@@ -1,0 +1,94 @@
+<script lang="ts">
+  import NavSidemenu from "../component/layout/nav/sidemenu/nav-sidemenu.svelte";
+  import Nav from "../component/layout/nav/nav.svelte";
+  import Footer from "../component/layout/footer/footer.svelte";
+  import AgeBanner from "../component/layout/age-banner/age-banner.svelte";
+  import { onMount } from "svelte";
+  import { afterNavigate } from "$app/navigation";
+  import { appManager } from "../lib/app-manager.svelte";
+  import { favouritesManager } from "../component/favourites/favourites-manager.svelte";
+  import { ageBannerManager } from "../component/layout/age-banner/age-banner-manager.svelte";
+  import { casinosDataManager } from "../component/casino/casinos-data-manager.svelte";
+
+  // Props passed from the server load function
+  let { data, children } = $props();
+
+  // Initialize data managers with server data and cookies
+  ageBannerManager.initialize(data.isAgeVerified);
+  favouritesManager.initialize(data.favouritesList);
+  casinosDataManager.initialize(data.casinos);
+  appManager.setCountryCode(data.countryCode);
+
+  // Apply content animations and detect device type on initial load
+  onMount(async () => {
+    appManager.addContentAnimation(); // Apply animations on initial load
+    appManager.setDeviceType(); // Initialize app manager for country and device type with country code from server data
+  });
+
+  // Scroll to top and reapply animations after each navigation
+  afterNavigate(() => {
+    appManager.scrollToTop(); // Scroll to top after navigation
+    appManager.addContentAnimation(); // Reapply animations after navigation
+  });
+</script>
+
+<svelte:head>
+  <!-- Preconnect with Render Hosting Service -->
+  <link
+    rel="preconnect"
+    href="https://sgo-strapi.onrender.com"
+    crossorigin="anonymous"
+  />
+  <!-- Google Tag Manager -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-1N5FE8V8Z2"
+  ></script>
+  <!-- Google Analitycs -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "G-1N5FE8V8Z2");
+  </script>
+</svelte:head>
+
+<AgeBanner />
+<NavSidemenu />
+<div class="main-outer">
+  <Nav />
+  <div class="main-inner">
+    <main>
+      {@render children()}
+    </main>
+    <Footer />
+  </div>
+</div>
+
+<style>
+  .main-outer {
+    position: fixed;
+    top: 0;
+    left: 300px;
+    width: calc(100% - 300px);
+    height: 100vh;
+    display: flex;
+    z-index: 1000;
+    .main-inner {
+      flex: 1;
+      margin-top: var(--navbar-height);
+      height: calc(100% - var(--navbar-height));
+      overflow-y: auto;
+      main {
+        min-height: 100%;
+      }
+    }
+    @media (max-width: 767px) {
+      left: 0;
+      width: 100%;
+    }
+  }
+</style>

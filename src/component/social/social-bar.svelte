@@ -1,0 +1,82 @@
+<script lang="ts">
+  const socialLinks = [
+    {
+      label: "Facebook",
+      url: "https://www.facebook.com/slotgratisonline.it/",
+      icon: "facebook",
+    },
+    {
+      label: "Instagram",
+      url: "https://www.instagram.com/sgonl_ine/",
+      icon: "instagram",
+    },
+    {
+      label: "X",
+      url: "https://x.com/gratis_slo56877",
+      icon: "x",
+    },
+    {
+      label: "LinkedIn",
+      url: "https://www.linkedin.com/company/100037252/admin/dashboard/",
+      icon: "linkedin",
+    },
+    {
+      label: "email",
+      url: "mailto:info@slotgratisonline.it",
+      icon: "email",
+    },
+  ];
+</script>
+
+<ul class="social-bar-list">
+  {#each socialLinks as link}
+    <li class="social-bar-list-item">
+      <a
+        class="social-bar-list-item-link"
+        href={link.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={link.label}
+      >
+        <svg class="social-bar-list-item-icon" aria-hidden="true">
+          <use href="/icons/social-set.svg#{link.icon}"></use>
+        </svg>
+      </a>
+    </li>
+  {/each}
+</ul>
+
+<style>
+  .social-bar-list {
+    width: 100%;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    .social-bar-list-item {
+      color: inherit;
+      .social-bar-list-item-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: inherit;
+        .social-bar-list-item-icon {
+          width: 20px;
+          height: 20px;
+          transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        &:hover {
+          .social-bar-list-item-icon {
+            transform: scale(1.5);
+            fill: var(--accent-color);
+          }
+        }
+      }
+    }
+  }
+</style>

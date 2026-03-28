@@ -1,0 +1,226 @@
+:root {
+  --white-900: rgb(250, 248, 245);
+  --white-900-opacity-500: rgba(246, 243, 237, 0.5);
+  --white-900-opacity-100: rgba(246, 243, 237, 0.1);
+  --blu-900: #161a20ff;
+  --blu-900-opacity-500: rgba(14, 22, 28, 0.5);
+  --blu-800: #1b2a38ff;
+  --blu-800-opacity-500: rgba(27, 42, 56, 0.5);
+  --blu-700: #2b4156ff;
+  --blu-700-opacity-500: rgba(61, 96, 128, 0.5);
+  --blu-700-opacity-100: rgba(61, 96, 128, 0.1);
+  --blu-600: #3d6080ff;
+  --blu-600-opacity-500: rgba(61, 96, 128, 0.5);
+  --blu-500: #5a87baff;
+  --blu-500-opacity-500: rgba(90, 135, 186, 0.5);
+  --blu-400: #7fa8d6ff;
+  --blu-400-opacity-500: rgba(127, 168, 214, 0.5);
+  --blu-300: #a9c8edff;
+  --blu-300-opacity-500: rgba(169, 200, 237, 0.5);
+  --blu-200: #d1e4f9ff;
+  --blu-200-opacity-500: rgba(209, 228, 249, 0.5);
+  --blu-100: #ebf2fcff;
+  --blu-100-opacity-500: rgba(235, 242, 252, 0.5);
+  --light-brown-900: #f6f3ed;
+  --light-brown-900-opacity-500: rgba(245, 240, 230, 0.5);
+  --light-brown-900-opacity-100: rgba(245, 240, 230, 0.2);
+  --light-brown-800: #e6ded2;
+  --light-brown-800-opacity-500: rgba(230, 222, 210, 0.5);
+  --light-brown-800-opacity-200: rgba(230, 222, 210, 0.2);
+  --light-brown-800-opacity-100: rgba(230, 222, 210, 0.1);
+  --light-brown-700: #d3cab9;
+  --light-brown-600: #aa9e8c;
+  --light-brown-500: #827767;
+  --green-900: #041909;
+  --green-800: #072f10ff;
+  --green-700: #0e4f1cff;
+  --green-600: #1b7a2eff;
+  --green-500: #2b9a4eff;
+  --orange-900: #ff6f00ff;
+  --orange-800: #ff9f1aff;
+  --red-900: #d7263dff;
+  --red-900-opacity-500: rgba(215, 38, 61, 0.5);
+  --red-900-opacity-100: rgba(215, 38, 61, 0.1);
+  --red-800: #fa5b4eff;
+  --red-700: #ff7b8aff;
+  --red-600: #ff9aa0ff;
+  --red-500: #ffc0c8ff;
+  --light-grey-900: rgb(200, 200, 200);
+  --light-grey-900-opacity-500: rgba(200, 200, 200, 0.5);
+  --light-grey-900-opacity-100: rgba(200, 200, 200, 0.1);
+  --light-grey-800: rgb(220, 220, 220);
+  --light-grey-700: rgb(240, 240, 240);
+  --light-grey-600: rgb(245, 245, 245);
+  --light-grey-500: rgb(250, 250, 250);
+  --graph-color: rgba(75, 192, 192, 1);
+  --graph-color-opacity-800: rgba(75, 192, 192, 0.8);
+  --graph-color-opacity-500: rgba(75, 192, 192, 0.5);
+  --graph-color-opacity-100: rgba(75, 192, 192, 0.1);
+
+  /* Navbar */
+  --navbar-height: 60px;
+  --navbar-text-color: var(--light-brown-800);
+  --navbar-bg-color-casino: var(--blu-800);
+  --navbar-bg-color-sport: var(--green-800);
+  /* Nav Section Toggler */
+  --navbar-section-toggler-bg-color-casino: var(--blu-600);
+  --navbar-section-toggler-bg-color-sport: var(--green-700);
+  --navbar-section-toggler-mobile-bg-color-casino: var(
+    --navbar-bg-color-casino
+  );
+  --navbar-section-toggler-mobile-bg-color-sport: var(--navbar-bg-color-sport);
+  /* Sidemenu */
+  --nav-sidemenu-width: 300px;
+  --nav-sidemenu-bg-color-casino: var(--navbar-bg-color-casino);
+  --nav-sidemenu-bg-color-sport: var(--navbar-bg-color-sport);
+  --nav-sidemenu-text-color: var(--navbar-text-color);
+  --nav-submenu-links-bg-color-casino: var(--blu-700);
+  --nav-submenu-links-bg-color-sport: var(--green-700);
+  /* Footer */
+  --footer-bg-color: var(--blu-700);
+  --sub-footer-bg-color: var(--blu-700);
+
+  --age-banner-bg-color-casino: var(--navbar-bg-color-casino);
+  --age-banner-bg-color-sport: var(--navbar-bg-color-sport);
+  --age-banner-text-color: var(--navbar-text-color);
+
+  --accent-color: rgb(0, 98, 235);
+  --mobile-padding: 16px;
+}
+
+@font-face {
+  font-family: "MontSerrat";
+  src: url("/fonts/montserrat.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: "Funnel Display";
+  src: url("/fonts/funnel-display.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: "Grenadier";
+  src: url("/fonts/grenadier.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: optional;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Montserrat, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--light-brown-900);
+  color: var(--blu-900);
+  font-size: 16px;
+  line-height: 1.5;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+.no-scroll {
+  height: 100vh;
+  overflow: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: var(--accent-color);
+}
+
+svg {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Funnel Display", Arial, sans-serif;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 62px;
+  text-align: center;
+  @media (max-width: 768px) {
+    font-size: 2rem;
+    margin-bottom: 32px;
+  }
+}
+.content {
+  width: 90%;
+  max-width: 1200px;
+  margin: 50px auto;
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+  &.content-columns {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+    .img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .small-img {
+      max-width: 400px;
+    }
+    .medium-img {
+      max-width: 600px;
+    }
+    @media (max-width: 768px) {
+      flex-direction: column;
+      .img {
+        max-width: 100%;
+      }
+    }
+  }
+  h2,
+  h3 {
+    margin-top: 32px;
+    margin-bottom: 8px;
+  }
+}
+.section-content {
+  margin-bottom: 100px;
+}
+ul,
+ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
