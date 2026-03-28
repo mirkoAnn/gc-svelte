@@ -1,1 +1,1 @@
-This is the Default Page
+Default Page
