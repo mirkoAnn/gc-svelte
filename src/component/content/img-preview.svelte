@@ -1,5 +1,5 @@
 <script lang="ts">
-	import gsap from 'gsap';
+	import gsap from 'gsap/dist/gsap';
 	import { onMount } from 'svelte';
 
 	let {
@@ -30,7 +30,7 @@
 	let scrollingAnimtion = $state<GSAPTimeline | null>(null);
 
 	onMount(async () => {
-		const scrollTrigger = await import('gsap/ScrollTrigger');
+		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
 		gsap.registerPlugin(scrollTrigger);
 
 		scrollingAnimtion = gsap

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import gsap from 'gsap';
+	import gsap from 'gsap/dist/gsap';
 	import { casinosDataManager } from './casinos-data-manager.svelte';
 	import RadialChart from '../graphics/charts/radial-chart.svelte';
 

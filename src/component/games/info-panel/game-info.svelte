@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation';
-	import gsap from 'gsap';
+	import gsap from 'gsap/dist/gsap';
 
 	let { game }: { game: any } = $props();
 
 	afterNavigate(async () => {
-		const scrollTrigger = await import('gsap/ScrollTrigger');
+		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
 		gsap.registerPlugin(scrollTrigger);
 
 		gsap.to('.game-rtp-value', {

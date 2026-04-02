@@ -1,5 +1,5 @@
 import { workersManager } from '$lib/workers-manager.svelte';
-import gsap from 'gsap';
+import gsap from 'gsap/dist/gsap';
 
 const gamesBatchSize = 20; // This is the number of games that we load in each batch when the user applies filters or when they click on the "Load More" button, you can adjust this number based on your needs and the performance of your server, but I recommend to keep it around 20 to 30 games per batch to avoid loading too many games at once and to improve the performance of the gallery
 

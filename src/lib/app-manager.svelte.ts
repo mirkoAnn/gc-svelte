@@ -1,4 +1,4 @@
-import gsap from 'gsap';
+import gsap from 'gsap/dist/gsap';
 
 export enum countryCodes {
 	it = 'it'
@@ -22,7 +22,7 @@ export const appManager = {
 	},
 	// Add content animation on scroll using GSAP and ScrollTrigger plugin in all pages
 	addContentAnimation: async () => {
-		const scrollTrigger = await import('gsap/ScrollTrigger');
+		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
 		gsap.registerPlugin(scrollTrigger);
 		document.querySelectorAll('.content').forEach((section) => {
 			gsap

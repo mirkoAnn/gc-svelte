@@ -1,5 +1,5 @@
 <script lang="ts">
-	import gsap from 'gsap';
+	import gsap from 'gsap/dist/gsap';
 	import { onMount } from 'svelte';
 
 	let { games }: { games: any } = $props();

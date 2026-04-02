@@ -1,5 +1,5 @@
 import { workersManager } from '$lib/workers-manager.svelte';
-import gsap from 'gsap';
+import gsap from 'gsap/dist/gsap';
 import { casinosDataManager } from '../../casino/casinos-data-manager.svelte';
 
 let isVisible = $state(false),

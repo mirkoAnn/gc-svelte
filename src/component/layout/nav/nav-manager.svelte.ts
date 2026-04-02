@@ -1,4 +1,4 @@
-import gsap from 'gsap';
+import gsap from 'gsap/dist/gsap';
 import NavSearch from './search/nav-search.svelte';
 import FavouritesList from '../../favourites/favourites-list.svelte';
 

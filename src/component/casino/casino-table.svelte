@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import gsap from 'gsap';
+	import gsap from 'gsap/dist/gsap';
 	import { resolve } from '$app/paths';
 	import { appManager } from '$lib/app-manager.svelte';
 
@@ -30,7 +30,7 @@
 	} = $props();
 
 	onMount(async () => {
-		const scrollTrigger = await import('gsap/ScrollTrigger');
+		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
 		gsap.registerPlugin(scrollTrigger);
 
 		// Animate table rows on scroll into view from bottom

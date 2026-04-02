@@ -2,7 +2,7 @@
 	import { gamesGalleryManager } from './games-gallery-manager.svelte';
 	import GamesGalleryFilter from './games-gallery-filter.svelte';
 	import { onMount } from 'svelte';
-	import gsap from 'gsap';
+	import gsap from 'gsap/dist/gsap';
 
 	// We need to use a state variable to store the animation instance, otherwise it gets recreated on each toggle causing the animation to break
 	// We also need to check if the animation is active before toggling it, to prevent multiple toggles while the animation is still running

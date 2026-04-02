@@ -1,5 +1,5 @@
 <script lang="ts">
-	import gsap from 'gsap';
+	import gsap from 'gsap/dist/gsap';
 	import { gamesGalleryManager } from './games-gallery-manager.svelte';
 
 	let { filter }: { filter: any } = $props();

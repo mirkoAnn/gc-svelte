@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { appManager } from '../../../lib/app-manager.svelte';
 	import SquaresLoader from './../../graphics/loader/squares-loader.svelte';
-	import gsap from 'gsap';
+	import gsap from 'gsap/dist/gsap';
 	import GameCard from './games-gallery-card.svelte';
 	import { gamesGalleryManager } from './games-gallery-manager.svelte';
 	import GamesGalleryFilters from './games-gallery-filters.svelte';
