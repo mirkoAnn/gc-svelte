@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import CasinoTable from "../../component/casino/casino-table.svelte";
   import { casinosDataManager } from "../../component/casino/casinos-data-manager.svelte";
   import Content from "../../component/content/content.svelte";
@@ -45,4 +45,4 @@
 </div>
 <CasinoTable casinos={casinosDataManager.getTopCasinos(10)} />
 
-<FaqsList faqs={data.page.faqs} />
+<FaqsList faqs={data.page.faqs} /> -->
