@@ -44,8 +44,6 @@ export const load = async ({ request, cookies }: LoadInput) => {
 			? countryCodes[countryHeader as keyof typeof countryCodes]
 			: countryCodes.it;
 
-	console.log('Detected country code:', request.headers.get('x-vercel-ip-country')?.toLowerCase());
-
 	// Set country code in app manager for use in other parts of the app, with fallback to "it"
 	// this is necessary to ensure that the app manager has the correct country code before any database queries are made, allowing for proper server address selection based on the user's location.
 	appManager.setCountryCode(countryCode);

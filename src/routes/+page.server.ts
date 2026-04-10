@@ -6,6 +6,8 @@ export async function load({ request }) {
 	switch (country) {
 		case 'it':
 			throw redirect(301, '/it'); // Redirect to Italian version of the site
+		case 'es':
+			throw redirect(301, '/es'); // Redirect to Spanish version of the site
 		default:
 			throw redirect(301, '/it'); // Redirect to Italian version of the site as default
 	}
