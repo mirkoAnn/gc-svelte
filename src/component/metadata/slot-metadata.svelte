@@ -1,5 +1,10 @@
 <script lang="ts">
-  let { data }: { data: any } = $props();
+	import { appManager } from '$lib/app-manager.svelte';
+	import { SITE_URL } from './sitedata-manager.svelte';
+
+	let { data }: { data: any } = $props();
+
+	const locale = $derived(appManager.getCountryCode());
 </script>
 
 {@html `
@@ -7,12 +12,12 @@
     {
       "@context": "https://schema.org",
       "type": "WebPage",
-      "id": "https://gamblingonlineitalia.it/slot/${data.page.slug}/#webpage",
-      "inLanguage": "it_IT",
+      "id": "https://${SITE_URL}/${locale}/slot/${data.page.slug}/#webpage",
+      "inLanguage": "${locale}_${locale.toUpperCase()}",
       "datePublished": "${data.page.publishedAt}",
       "dateModified": "${data.page.updatedAt}",
       "isPartOf": {
-        "id": "https://gamblingonlineitalia.it#website"
+        "id": "https://${SITE_URL}/#website"
       },
       "name": "${data.page.seo.title}",
       "description": "${data.page.seo.description}"
@@ -23,11 +28,11 @@
     {
       "@context": "https://schema.org",
       "type": "WebApplication",
-      "id": "https://gamblingonlineitalia.it/slot/${data.page.slug}",
+      "id": "https://${SITE_URL}/${locale}/slot/${data.page.slug}",
       "browserRequirements": "HTML5",
       "applicationCategory": "Game",
       "applicationSubCategory": "Slot Machine",
-      "inLanguage": "it_IT",
+      "inLanguage": "${locale}_${locale.toUpperCase()}",
       "name": "${data.page.title}",
       "image": {
         "type": "ImageObject",
@@ -51,7 +56,7 @@
       },
       "mainEntityOfPage": {
         "type": "WebPage",
-        "id": "https://gamblingonlineitalia.it/slot/${data.page.slug}/#webpage"
+        "id": "https://${SITE_URL}/${locale}/slot/${data.page.slug}/#webpage"
       },
       "potentialAction": {
         "type": "PlayAction",
@@ -72,9 +77,9 @@
         "dateModified": "${data.page.updatedAt}",
         "author": {
           "type": "Person",
-          "id": "https://gamblingonlineitalia.it/author/${data.page.author.slug}",
+          "id": "https://${SITE_URL}/${locale}/author/${data.page.author.slug}",
           "name": "${data.page.author.name}",
-          "url": "https://gamblingonlineitalia.it/author/${data.page.author.slug}",
+          "url": "https://${SITE_URL}/${locale}/author/${data.page.author.slug}",
           "sameAs": [
             "${data.page.author.facebookProfile}",
             "${data.page.author.linkedinProfile}"

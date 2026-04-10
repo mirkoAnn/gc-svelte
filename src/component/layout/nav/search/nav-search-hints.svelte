@@ -4,7 +4,7 @@
 </script>
 
 <ul class="navbar-searches-hints navbar-popular-searches-hints">
-	{#each navSearchManager.getSearchHints(10) as searchHint, i}
+	{#each navSearchManager.getSearchHints(10) as searchHint, i (searchHint.id)}
 		<li class="navbar-search-item" in:fly={{ y: 20, delay: i * 50, duration: 500 }}>
 			<button
 				class="navbar-search-item-button"

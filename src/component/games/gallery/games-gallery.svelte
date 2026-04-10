@@ -6,6 +6,8 @@
 	import { gamesGalleryManager } from './games-gallery-manager.svelte';
 	import GamesGalleryFilters from './games-gallery-filters.svelte';
 	import { capitalizeFirstLetter } from '$lib/utils.svelte';
+	import { m } from '../../../paraglide/messages';
+	import type { Game } from '$lib/types/games';
 
 	let {
 		games, // Optional: if provided, it will use these games instead of the ones from the gamesGalleryManager, allowing to have multiple galleries with different games on the same page, like in the similar games section of the game page
@@ -16,7 +18,7 @@
 		categoryLink, // Optional: if provided a last card will be rendered linking to the category page with the provided URL and label "Vedi tutte le [category]"
 		hasFilters = false // Optional: if true, it will show a button to toggle the filters and the games will be filtered based on the selected filters in the gamesGalleryManager, used in the main games-gallery page to allow filtering the games by type, provider, etc..
 	}: {
-		games?: any;
+		games?: Game[];
 		excludeId?: string;
 		category: string;
 		title?: string;
@@ -25,28 +27,33 @@
 		hasFilters?: boolean;
 	} = $props();
 
+	const locale = $derived(appManager.getCountryCode());
+
 	// Generate a unique ID for the carousel instance to avoid conflicts when multiple carousels are present on the same page
 	const carouselID = `carousel-${Math.floor(Math.random() * 90000) + 10000}`;
 
-	let carouselIconName = $state(category); // Default icon is the category name, but it can be overridden by specific keywords in the title, like "slot" or "live"
-	if (
-		title &&
-		title
-			.normalize('NFD')
-			.replace(capitalizeFirstLetter(category), '')
-			.replace(' ', '')
-			.replace(/[\u0300-\u036f]/g, '')
-			.replace(' ', '-')
-			.toLowerCase() !== 'online'
-	) {
-		carouselIconName = title
+	const knownCategories = ['slot', 'roulette'];
+
+	const carouselIconName = $derived.by(() => {
+		const currentTitle = title ?? '';
+		const hasKnownCategory = knownCategories.some((cat) =>
+			currentTitle.toLowerCase().includes(cat)
+		);
+
+		if (!hasKnownCategory) return '';
+
+		const cleanedTitle = currentTitle
 			.normalize('NFD')
 			.replace(capitalizeFirstLetter(category), '')
 			.replace(' ', '')
 			.replace(/[\u0300-\u036f]/g, '')
 			.replace(' ', '-')
 			.toLowerCase();
-	}
+
+		// keep previous behavior: default to category unless cleaned title is meaningful
+		if (cleanedTitle && cleanedTitle !== 'online') return cleanedTitle;
+		return category;
+	});
 
 	// Scroll management variables and function
 	let scrollOffset = 0;
@@ -113,7 +120,7 @@
 				<div class="arrows-container">
 					<button
 						class="arrow left-arrow"
-						aria-label="Mostra i giochi precedenti"
+						aria-label={m.show_previous_games({ locale })}
 						onclick={() => scroll('left')}
 					>
 						<svg class="arrow-icon">
@@ -122,7 +129,7 @@
 					</button>
 					<button
 						class="arrow right-arrow"
-						aria-label="Mostra i giochi successivi"
+						aria-label={m.show_next_games({ locale })}
 						onclick={() => scroll('right')}
 					>
 						<svg class="arrow-icon">
@@ -140,7 +147,7 @@
 	{/if}
 	<div id={carouselID} class="games-gallery-inner">
 		<!-- If provided use the games prop, otherwise use the games from the gamesGalleryManager -->
-		{#each games ? games : gamesGalleryManager.getGames() as game}
+		{#each games ? games : gamesGalleryManager.getGames() as game (game.id)}
 			<!-- Remove some ids to avoid duplicates in the similar games gallery -->
 			{#if !excludeId || game.id !== excludeId}
 				<GameCard {game} {category} />
@@ -149,12 +156,12 @@
 		<!-- Link to the category for carousel type -->
 		{#if categoryLink}
 			<a
-				href={`/${appManager.getCountryCode() + categoryLink}`}
+				href={`/${locale}/${categoryLink}`}
 				class="game-card more-games-card"
-				aria-label={'Vedi tutte le ' + title}
-				title={'Vedi tutte le ' + title}
+				aria-label={m.show_all_by_category({ category }, { locale })}
+				title={m.show_all_by_category({ category }, { locale })}
 			>
-				<span>Vedi tutte le {category}</span>
+				<span>{m.show_all_by_category({ category }, { locale })}</span>
 				<svg class="more-games-card-icon">
 					<use href="/icons/icon-set.svg#fill-arrow" />
 				</svg>
@@ -164,7 +171,7 @@
 				class="game-card more-games-card load-more-button"
 				onclick={() => gamesGalleryManager.loadMoreGames()}
 				disabled={!gamesGalleryManager.areMoreGamesAvailable()}
-				aria-label="Carica più giochi"
+				aria-label={m.load_more_games({ locale })}
 			>
 				<svg class="more-games-card-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
 					<path

@@ -1,8 +1,13 @@
 <script lang="ts">
 	import gsap from 'gsap/dist/gsap';
 	import { gamesGalleryManager } from './games-gallery-manager.svelte';
+	import { m } from '../../../paraglide/messages';
+	import { appManager } from '$lib/app-manager.svelte';
+	import type { FilterCategory } from '$lib/types/filters';
 
-	let { filter }: { filter: any } = $props();
+	let { filter }: { filter: FilterCategory } = $props();
+
+	const locale = $derived(appManager.getCountryCode());
 
 	let filterOptionsTogglingAnimation = $state<GSAPTimeline | null>();
 
@@ -63,7 +68,7 @@
 <div id="games-gallery-filter-{filter.name}" class="games-gallery-filter">
 	<button
 		class="games-gallery-filter-select-toggler"
-		aria-label={'Seleziona filtro per ' + filter.label}
+		aria-label={m.select_filter_for({ filterName: filter.label }, { locale })}
 		onclick={toggleFilterOptions}
 	>
 		<span>{filter.label}</span>
@@ -72,7 +77,7 @@
 		</svg>
 	</button>
 	<div class="games-gallery-filter-options">
-		{#each filter.filters as filterOption}
+		{#each filter.filters as filterOption (filterOption.value)}
 			<button
 				class="games-gallery-filter-option {gamesGalleryManager.isThisFilterCurrentlyApplied(
 					filter.name,

@@ -1,14 +1,18 @@
-<!-- <script lang="ts">
-  import CasinoTable from "../../component/casino/casino-table.svelte";
-  import { casinosDataManager } from "../../component/casino/casinos-data-manager.svelte";
-  import Content from "../../component/content/content.svelte";
-  import FaqsList from "../../component/faqs/faqs-list.svelte";
-  import GamesGallery from "../../component/games/gallery/games-gallery.svelte";
-  import PageMetadata from "../../component/metadata/page-metadata.svelte";
+<script lang="ts">
+	import type { HomePageData } from './+page.server';
 
-  let { data }: { data: any } = $props();
+	// import CasinoTable from '../../component/casino/casino-table.svelte';
+	// import { casinosDataManager } from '../../component/casino/casinos-data-manager.svelte';
+	// import Content from '../../component/content/content.svelte';
+	// import FaqsList from '../../component/faqs/faqs-list.svelte';
+	// import GamesGallery from '../../component/games/gallery/games-gallery.svelte';
+	// import PageMetadata from '../../component/metadata/page-metadata.svelte';
+	// import Faq from '../../component/faqs/faq.svelte';
+
+	let { data }: { data: HomePageData } = $props();
 </script>
 
+<!-- 
 <PageMetadata
   title={data.page.seo.title}
   description={data.page.seo.description}

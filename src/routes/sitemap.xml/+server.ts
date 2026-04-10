@@ -1,159 +1,278 @@
-import { dbManager } from "$lib/db-manager.svelte";
-import { error } from "@sveltejs/kit";
+import { countryCodes } from '$lib/app-manager.svelte';
+import { dbManager } from '$lib/db-manager.svelte';
+import { capitalizeFirstLetter } from '$lib/utils.svelte';
+import { error } from '@sveltejs/kit';
 
 export async function GET() {
-  let query = `
-    query {
-      homepage {
+	// Build GraphQL query to fetch updatedAt for main pages and collections for all country codes
+	let query = `query Sitemap {`;
+	// Iterate over country codes to build query for each country's pages and collections
+	Object.values(countryCodes).forEach((countryCode) => {
+		const countrySuffix = capitalizeFirstLetter(countryCode);
+		query += `
+      homePage${countrySuffix}: homePage(locale: "${countryCode}") {
         updatedAt
       }
-      slotsPage {
+      slotsPage${countrySuffix}: slotsPage(locale: "${countryCode}") {
         updatedAt
       }
-      slotThemes(pagination: { page: 1, pageSize: 500 }) {
+      slotThemes${countrySuffix}: slotThemes(locale: "${countryCode}",pagination: { page: 1, pageSize: 500 }) {
         slug
         updatedAt
       }
-      slotMechanics(pagination: { page: 1, pageSize: 500 }) {
+      slotMechanics${countrySuffix}: slotMechanics(locale: "${countryCode}",pagination: { page: 1, pageSize: 500 }) {
         slug
         updatedAt
       }
-      slots(pagination: { page: 1, pageSize: 5000 }) {
+      slots${countrySuffix}: slots(locale: "${countryCode}",pagination: { page: 1, pageSize: 5000 }) {
         slug
         updatedAt
       }
-      providersPage {
+      roulettePage${countrySuffix}: roulettePage(locale: "${countryCode}") {
         updatedAt
       }
-      providers(pagination: { page: 1, pageSize: 500 }) {
+      roulettes${countrySuffix}: roulettes(locale: "${countryCode}",pagination: { page: 1, pageSize: 5000 }) {
         slug
         updatedAt
       }
-      casinosPage {
+      rouletteMechanics${countrySuffix}: rouletteMechanics(locale: "${countryCode}",pagination: { page: 1, pageSize: 500 }) {
+        slug
+        updatedAt
+       }
+      providersPage${countrySuffix}: providersPage(locale: "${countryCode}") {
         updatedAt
       }
-      casinos(pagination: { page: 1, pageSize: 500 }) {
+      casinosPage${countrySuffix}: casinosPage(locale: "${countryCode}") {
+        updatedAt
+      }
+      casinos${countrySuffix}: casinos(locale: "${countryCode}",pagination: { page: 1, pageSize: 500 }) {
         slug
         updatedAt
       }
-    }
-  `;
+      providers${countrySuffix}: providers(locale: "${countryCode}",pagination: { page: 1, pageSize: 500 }) {
+        slug
+        updatedAt
+      }
+    `;
+	});
+	query += `}`;
 
-  let urlset: any = [];
-  const SITE_ADDRESS = "https://slotgratisonline.it";
+	// Define TypeScript types for the expected GraphQL response structure
+	type PageData = { updatedAt: string };
+	type CollectionItem = { slug: string; updatedAt: string };
 
-  await dbManager
-    .executeQuery(query)
-    .catch(() => {
-      throw error(404, {
-        message: "Error loading page",
-      });
-    })
-    .then((response: any) => {
-      // Main Pages entries
-      urlset.push(
-        {
-          loc: SITE_ADDRESS,
-          freq: "daily",
-          mod: response.data.homepage.updatedAt,
-          priority: 1,
-        },
-        {
-          loc: SITE_ADDRESS + "/slot-gratis",
-          freq: "daily",
-          mod: response.data.slotsPage.updatedAt,
-          priority: 1,
-        },
-        {
-          loc: SITE_ADDRESS + "/providers",
-          freq: "monthly",
-          mod: response.data.providersPage.updatedAt,
-          priority: 1,
-        },
-        {
-          loc: SITE_ADDRESS + "/casino-online",
-          freq: "weekly",
-          mod: response.data.casinosPage.updatedAt,
-          priority: 0.9,
-        },
-      );
+	type QueryResponse = {
+		homePageIt: PageData;
+		homePageEs: PageData;
+		slotsPageIt: PageData;
+		slotsPageEs: PageData;
+		slotThemesIt: CollectionItem[];
+		slotThemesEs: CollectionItem[];
+		slotMechanicsIt: CollectionItem[];
+		slotMechanicsEs: CollectionItem[];
+		slotsIt: CollectionItem[];
+		slotsEs: CollectionItem[];
+		roulettePageIt: PageData;
+		roulettePageEs: PageData;
+		roulettesIt: CollectionItem[];
+		roulettesEs: CollectionItem[];
+		rouletteMechanicsIt: CollectionItem[];
+		rouletteMechanicsEs: CollectionItem[];
+		providersPageIt: PageData;
+		providersPageEs: PageData;
+		providersIt: CollectionItem[];
+		providersEs: CollectionItem[];
+		casinosPageIt: PageData;
+		casinosPageEs: PageData;
+		casinosIt: CollectionItem[];
+		casinosEs: CollectionItem[];
+	};
 
-      // Temporary variable to store entries during cycles
-      let url: any, entries: any;
+	// Define types for normalized response structure to separate pages and collections for easier processing
+	type NormalizedResponse = {
+		pages: Record<string, PageData>;
+		collections: Record<string, CollectionItem[]>;
+	};
 
-      // Casino entries
-      entries = response.data.casinos;
-      entries.forEach((entry: any) => {
-        url = {
-          loc: SITE_ADDRESS + "/casino-online/" + entry.slug,
-          freq: "monthly",
-          mod: entry.updatedAt,
-          priority: 0.8,
-        };
-        urlset.push(url);
-      });
+	// Define type for URL set response that will be used to generate the sitemap entries
+	type UrlSetResponse = {
+		loc: string;
+		freq: string;
+		mod: string;
+		priority: number;
+	}[];
+	const urlset: UrlSetResponse = [];
+	const SITE_ADDRESS = 'https://gamlub.com';
 
-      // Slot Categories entries
-      entries = response.data.slotThemes;
-      entries.forEach((entry: any) => {
-        url = {
-          loc: SITE_ADDRESS + "/slot-gratis/slot-" + entry.slug,
-          freq: "yearly",
-          mod: entry.updatedAt,
-          priority: 0.5,
-        };
-        urlset.push(url);
-      });
+	let response: { data: QueryResponse };
+	try {
+		response = await dbManager.executeQuery(query);
+	} catch {
+		throw error(404, {
+			message: 'Error loading page'
+		});
+	}
 
-      // Slot Mechanics entries
-      entries = response.data.slotMechanics;
-      entries.forEach((entry: any) => {
-        url = {
-          loc: SITE_ADDRESS + "/slot-gratis/regole-" + entry.slug,
-          freq: "yearly",
-          mod: entry.updatedAt,
-          priority: 0.5,
-        };
-        urlset.push(url);
-      });
+	// Normalize response into pages and collections
+	const normalized: NormalizedResponse = {
+		pages: {
+			homePageIt: response.data.homePageIt,
+			homePageEs: response.data.homePageEs,
+			slotsPageIt: response.data.slotsPageIt,
+			slotsPageEs: response.data.slotsPageEs,
+			roulettePageIt: response.data.roulettePageIt,
+			roulettePageEs: response.data.roulettePageEs,
+			providersPageIt: response.data.providersPageIt,
+			providersPageEs: response.data.providersPageEs,
+			casinosPageIt: response.data.casinosPageIt,
+			casinosPageEs: response.data.casinosPageEs
+		},
+		collections: {
+			casinosIt: response.data.casinosIt,
+			casinosEs: response.data.casinosEs,
+			slotThemesIt: response.data.slotThemesIt,
+			slotThemesEs: response.data.slotThemesEs,
+			slotMechanicsIt: response.data.slotMechanicsIt,
+			slotMechanicsEs: response.data.slotMechanicsEs,
+			slotsIt: response.data.slotsIt,
+			slotsEs: response.data.slotsEs,
+			roulettesIt: response.data.roulettesIt,
+			roulettesEs: response.data.roulettesEs,
+			rouletteMechanicsIt: response.data.rouletteMechanicsIt,
+			rouletteMechanicsEs: response.data.rouletteMechanicsEs,
+			providersIt: response.data.providersIt,
+			providersEs: response.data.providersEs
+		}
+	};
 
-      // Slots entries
-      entries = response.data.slots;
-      entries.forEach((entry: any) => {
-        url = {
-          loc: SITE_ADDRESS + "/slot/" + entry.slug,
-          freq: "yearly",
-          mod: entry.updatedAt,
-          priority: 0.5,
-        };
-        urlset.push(url);
-      });
+	// Main Pages and collection entries
+	Object.values(countryCodes).forEach((countryCode) => {
+		const countrySuffix = capitalizeFirstLetter(countryCode);
+		const homePageKey = `homePage${countrySuffix}` as keyof typeof normalized.pages;
+		const slotsPageKey = `slotsPage${countrySuffix}` as keyof typeof normalized.pages;
+		const roulettePageKey = `roulettePage${countrySuffix}` as keyof typeof normalized.pages;
+		const providersPageKey = `providersPage${countrySuffix}` as keyof typeof normalized.pages;
+		const casinosPageKey = `casinosPage${countrySuffix}` as keyof typeof normalized.pages;
 
-      // Providers entries
-      entries = response.data.providers;
-      entries.forEach((entry: any) => {
-        url = {
-          loc: SITE_ADDRESS + "/providers/" + entry.slug,
-          freq: "yearly",
-          mod: entry.updatedAt,
-          priority: 0.5,
-        };
-        urlset.push(url);
-      });
-    });
+		const casinosKey = `casinos${countrySuffix}` as keyof typeof normalized.collections;
+		const slotThemesKey = `slotThemes${countrySuffix}` as keyof typeof normalized.collections;
+		const slotMechanicsKey = `slotMechanics${countrySuffix}` as keyof typeof normalized.collections;
+		const slotsKey = `slots${countrySuffix}` as keyof typeof normalized.collections;
+		const roulettesKey = `roulettes${countrySuffix}` as keyof typeof normalized.collections;
+		const rouletteMechanicsKey =
+			`rouletteMechanics${countrySuffix}` as keyof typeof normalized.collections;
+		const providersKey = `providers${countrySuffix}` as keyof typeof normalized.collections;
 
-  let mappedUrlset = "";
-  urlset.forEach((url: any) => {
-    mappedUrlset += `<url>
+		urlset.push(
+			{
+				loc: SITE_ADDRESS + '/' + countryCode,
+				freq: 'daily',
+				mod: normalized.pages[homePageKey].updatedAt,
+				priority: 1
+			},
+			{
+				loc: SITE_ADDRESS + '/' + countryCode + '/slot-gratis',
+				freq: 'daily',
+				mod: normalized.pages[slotsPageKey].updatedAt,
+				priority: 1
+			},
+			{
+				loc: SITE_ADDRESS + '/' + countryCode + '/roulette-gratis',
+				freq: 'daily',
+				mod: normalized.pages[roulettePageKey].updatedAt,
+				priority: 1
+			},
+			{
+				loc: SITE_ADDRESS + '/' + countryCode + '/providers',
+				freq: 'monthly',
+				mod: normalized.pages[providersPageKey].updatedAt,
+				priority: 1
+			},
+			{
+				loc: SITE_ADDRESS + '/' + countryCode + '/casino-online',
+				freq: 'weekly',
+				mod: normalized.pages[casinosPageKey].updatedAt,
+				priority: 0.9
+			}
+		);
+
+		normalized.collections[casinosKey].forEach((entry) => {
+			urlset.push({
+				loc: SITE_ADDRESS + '/' + countryCode + '/casino-online/' + entry.slug,
+				freq: 'monthly',
+				mod: entry.updatedAt,
+				priority: 0.8
+			});
+		});
+
+		normalized.collections[slotThemesKey].forEach((entry) => {
+			urlset.push({
+				loc: SITE_ADDRESS + '/' + countryCode + '/slot-gratis/slot-' + entry.slug,
+				freq: 'yearly',
+				mod: entry.updatedAt,
+				priority: 0.5
+			});
+		});
+
+		normalized.collections[slotMechanicsKey].forEach((entry) => {
+			urlset.push({
+				loc: SITE_ADDRESS + '/' + countryCode + '/slot-gratis/regole-' + entry.slug,
+				freq: 'yearly',
+				mod: entry.updatedAt,
+				priority: 0.5
+			});
+		});
+
+		normalized.collections[slotsKey].forEach((entry) => {
+			urlset.push({
+				loc: SITE_ADDRESS + '/' + countryCode + '/slot/' + entry.slug,
+				freq: 'yearly',
+				mod: entry.updatedAt,
+				priority: 0.5
+			});
+		});
+
+		normalized.collections[roulettesKey].forEach((entry) => {
+			urlset.push({
+				loc: SITE_ADDRESS + '/' + countryCode + '/roulette/' + entry.slug,
+				freq: 'yearly',
+				mod: entry.updatedAt,
+				priority: 0.5
+			});
+		});
+
+		normalized.collections[rouletteMechanicsKey].forEach((entry) => {
+			urlset.push({
+				loc: SITE_ADDRESS + '/' + countryCode + '/roulette-gratis/regole-' + entry.slug,
+				freq: 'yearly',
+				mod: entry.updatedAt,
+				priority: 0.5
+			});
+		});
+
+		normalized.collections[providersKey].forEach((entry) => {
+			urlset.push({
+				loc: SITE_ADDRESS + '/' + countryCode + '/providers/' + entry.slug,
+				freq: 'yearly',
+				mod: entry.updatedAt,
+				priority: 0.5
+			});
+		});
+	});
+
+	const mappedUrlset = urlset
+		.map(
+			(url) => `<url>
       <loc>${url.loc}</loc>
       <changefreq>${url.freq}</changefreq>
       <lastmod>${url.mod}</lastmod>
       <priority>${url.priority}</priority>
-    </url>`;
-  });
+    </url>`
+		)
+		.join('');
 
-  return new Response(
-    `
+	return new Response(
+		`
         <?xml version="1.0" encoding="UTF-8" ?>
         <urlset
             xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"
@@ -165,10 +284,10 @@ export async function GET() {
         >
         ${mappedUrlset}
         </urlset>`.trim(),
-    {
-      headers: {
-        "Content-Type": "application/xml",
-      },
-    },
-  );
+		{
+			headers: {
+				'Content-Type': 'application/xml'
+			}
+		}
+	);
 }

@@ -3,11 +3,15 @@
 	import GamesGalleryFilter from './games-gallery-filter.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap/dist/gsap';
+	import { m } from '../../../paraglide/messages';
+	import { appManager } from '$lib/app-manager.svelte';
 
 	// We need to use a state variable to store the animation instance, otherwise it gets recreated on each toggle causing the animation to break
 	// We also need to check if the animation is active before toggling it, to prevent multiple toggles while the animation is still running
 	// This animation is used to toggle the filters panel, it changes the background color and width of the panel, and rotates the arrow icon
 	let toggleFiltersAnimation = $state<GSAPTimeline | null>();
+
+	const locale = $derived(appManager.getCountryCode());
 
 	const toggleFiltersOptions = () => {
 		if (toggleFiltersAnimation && toggleFiltersAnimation.isActive()) return;
@@ -42,8 +46,8 @@
 				isDesktop: '(min-width: 768px)',
 				isMobile: '(max-width: 767px)'
 			},
-			(context: any) => {
-				const { isDesktop, isMobile } = context.conditions;
+			(context: gsap.MatchMediaContext) => {
+				const { isDesktop } = context.conditions;
 
 				toggleFiltersAnimation = gsap
 					.timeline({ defaults: { ease: 'back.inOut(1.7)' }, paused: true })
@@ -150,9 +154,11 @@
 	const toggleFilters = () => {
 		if (toggleFiltersAnimation && toggleFiltersAnimation.isActive()) return;
 		gamesGalleryManager.toggleFilters(); // Toggle the filters state in the manager. This will be used in other components to know if there are filters in use or not
-		gamesGalleryManager.areFiltersVisible()
-			? toggleFiltersAnimation?.play() // if there are filters in use, open the filters panel
-			: toggleFiltersAnimation?.reverse(); // if there are no filters in use, close the filters panel
+		if (gamesGalleryManager.areFiltersVisible()) {
+			toggleFiltersAnimation?.play(); // if there are filters in use, open the filters panel
+		} else {
+			toggleFiltersAnimation?.reverse(); // if there are no filters in use, close the filters panel
+		}
 	};
 
 	const clearFilters = () => {
@@ -167,7 +173,7 @@
 	<button
 		class="games-filters-toggler-arrow"
 		onclick={toggleFilters}
-		aria-label="Mostra/Nascondi Filtri"
+		aria-label={m.toggle_filters({ locale })}
 	>
 		<svg class="games-filters-toggler-arrow-icon" viewBox="0 0 200 200">
 			<use href="/icons/icon-set.svg#arrow" />
@@ -175,18 +181,26 @@
 	</button>
 	<!-- Filters buttons -->
 	<div class="games-gallery-filters">
-		{#each gamesGalleryManager.getFilters().categories as filter}
+		{#each gamesGalleryManager.getFilters().categories as filter (filter.name)}
 			<GamesGalleryFilter {filter} />
 		{/each}
-		<button class="games-gallery-filters-reset" onclick={clearFilters}>
+		<button
+			class="games-gallery-filters-reset"
+			onclick={clearFilters}
+			aria-label={m.clear_filters({ locale })}
+		>
 			<svg class="games-gallery-filters-reset-icon" viewBox="0 0 24 24"
 				><use href="/icons/icon-set.svg#clear" />
 			</svg>
-			Cancella</button
+			{m.clear_filters({ locale })}</button
 		>
 	</div>
 	<!-- Filter Icon -->
-	<button class="games-filters-toggler" onclick={toggleFilters} aria-label="Mostra/Nascondi Filtri">
+	<button
+		class="games-filters-toggler"
+		onclick={toggleFilters}
+		aria-label={m.toggle_filters({ locale })}
+	>
 		<svg class="games-filters-toggler-icon" viewBox="0 0 200 200">
 			<use href="/icons/icon-set.svg#filter" />
 		</svg>

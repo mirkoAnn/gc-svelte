@@ -1,24 +1,25 @@
 <script lang="ts">
 	import gsap from 'gsap/dist/gsap';
 	import { onMount } from 'svelte';
+	import { m } from '../../paraglide/messages';
 
 	let {
 		imgId, // Unique identifier for the image element to target with GSAP animations
 		imgUrl,
-		imgAlt,
 		imgWidth,
 		imgHeight,
 		imgSize
 	}: {
 		imgId: string;
 		imgUrl: string;
-		imgAlt: string;
 		imgWidth: string;
 		imgHeight: string;
 		imgSize: string;
 	} = $props();
 
 	let isExpanded = $state(false);
+
+	const photoAlt = $derived(m.img_carousel_alt_text({ locale: '' }));
 
 	const togglePreview = () => {
 		isExpanded = !isExpanded;
@@ -27,13 +28,13 @@
 		}
 	};
 
-	let scrollingAnimtion = $state<GSAPTimeline | null>(null);
+	let scrollingAnimation = $state<GSAPTimeline | null>(null);
 
 	onMount(async () => {
 		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
 		gsap.registerPlugin(scrollTrigger);
 
-		scrollingAnimtion = gsap
+		scrollingAnimation = gsap
 			.timeline({
 				scrollTrigger: {
 					scroller: '.main-inner',
@@ -65,8 +66,8 @@
 		loading="lazy"
 		decoding="async"
 		src={imgUrl}
-		alt="visualizza l'immagine {imgAlt} in anteprima ingrandita o ridotta"
-		title="Visualizza l'immagine {imgAlt} in anteprima ingrandita o ridotta"
+		alt={photoAlt}
+		title={photoAlt}
 		width={imgWidth}
 		height={imgHeight}
 	/>

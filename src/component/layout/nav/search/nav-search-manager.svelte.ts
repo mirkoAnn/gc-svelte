@@ -1,227 +1,200 @@
-import { casinosDataManager } from "../../../casino/casinos-data-manager.svelte";
-import { bookmakersDataManager } from "../../../bookmakers/bookmakers-data-manager.svelte";
-import { workersManager } from "$lib/workers-manager.svelte";
+import { workersManager } from '$lib/workers-manager.svelte';
+import { m } from '../../../../paraglide/messages';
+import { appManager } from '$lib/app-manager.svelte';
+import type { SearchHints, SearchResults } from '$lib/types/search';
 
-let searchHints: any = $state([]),
-  searchInput: string = $state(""),
-  searchResults: any = $state({
-    casinosIds: [], // Initialize with an empty array for casinos,
-    bookmakersIds: [], // Initialize with an empty array for bookmakers
-    slots: [], // Initialize with an empty array for slots
-    bingo: [], // Initialize with an empty array for bingo
-    crash: [], // Initialize with an empty array for crash
-    roulettes: [], // Initialize with an empty array for roulette
-    providers: [], // Initialize with an empty array for providers
-    faqs: [], // Initialize with an empty array for FAQs
-  }),
-  searchInputPlaceholder: string = $state("Buscar..."),
-  isSearchInputLoading: boolean = $state(false),
-  isResultsListEmpty = $derived.by(() => {
-    return (
-      (!searchResults.casinosIds || searchResults.casinosIds.length === 0) && // Check if casinosIds is empty
-      (!searchResults.bookmakersIds ||
-        searchResults.bookmakersIds.length === 0) && // Check if bookmakersIds is empty
-      (!searchResults.slots || searchResults.slots.length === 0) && // Check if slots is empty
-      (!searchResults.bingo || searchResults.bingo.length === 0) && // Check if bingo is empty
-      (!searchResults.crash || searchResults.crash.length === 0) && // Check if crash is empty
-      (!searchResults.roulettes || searchResults.roulettes.length === 0) && // Check if roulettes is empty
-      (!searchResults.providers || searchResults.providers.length === 0) && // Check if providers is empty
-      (!searchResults.faqs || searchResults.faqs.length === 0) // Check if faqs is empty
-    );
-  });
+const searchInputPlaceholder: string = $state(
+	m.search_input_placeholder({ locale: appManager.getCountryCode() })
+);
+
+const isResultsListEmpty = $derived.by(() => {
+	return (
+		(!searchResults.casinosIds || searchResults.casinosIds.length === 0) && // Check if casinosIds is empty
+		(!searchResults.slots || searchResults.slots.length === 0) && // Check if slots is empty
+		(!searchResults.roulettes || searchResults.roulettes.length === 0) && // Check if roulettes is empty
+		(!searchResults.providers || searchResults.providers.length === 0) // Check if providers is empty
+	);
+});
+
+let searchHints: SearchHints = $state([]),
+	searchInput: string = $state(''),
+	searchResults: SearchResults = $state({
+		casinosIds: [], // Initialize with an empty array for casinos,
+		slots: [], // Initialize with an empty array for slots
+		roulettes: [], // Initialize with an empty array for roulette
+		providers: [] // Initialize with an empty array for providers
+	}),
+	isSearchInputLoading: boolean = $state(false);
 
 const normalizeString = (inputString: string) => {
-  // Process the search input to create a search value
-  // This includes removing specific keywords, special characters,
-  // normalizing the string, and formatting it for the search query
-  return inputString
-    .replace("casino", "") // Remove specific keywords
-    .replace("slot", "") // Remove specific keywords
-    .replace(/\s+/g, " ") // Replace multiple spaces with a single space
-    .trim() // Trim leading and trailing spaces
-    .replace(/\s+/g, " ") // Replace multiple spaces with a single space
-    .replaceAll(" ", "-") // Replace spaces with hyphens for better search matching
-    .normalize("NFD") // Normalize the string to remove diacritics
-    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
-    .replace("¿", "") // Remove special characters
-    .replace("?", "") // Remove special characters
-    .toLowerCase();
+	// Process the search input to create a search value
+	// This includes removing specific keywords, special characters,
+	// normalizing the string, and formatting it for the search query
+	return inputString
+		.replace('casino', '') // Remove specific keywords
+		.replace('slot', '') // Remove specific keywords
+		.replace(/\s+/g, ' ') // Replace multiple spaces with a single space
+		.trim() // Trim leading and trailing spaces
+		.replace(/\s+/g, ' ') // Replace multiple spaces with a single space
+		.replaceAll(' ', '-') // Replace spaces with hyphens for better search matching
+		.normalize('NFD') // Normalize the string to remove diacritics
+		.replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+		.replace('¿', '') // Remove special characters
+		.replace('?', '') // Remove special characters
+		.toLowerCase();
 };
 
 const resetSearchData = () => {
-  // Reset search input and results
-  searchInput = "";
-  searchResults = {
-    casinosIds: [], // Initialize with an empty array for casinos
-    slots: [], // Initialize with an empty array for slots
-    bingo: [], // Initialize with an empty array for bingo
-    crash: [], // Initialize with an empty array for crash
-    roulettes: [], // Initialize with an empty array for roulettes
-    providers: [], // Initialize with an empty array for providers
-    faqs: [], // Initialize with an empty array for FAQs
-  };
-  searchHints = [];
-  isSearchInputLoading = false;
+	// Reset search input and results
+	searchInput = '';
+	searchResults = {
+		casinosIds: [], // Initialize with an empty array for casinos
+		slots: [], // Initialize with an empty array for slots
+		roulettes: [], // Initialize with an empty array for roulettes
+		providers: [] // Initialize with an empty array for providers
+	};
+	searchHints = [];
+	isSearchInputLoading = false;
 };
 
-const updateSearchHints = () => {
-  // Logic to update search hints based on the current input
-  if (isResultsListEmpty) {
-    // If there are no search results, clear the hints
-    searchHints = [];
-  } else {
-    // If there are search results, populate hints based on the results
-    const hintsSet = new Set<any>();
+// const updateSearchHints = () => {
+// 	// Logic to update search hints based on the current input
+// 	if (isResultsListEmpty) {
+// 		// If there are no search results, clear the hints
+// 		searchHints = [];
+// 	} else {
+// 		// If there are search results, populate hints based on the results
+// 		const hintsSet = new Set<any>();
 
-    // Add casino hints
-    if (searchResults.casinosIds && searchResults.casinosIds.length > 0) {
-      casinosDataManager
-        .getCasinosByIds(searchResults.casinosIds)
-        .forEach((casino: any) => {
-          hintsSet.add({ title: casino.attributes.title, category: "casino" });
-        });
-    }
-    // Add bookmaker hints
-    if (searchResults.bookmakersIds && searchResults.bookmakersIds.length > 0) {
-      bookmakersDataManager
-        .getBookmakersByIds(searchResults.bookmakersIds)
-        .forEach((bookmaker: any) => {
-          hintsSet.add({
-            title: bookmaker.attributes.title + " Apuestas",
-            category: "apuestas",
-          });
-        });
-    }
+// 		// Add casino hints
+// 		if (searchResults.casinosIds && searchResults.casinosIds.length > 0) {
+// 			casinosDataManager.getCasinosByIds(searchResults.casinosIds).forEach((casino: any) => {
+// 				hintsSet.add({ title: casino.attributes.title, category: 'casino' });
+// 			});
+// 		}
 
-    // Add slot hints
-    if (searchResults.slots && searchResults.slots.length > 0) {
-      searchResults.slots.forEach((slot: any) => {
-        hintsSet.add({ title: slot.title, category: "slot" });
-      });
-    }
+// 		// Add slot hints
+// 		if (searchResults.slots && searchResults.slots.length > 0) {
+// 			searchResults.slots.forEach((slot: any) => {
+// 				hintsSet.add({ title: slot.title, category: 'slot' });
+// 			});
+// 		}
 
-    // Add bingo hints
-    if (searchResults.bingo && searchResults.bingo.length > 0) {
-      searchResults.bingo.forEach((bingo: any) => {
-        hintsSet.add({ title: bingo.title, category: "bingo" });
-      });
-    }
+// 		// Add bingo hints
+// 		if (searchResults.bingo && searchResults.bingo.length > 0) {
+// 			searchResults.bingo.forEach((bingo: any) => {
+// 				hintsSet.add({ title: bingo.title, category: 'bingo' });
+// 			});
+// 		}
 
-    // Add crash hints
-    if (searchResults.crash && searchResults.crash.length > 0) {
-      searchResults.crash.forEach((crash: any) => {
-        hintsSet.add({ title: crash.title, category: "crash" });
-      });
-    }
+// 		// Add crash hints
+// 		if (searchResults.crash && searchResults.crash.length > 0) {
+// 			searchResults.crash.forEach((crash: any) => {
+// 				hintsSet.add({ title: crash.title, category: 'crash' });
+// 			});
+// 		}
 
-    // Add roulette hints
-    if (searchResults.roulettes && searchResults.roulettes.length > 0) {
-      searchResults.roulettes.forEach((roulette: any) => {
-        hintsSet.add({ title: roulette.title, category: "roulette" });
-      });
-    }
+// 		// Add roulette hints
+// 		if (searchResults.roulettes && searchResults.roulettes.length > 0) {
+// 			searchResults.roulettes.forEach((roulette: any) => {
+// 				hintsSet.add({ title: roulette.title, category: 'roulette' });
+// 			});
+// 		}
 
-    // Add provider hints
-    if (searchResults.providers && searchResults.providers.length > 0) {
-      searchResults.providers.forEach((provider: any) => {
-        hintsSet.add({ title: provider.title, category: "provider" });
-      });
-    }
-
-    // Add FAQ hints
-    if (searchResults.faqs && searchResults.faqs.length > 0) {
-      searchResults.faqs.forEach((faq: any) => {
-        hintsSet.add({ title: faq.title, category: "faq" });
-      });
-    }
-
-    // Remove any hint that exactly matches the current search input (case-insensitive)
-    // This prevents showing a hint that is identical to what the user has typed
-    // Convert the Set back to an array and filter out the matching hint
-    searchHints = Array.from(hintsSet).filter(
-      (hint: any) => hint.title.toLowerCase() !== searchInput.toLowerCase(),
-    );
-  }
-};
+// 		// Add provider hints
+// 		if (searchResults.providers && searchResults.providers.length > 0) {
+// 			searchResults.providers.forEach((provider: any) => {
+// 				hintsSet.add({ title: provider.title, category: 'provider' });
+// 			});
+// 		}
+// 		// Remove any hint that exactly matches the current search input (case-insensitive)
+// 		// This prevents showing a hint that is identical to what the user has typed
+// 		// Convert the Set back to an array and filter out the matching hint
+// 		searchHints = Array.from(hintsSet).filter(
+// 			(hint: any) => hint.title.toLowerCase() !== searchInput.toLowerCase()
+// 		);
+// 	}
+// };
 
 // Function to handle the search logic
 const search = () => {
-  // If search is already in progress, do not initiate another search
-  if (isSearchInputLoading) {
-    return;
-  }
+	// If search is already in progress, do not initiate another search
+	if (isSearchInputLoading) {
+		return;
+	}
 
-  // Logic to handle search queries
-  if (searchInput.trim() === "" || searchInput.length < 3) {
-    return;
-  }
+	// Logic to handle search queries
+	if (searchInput.trim() === '' || searchInput.length < 3) {
+		return;
+	}
 
-  // Set loading state
-  isSearchInputLoading = true;
+	// Set loading state
+	isSearchInputLoading = true;
 
-  // 	// Process the search input to create a search value
-  // 	// This includes removing specific keywords, special characters,
-  // 	// normalizing the string, and formatting it for the search query
-  const searchValue = normalizeString(searchInput);
+	// 	// Process the search input to create a search value
+	// 	// This includes removing specific keywords, special characters,
+	// 	// normalizing the string, and formatting it for the search query
+	const searchValue = normalizeString(searchInput);
 
-  // Initiate the search using the workers manager, this will offload the search processing to a web worker, keeping the UI responsive
-  // The search results will be handled in the onmessage callback of the worker taht will call the uploadSearchResults Function to update the search results in the UI
-  workersManager.search(searchValue);
+	// Initiate the search using the workers manager, this will offload the search processing to a web worker, keeping the UI responsive
+	// The search results will be handled in the onmessage callback of the worker taht will call the uploadSearchResults Function to update the search results in the UI
+	workersManager.search(searchValue);
 };
 
 export const navSearchManager = {
-  /**
-   * This function is used to manage the navbar search functionality.
-   * It handles the search input, results, and interactions.
-   */
-  init: () => {
-    // Initialization logic for the navbar search
-  },
-  isResultsListEmpty: () => {
-    return isResultsListEmpty;
-  },
-  isLoading: () => {
-    return isSearchInputLoading;
-  },
-  getPlaceholder: () => {
-    // Logic to determine the placeholder text based on the current state
-    return searchInputPlaceholder;
-  },
-  // This function is used to get the current search input value, which can be used to display the value in the search input field
-  getSearchInput: () => {
-    return searchInput;
-  },
-  // This function is called when the user types in the search input, it updates the search input state and triggers the search function to fetch new results based on the updated input
-  handleInput: (value: string) => {
-    searchInput = value;
-    search();
-  },
-  // This function is called to update the search results in the UI after receiving the response from the search worker
-  updateSearchResults: (response: any) => {
-    searchResults.slots = [...response.slots]; // Update slots with the fetched data for slots
-    searchResults.casinosIds = response.casinos.map((casino: any) => casino.id);
-    searchResults.providers = [...response.providers]; // Update providers with the fetched data for providers
-    isSearchInputLoading = false;
-  },
-  getSearchHints: (maxResults: number = 10) => {
-    // Return only the specified number of hints
-    return searchHints.slice(0, maxResults);
-  },
-  // This function is used to get the current search results, which can be used to display the results in the UI
-  getSearchResults: () => {
-    return searchResults;
-  },
-  handleBlur: () => {
-    // Logic to handle blur on the search input
-    resetSearchData();
-  },
-  handleHints: (hint: string) => {
-    // Logic to handle search hints
-    searchInput = hint;
-    search();
-    searchHints = [];
-  },
-  clearSearch: () => {
-    resetSearchData();
-  },
+	/**
+	 * This function is used to manage the navbar search functionality.
+	 * It handles the search input, results, and interactions.
+	 */
+	init: () => {
+		// Initialization logic for the navbar search
+	},
+	isResultsListEmpty: () => {
+		return isResultsListEmpty;
+	},
+	isLoading: () => {
+		return isSearchInputLoading;
+	},
+	getPlaceholder: () => {
+		// Logic to determine the placeholder text based on the current state
+		return searchInputPlaceholder;
+	},
+	// This function is used to get the current search input value, which can be used to display the value in the search input field
+	getSearchInput: () => {
+		return searchInput;
+	},
+	// This function is called when the user types in the search input, it updates the search input state and triggers the search function to fetch new results based on the updated input
+	handleInput: (value: string) => {
+		searchInput = value;
+		search();
+	},
+	// This function is called to update the search results in the UI after receiving the response from the search worker
+	updateSearchResults: (response: SearchResults) => {
+		searchResults.slots = [...response.slots]; // Update slots with the fetched data for slots
+		searchResults.roulettes = [...response.roulettes]; // Update roulettes with the fetched data for roulettes
+		searchResults.casinosIds = response.casinosIds; // Update casinosIds with the fetched data for casinosIds
+		searchResults.providers = [...response.providers]; // Update providers with the fetched data for providers
+		isSearchInputLoading = false;
+	},
+	getSearchHints: (maxResults: number = 10) => {
+		// Return only the specified number of hints
+		return searchHints.slice(0, maxResults);
+	},
+	// This function is used to get the current search results, which can be used to display the results in the UI
+	getSearchResults: () => {
+		return searchResults;
+	},
+	handleBlur: () => {
+		// Logic to handle blur on the search input
+		resetSearchData();
+	},
+	handleHints: (hint: string) => {
+		// Logic to handle search hints
+		searchInput = hint;
+		search();
+		searchHints = [];
+	},
+	clearSearch: () => {
+		resetSearchData();
+	}
 };

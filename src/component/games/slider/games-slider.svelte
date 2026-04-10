@@ -1,8 +1,13 @@
 <script lang="ts">
 	import gsap from 'gsap/dist/gsap';
 	import { onMount } from 'svelte';
+	import { m } from '../../../paraglide/messages';
+	import { appManager } from '$lib/app-manager.svelte';
+	import type { Game } from '$lib/types/games';
 
-	let { games }: { games: any } = $props();
+	let { games }: { games: Game[] } = $props();
+
+	const locale = $derived(appManager.getCountryCode());
 
 	let currentSlide = 0; // Start with the last slide to create a seamless loop,
 	let slidingAnimation = $state<GSAPTimeline | null>(null); // Store the current sliding animation to prevent overlapping animations
@@ -67,28 +72,18 @@
 </script>
 
 <div class="games-slider" style="--slide-width: {slideWidth}px">
-	{#each games as game, i}
+	{#each games as game, i (game.id)}
 		<div class="games-slider-item games-slider-item-{i}" style="--bg-image: url({game.logo.url})">
 			<img
 				loading="eager"
 				decoding="async"
 				class="game-image"
 				src={game.logo.url}
-				alt="gioca gratis alla slot machine {game.title}"
+				alt={m.logo_description({ title: game.title }, { locale })}
 				width="1000"
 				height="500"
 			/>
 			<h3 class="game-title">{game.title}</h3>
-			<!-- <div class="game-info">
-        <p class="game-release-date">
-          Release Date: <span class="game-release-date-value"
-            >{game.createdAt}</span
-          >
-        </p>
-        <p class="game-rtp">
-          RTP: <span class="game-rtp-value">{game.rtp}%</span>
-        </p>
-      </div> -->
 		</div>
 	{/each}
 </div>

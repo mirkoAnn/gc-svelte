@@ -118,11 +118,11 @@ const menuActions = [
 	{ label: 'Menu', category: 'menu', component: null }
 ];
 
-let menuAnimation: any = $state<GSAPTimeline | null>(null), // GSAP animation instance
-	buttonsAnimation: any = $state<GSAPTimeline | null>(null), // GSAP animation instance
-	activeMenuIndex: number = $state<number>(-1), // Currently active menu index
-	activeActionIndex: number = $state<number>(-1), // Currently active action index
-	activeSubmenuIndex: number = $state<number>(-1); // Currently active submenu index
+let menuAnimation: GSAPTimeline | null = $state(null), // GSAP animation instance
+	buttonsAnimation: GSAPTimeline | null = $state(null), // GSAP animation instance
+	activeMenuIndex: number = $state(-1), // Currently active menu index
+	activeActionIndex: number = $state(-1), // Currently active action index
+	activeSubmenuIndex: number = $state(-1); // Currently active submenu index
 
 const screenBreakpoint = 768; // Tailwind 'md' breakpoint in pixels
 
@@ -138,9 +138,9 @@ const toggleMenuPanel = (newMenuIndex: number) => {
 			isMobile: `(max-width: ${screenBreakpoint - 1}px)`,
 			reduceMotion: '(prefers-reduced-motion: reduce)'
 		},
-		(context: any) => {
+		(context: gsap.MatchMediaContext) => {
 			// context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
-			let { isDesktop } = context.conditions;
+			const { isDesktop } = context.conditions;
 
 			// If closing the menu panel, reset the active menu index
 			if (newMenuIndex === -1) {
@@ -248,83 +248,71 @@ const animateActionButtons = (newActionIndex: number) => {
 		buttonsAnimation.kill();
 	}
 
-	buttonsAnimation = gsap.matchMedia();
-	buttonsAnimation.add(
-		{
-			// set up any number of arbitrarily-named conditions. The function below will be called when ANY of them match.
-			isDesktop: `(min-width: ${screenBreakpoint}px)`,
-			isMobile: `(max-width: ${screenBreakpoint - 1}px)`,
-			reduceMotion: '(prefers-reduced-motion: reduce)'
-		},
-		(context: any) => {
-			// context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
-			let { isDesktop } = context.conditions;
-			// perform your animations here based on the matched conditions
-			buttonsAnimation = gsap.timeline({
-				defaults: { duration: 0.5, ease: 'back.inOut(1.7)' },
-				paused: true
-			});
+	// context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
+	// perform your animations here based on the matched conditions
+	buttonsAnimation = gsap.timeline({
+		defaults: { duration: 0.5, ease: 'back.inOut(1.7)' },
+		paused: true
+	});
 
-			if (newActionIndex === -1) {
-				// If closing the action panel, reset the active action index
-				buttonsAnimation
-					// Reset all action buttons to default state
-					.to('.nav-action .nav-action-icon', { scale: 1 })
-					// Animate the action button width and color
-					.to('.nav-action', { width: 30, color: 'inherit' }, '<')
-					// Animate the selector back to default position
-					.to('.nav-action-selector', { autoAlpha: 0 }, '<')
-					// Animate the close icon and label back to default state
-					.to('.nav-action-close .nav-action-close-icon', { scale: 0 }, '<')
-					// Animate the close icon and label back to default state
-					.to('.nav-action-close-label', { autoAlpha: 0 }, '<')
-					.to('.nav-panel', { autoAlpha: 0 }, '<');
-			} else {
-				buttonsAnimation
-					.to('.nav-action .nav-action-icon', { scale: 1 }, '<')
-					.fromTo(
-						'.nav-action-' + newActionIndex + ' .nav-action-icon',
-						{ scale: 1 },
-						{ scale: 0 },
-						'<'
-					)
-					// Animate the action button width and color
-					.to('.nav-action', { width: 30, color: 'inherit' }, '<')
-					.fromTo(
-						'.nav-action-' + (newActionIndex !== -1 ? newActionIndex : activeActionIndex),
-						{ width: 30, color: 'inherit' },
-						{ width: 100, color: 'var(--black-800)' },
-						'<'
-					)
-					.to(
-						'.nav-action-selector',
-						{
-							x: newActionIndex * 38,
-							autoAlpha: 1
-						},
-						'<'
-					)
-					// Animate the close icon and label
-					.to('.nav-action-close .nav-action-close-icon', { scale: 0 }, '<')
-					.fromTo(
-						'.nav-action-' + newActionIndex + ' .nav-action-close .nav-action-close-icon',
-						{ scale: 0 },
-						{ scale: 1 },
-						'<'
-					)
-					// Animate the close icon and label
-					.to('.nav-action-close-label', { autoAlpha: 0 }, '<')
-					.fromTo(
-						'.nav-action-' + newActionIndex + ' .nav-action-close-label',
-						{ autoAlpha: 0 },
-						{ autoAlpha: 1 },
-						'<'
-					)
-					.fromTo('.nav-action-close .nav-action-close-icon', { scale: 0 }, { scale: 1 }, '<');
-			}
-			buttonsAnimation.play();
-		}
-	);
+	if (newActionIndex === -1) {
+		// If closing the action panel, reset the active action index
+		buttonsAnimation
+			// Reset all action buttons to default state
+			.to('.nav-action .nav-action-icon', { scale: 1 })
+			// Animate the action button width and color
+			.to('.nav-action', { width: 30, color: 'inherit' }, '<')
+			// Animate the selector back to default position
+			.to('.nav-action-selector', { autoAlpha: 0 }, '<')
+			// Animate the close icon and label back to default state
+			.to('.nav-action-close .nav-action-close-icon', { scale: 0 }, '<')
+			// Animate the close icon and label back to default state
+			.to('.nav-action-close-label', { autoAlpha: 0 }, '<')
+			.to('.nav-panel', { autoAlpha: 0 }, '<');
+	} else {
+		buttonsAnimation
+			.to('.nav-action .nav-action-icon', { scale: 1 }, '<')
+			.fromTo(
+				'.nav-action-' + newActionIndex + ' .nav-action-icon',
+				{ scale: 1 },
+				{ scale: 0 },
+				'<'
+			)
+			// Animate the action button width and color
+			.to('.nav-action', { width: 30, color: 'inherit' }, '<')
+			.fromTo(
+				'.nav-action-' + (newActionIndex !== -1 ? newActionIndex : activeActionIndex),
+				{ width: 30, color: 'inherit' },
+				{ width: 100, color: 'var(--black-800)' },
+				'<'
+			)
+			.to(
+				'.nav-action-selector',
+				{
+					x: newActionIndex * 38,
+					autoAlpha: 1
+				},
+				'<'
+			)
+			// Animate the close icon and label
+			.to('.nav-action-close .nav-action-close-icon', { scale: 0 }, '<')
+			.fromTo(
+				'.nav-action-' + newActionIndex + ' .nav-action-close .nav-action-close-icon',
+				{ scale: 0 },
+				{ scale: 1 },
+				'<'
+			)
+			// Animate the close icon and label
+			.to('.nav-action-close-label', { autoAlpha: 0 }, '<')
+			.fromTo(
+				'.nav-action-' + newActionIndex + ' .nav-action-close-label',
+				{ autoAlpha: 0 },
+				{ autoAlpha: 1 },
+				'<'
+			)
+			.fromTo('.nav-action-close .nav-action-close-icon', { scale: 0 }, { scale: 1 }, '<');
+	}
+	buttonsAnimation.play();
 };
 // Function to switch between different action panels with animation
 const switchBetweeenActionPanels = (newActionIndex: number) => {
@@ -484,9 +472,9 @@ const animateSectionChange = () => {
 			reduceMotion: '(prefers-reduced-motion: reduce)'
 		},
 
-		(context: any) => {
+		(context: gsap.MatchMediaContext) => {
 			// context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
-			let { isDesktop } = context.conditions;
+			const { isDesktop } = context.conditions;
 			// perform your animations here based on the matched conditions
 
 			menuAnimation = gsap

@@ -3,31 +3,16 @@
 	import gsap from 'gsap/dist/gsap';
 	import { resolve } from '$app/paths';
 	import { appManager } from '$lib/app-manager.svelte';
+	import type { Casino } from '$lib/types/casino';
+	import { m } from '../../paraglide/messages';
 
 	let {
 		casinos
 	}: {
-		casinos: [
-			{
-				id: string;
-				title: string;
-				slug: string;
-				logo: {
-					url: string;
-				};
-				colors: {
-					background: string;
-				};
-				welcomeBonus: {
-					noDeposit: string;
-					withDeposit: string;
-					noDepositRequirements: string;
-					withDepositRequirements: string;
-				};
-				affiliationUrl: string;
-			}
-		];
+		casinos: Casino[];
 	} = $props();
+
+	const locale = $derived(appManager.getCountryCode());
 
 	onMount(async () => {
 		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
@@ -83,13 +68,13 @@
 	};
 </script>
 
-<span class="casino-info-legal">18+ | Gioca Responsabilmente | ADM</span>
+<span class="casino-info-legal">{m.responsible_gambling_title({ locale })}</span>
 <table class="casino-table">
 	<thead class="casino-table-header">
 		<tr class="casino-table-row">
-			<th class="casino-table-th">Casino</th>
-			<th class="casino-table-th">Bonus Senza Deposito</th>
-			<th class="casino-table-th">Bonus Con Deposito</th>
+			<th class="casino-table-th">{m.casino({ locale })}</th>
+			<th class="casino-table-th">{m.bonus_no_deposit_title({ locale })}</th>
+			<th class="casino-table-th">{m.bonus_with_deposit_title({ locale })}</th>
 			<th class="casino-table-th"></th>
 		</tr>
 	</thead>
@@ -102,8 +87,8 @@
 						decoding="async"
 						class="casino-table-logo"
 						src={casino.logo.url}
-						alt="il logo di {casino.title}"
-						title="il logo di {casino.title}"
+						alt={m.logo_description({ title: casino.title }, { locale })}
+						title={m.logo_description({ title: casino.title }, { locale })}
 						width={200}
 						height={40}
 						style="--bg-color: {casino.colors.background}"
@@ -113,12 +98,12 @@
 					<div class="bonus-container">
 						<a
 							class="casino-table-cta-link"
-							title="Registrati al casino di {casino.title}"
+							title={m.casino_cta_title({ casinoTitle: casino.title }, { locale })}
 							target="_blank"
 							rel="noopener noreferrer external"
 							href={casino.affiliationUrl}
 						>
-							<span class="mobile-bonus-label">Bonus Senza Deposito</span>
+							<span class="mobile-bonus-label">{m.bonus_no_deposit_title({ locale })}</span>
 							<span class="mobile-bonus-value">{casino.welcomeBonus.noDeposit}</span>
 						</a>
 					</div>
@@ -128,11 +113,13 @@
 								toggleBonusRequirements(`disclaimer-no-deposit-${casino.id}`);
 							}}
 							class="disclaimer-button"
-							title="Mostra i requisiti di scommessa per il bonus senza deposito di {casino.title}"
+							title={m.bonus_no_deposit_requirements_title(
+								{ casinoTitle: casino.title },
+								{ locale }
+							)}
 						>
-							Requisiti di Scommessa <svg class="disclaimer-button-icon"
-								><use href="/icons/icon-set.svg#arrow" /></svg
-							>
+							{m.bonus_no_deposit_requirements_title({ casinoTitle: casino.title }, { locale })}
+							<svg class="disclaimer-button-icon"><use href="/icons/icon-set.svg#arrow" /></svg>
 						</button>
 						<p class="disclaimer-text">
 							{casino.welcomeBonus.noDepositRequirements}
@@ -143,12 +130,12 @@
 					<div class="bonus-container">
 						<a
 							class="casino-table-cta-link"
-							title="Registrati al casino di {casino.title}"
+							title={m.casino_cta_title({ casinoTitle: casino.title }, { locale })}
 							target="_blank"
 							rel="noopener noreferrer external"
 							href={casino.affiliationUrl}
 						>
-							<span class="mobile-bonus-label">Bonus Con Deposito</span>
+							<span class="mobile-bonus-label">{m.bonus_with_deposit_title({ locale })}</span>
 							<span class="mobile-bonus-value">{casino.welcomeBonus.withDeposit}</span>
 						</a>
 					</div>
@@ -158,11 +145,13 @@
 								toggleBonusRequirements(`disclaimer-with-deposit-${casino.id}`);
 							}}
 							class="disclaimer-button"
-							title="Mostra i requisiti di scommessa per il bonus con deposito di {casino.title}"
+							title={m.bonus_with_deposit_requirements_title(
+								{ casinoTitle: casino.title },
+								{ locale }
+							)}
 						>
-							Requisiti di Scommessa <svg class="disclaimer-button-icon"
-								><use href="/icons/icon-set.svg#arrow" /></svg
-							>
+							{m.bonus_with_deposit_requirements_title({ casinoTitle: casino.title }, { locale })}
+							<svg class="disclaimer-button-icon"><use href="/icons/icon-set.svg#arrow" /></svg>
 						</button>
 						<p class="disclaimer-text">
 							{casino.welcomeBonus.withDepositRequirements}
@@ -172,18 +161,18 @@
 				<td class="casino-table-td casino-table-cta-td">
 					<a
 						class="casino-table-button casino-table-review-button"
-						title="Scopri info, bonus e opinioni sul casino online di {casino.title}"
+						title={m.casino_review_link_title({ casinoTitle: casino.title }, { locale })}
 						href={resolve(`/${appManager.getCountryCode()}/casino-online/${casino.slug}`)}
-						>Più Info
+						>{m.casino_review_link_text({ locale })}
 						<svg class="casino-table-icon"><use href="/icons/icon-set.svg#arrow" /></svg></a
 					>
 					<a
 						class="casino-table-button casino-table-cta-button"
-						title="Registrati al casino di {casino.title}"
+						title={m.casino_cta_title({ casinoTitle: casino.title }, { locale })}
 						target="_blank"
 						rel="noopener noreferrer external"
 						href={casino.affiliationUrl}
-						>Sito
+						>{m.casino_cta_text({ locale })}
 						<svg class="casino-table-icon"><use href="/icons/icon-set.svg#arrow" /></svg></a
 					>
 				</td>
@@ -293,10 +282,10 @@
 			}
 		}
 		.casino-table-review-button {
-			background-color: var(--green-900);
+			background-color: var(--green-300);
 			color: var(--light-brown-900);
 			&:hover {
-				background-color: var(--green-800);
+				background-color: var(--green-400);
 			}
 		}
 		.casino-table-cta-button {

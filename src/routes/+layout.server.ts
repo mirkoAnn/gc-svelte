@@ -2,6 +2,8 @@ import { AGE_VERIFICATION_COOKIE_NAME } from '../component/layout/age-banner/age
 import { FAVOURITES_LIST_COOKIE_NAME } from '../component/favourites/favourites-manager.svelte';
 import { appManager, countryCodes } from '../lib/app-manager.svelte';
 import { dbManager } from '../lib/db-manager.svelte';
+import type { Slot } from '$lib/types/games';
+import type { Casino } from '$lib/types/casino';
 
 type LoadInput = {
 	request: Request;
@@ -11,40 +13,7 @@ type LoadInput = {
 };
 
 type FavouritesList = {
-	slots: unknown[];
-};
-
-type Casino = {
-	id: string;
-	title: string;
-	slug: string;
-	rank: number;
-	logo: { url: string };
-	affiliationUrl: string;
-	welcomeBonus: {
-		noDeposit: number;
-		noDepositRequirements: string;
-		withDeposit: number;
-		withDepositRequirements: string;
-		tcUrl: string;
-	};
-	info: {
-		bonusRating: number;
-		designRating: number;
-		mobileRating: number;
-		gamesRating: number;
-		supportRating: number;
-	};
-	rating: {
-		up: number;
-		down: number;
-		trend: string;
-	};
-	colors: {
-		background: string;
-		text: string;
-	};
-	providers: { title: string }[];
+	slots: Slot[];
 };
 
 const parseFavouritesList = (cookieValue: string | undefined): FavouritesList => {
@@ -74,6 +43,8 @@ export const load = async ({ request, cookies }: LoadInput) => {
 		countryHeader && countryHeader in countryCodes
 			? countryCodes[countryHeader as keyof typeof countryCodes]
 			: countryCodes.it;
+
+	console.log('Detected country code:', request.headers.get('x-vercel-ip-country')?.toLowerCase());
 
 	// Set country code in app manager for use in other parts of the app, with fallback to "it"
 	// this is necessary to ensure that the app manager has the correct country code before any database queries are made, allowing for proper server address selection based on the user's location.

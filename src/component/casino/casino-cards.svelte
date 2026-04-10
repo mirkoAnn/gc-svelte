@@ -2,11 +2,19 @@
 	import gsap from 'gsap/dist/gsap';
 	import { casinosDataManager } from './casinos-data-manager.svelte';
 	import RadialChart from '../graphics/charts/radial-chart.svelte';
+	import type { Casino } from '$lib/types/casino';
+	import { resolve } from '$app/paths';
+	import { appManager } from '$lib/app-manager.svelte';
+	import { m } from '../../paraglide/messages';
 
-	let { casinos, ratingsShouldBeShown = false }: { casinos: any; ratingsShouldBeShown?: boolean } =
-		$props();
+	let {
+		casinos,
+		ratingsShouldBeShown = false
+	}: { casinos: Casino[]; ratingsShouldBeShown?: boolean } = $props();
 
 	let areBonusInfosVisible: boolean = $state(false);
+
+	const locale = $derived(appManager.getCountryCode());
 
 	const toogleBonusDisclaimer = (casinoId: string) => {
 		areBonusInfosVisible = !areBonusInfosVisible;
@@ -39,21 +47,26 @@
 </script>
 
 <div class="casino-cards">
-	{#each casinos as casino}
+	{#each casinos as casino (casino.slug)}
+		<!-- Fetch casino info  -->
+		{@const casinoInfo = casinosDataManager.getCasinoById(casino.id)?.info}
 		<div
 			class="casino-card"
 			style="--bg-color: {casino.colors.background}; --text-color: {casino.colors.text}"
 		>
 			<a
 				class="casino-card-link"
-				href={`/casino-online/${casino.slug}`}
-				title={`Scopri di più su${casino.title}`}
+				href={resolve(`/${appManager.getCountryCode()}/casino-online/[slug]`, {
+					slug: casino.slug
+				})}
+				title={m.casino_review_link_title({ casinoTitle: casino.title }, { locale })}
 			>
 				<div class="casino-card-header">
 					<img
 						class="casino-card-logo"
 						src={casino.logo.url}
-						alt={`Logo di ${casino.title}`}
+						alt={m.logo_description({ title: casino.title }, { locale })}
+						title={m.logo_description({ title: casino.title }, { locale })}
 						width={150}
 						height={50}
 					/>
@@ -68,27 +81,38 @@
 						</li>
 					</ul>
 				</div>
-				{#if ratingsShouldBeShown}
+
+				{#if ratingsShouldBeShown && casinoInfo}
 					<div class="casino-card-graph">
 						<RadialChart
 							data={[
-								casinosDataManager.getCasinoById(casino.id).info.bonusRating,
-								casinosDataManager.getCasinoById(casino.id).info.designRating,
-								casinosDataManager.getCasinoById(casino.id).info.mobileRating,
-								casinosDataManager.getCasinoById(casino.id).info.gamesRating,
-								casinosDataManager.getCasinoById(casino.id).info.supportRating
+								casinoInfo.bonusRating,
+								casinoInfo.designRating,
+								casinoInfo.mobileRating,
+								casinoInfo.gamesRating,
+								casinoInfo.supportRating
 							]}
-							labels={['Bonus', 'Design', 'Mobile', 'Giochi', 'Supporto']}
+							labels={[
+								m.bonus({ locale }),
+								m.design({ locale }),
+								m.mobile({ locale }),
+								m.games({ locale }),
+								m.support({ locale })
+							]}
 							textColor={casino.colors.text}
 						/>
 					</div>
 				{/if}
 				<div id={`bonus-info-${casino.id}`} class="bonus-info-disclaimer">
-					<span class="bonus-info-disclaimer-title">Requisiti senza deposito:</span>
+					<span class="bonus-info-disclaimer-title"
+						>{m.bonus_no_deposit_requirements_title({ locale })}</span
+					>
 					<span class="bonus-info-disclaimer-list-item">
 						{casino.welcomeBonus.noDepositRequirements}
 					</span>
-					<span class="bonus-info-disclaimer-title">Requisiti con deposito:</span>
+					<span class="bonus-info-disclaimer-title"
+						>{m.bonus_with_deposit_requirements_title({ locale })}</span
+					>
 					<span class="bonus-info-disclaimer-list-item">
 						{casino.welcomeBonus.withDepositRequirements}
 					</span>

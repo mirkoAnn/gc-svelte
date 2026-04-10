@@ -1,8 +1,20 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation';
+	import { appManager } from '$lib/app-manager.svelte';
+	import type { Game } from '$lib/types/games';
 	import gsap from 'gsap/dist/gsap';
+	import { m } from '../../../paraglide/messages';
 
-	let { game }: { game: any } = $props();
+	let { game }: { game: Game } = $props();
+
+	const locale = $derived(appManager.getCountryCode());
+
+	const formatCurrency = (value: string) => {
+		return parseFloat(value).toLocaleString(appManager.getCountryLangCode(), {
+			style: 'currency',
+			currency: appManager.getCurrencyCode()
+		});
+	};
 
 	afterNavigate(async () => {
 		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
@@ -24,68 +36,48 @@
 </script>
 
 <div class="content game-info-panel">
-	<h2 class="game-info-title">{game.title} Informazioni Utili</h2>
+	<h2 class="game-info-title">{m.usefull_info_title({ title: game.title }, { locale })}</h2>
 	<div class="game-info-outer-container">
 		<img class="game-info-logo" src={game.logo.url} alt={`${game.title} Logo`} />
 		<div class="game-info-inner-container">
 			<ul class="game-info-top-list">
 				<li class="game-info">
-					<span class="game-info-label game-info-rtp">RTP</span>
+					<span class="game-info-label game-info-rtp">{m.game_rtp({ locale })}</span>
 					<span class="game-info-value game-rtp-value">0</span>
 				</li>
 				<li class="game-info">
-					<span class="game-info-label">Volatilità</span>
+					<span class="game-info-label">{m.game_volatility({ locale })}</span>
 					<span class="game-info-value game-volatility-value">{game.info.volatility}</span>
 				</li>
 			</ul>
 			<ul class="game-info-list">
 				<li class="game-info">
-					<span class="game-info-label">Numero Rulli: </span>
+					<span class="game-info-label">{m.game_reels({ locale })}: </span>
 					<span class="game-info-value">{game.info.reels}</span>
 				</li>
 				<li class="game-info">
-					<span class="game-info-label">Numero Linee: </span>
+					<span class="game-info-label">{m.game_paylines({ locale })}: </span>
 					<span class="game-info-value">{game.info.paylines}</span>
 				</li>
 				<li class="game-info">
-					<span class="game-info-label">Scommessa Minima: </span>
-					<span class="game-info-value"
-						>{parseFloat(game.info.betMin).toLocaleString('it-IT', {
-							style: 'currency',
-							currency: 'EUR'
-						})}</span
-					>
+					<span class="game-info-label">{m.game_bet_min({ locale })}: </span>
+					<span class="game-info-value">{formatCurrency(game.info.betMin)}</span>
 				</li>
 				<li class="game-info">
-					<span class="game-info-label">Scommessa Massima: </span>
-					<span class="game-info-value"
-						>{parseFloat(game.info.betMax).toLocaleString('it-IT', {
-							style: 'currency',
-							currency: 'EUR'
-						})}</span
-					>
+					<span class="game-info-label">{m.game_bet_max({ locale })}: </span>
+					<span class="game-info-value">{formatCurrency(game.info.betMax)}</span>
 				</li>
 				<li class="game-info">
-					<span class="game-info-label">Vincita Minima: </span>
-					<span class="game-info-value"
-						>{parseFloat(game.info.winMin).toLocaleString('it-IT', {
-							style: 'currency',
-							currency: 'EUR'
-						})}</span
-					>
+					<span class="game-info-label">{m.game_win_min({ locale })}: </span>
+					<span class="game-info-value">{formatCurrency(game.info.winMin)}</span>
 				</li>
 				<li class="game-info">
-					<span class="game-info-label">Vincita Massima: </span>
-					<span class="game-info-value"
-						>{parseFloat(game.info.winMax).toLocaleString('it-IT', {
-							style: 'currency',
-							currency: 'EUR'
-						})}</span
-					>
+					<span class="game-info-label">{m.game_win_max({ locale })}: </span>
+					<span class="game-info-value">{formatCurrency(game.info.winMax)}</span>
 				</li>
 			</ul>
 			<div class="game-bonus-list">
-				<h3 class="game-info-subtitle">Bonus Disponibili</h3>
+				<h3 class="game-info-subtitle">{m.game_bonus_section_title({ locale })}</h3>
 				<div class="game-bonus-list-icons">
 					<div class="game-bonus">
 						<svg class="bonus-icon">
@@ -98,7 +90,7 @@
 									: '/icons/icon-set.svg#no-check'}
 							></use></svg
 						>
-						<span class="bonus-text">Gioco Bonus</span>
+						<span class="bonus-text">{m.game_has_bonus_game({ locale })}</span>
 					</div>
 					<div class="game-bonus">
 						<svg class="bonus-icon" viewBox="0 0 64 64">
@@ -111,7 +103,7 @@
 									: '/icons/icon-set.svg#no-check'}
 							></use></svg
 						>
-						<span class="bonus-text">Free Spins</span>
+						<span class="bonus-text">{m.game_has_free_spins({ locale })}</span>
 					</div>
 					<div class="game-bonus">
 						<svg class="bonus-icon">
@@ -123,7 +115,7 @@
 									? '/icons/icon-set.svg#check'
 									: '/icons/icon-set.svg#no-check'}
 							></use></svg
-						><span class="bonus-text">Jackpot</span>
+						><span class="bonus-text">{m.game_has_jackpot({ locale })}</span>
 					</div>
 				</div>
 			</div>

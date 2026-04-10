@@ -53,9 +53,9 @@
 	<div class="top"></div>
 	<div class="bottom"></div>
 	<div class="icons-container">
-		{#each letters as letterRow, i}
+		{#each letters as letterRow, i (letterRow)}
 			<div class="icon-row">
-				{#each letterRow as letter}
+				{#each letterRow as letter (letter)}
 					<div class="letter">{letter}</div>
 				{/each}
 			</div>

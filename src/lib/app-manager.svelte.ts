@@ -1,7 +1,8 @@
 import gsap from 'gsap/dist/gsap';
 
 export enum countryCodes {
-	it = 'it'
+	it = 'it',
+	es = 'es'
 }
 
 let isMobile = $state<boolean>(false),
@@ -19,6 +20,35 @@ export const appManager = {
 	},
 	getCountryCode: () => {
 		return countryCode;
+	},
+	getCountryName: () => {
+		switch (countryCode) {
+			case countryCodes.it:
+				return 'Italia';
+			case countryCodes.es:
+				return 'España';
+			default:
+				return '';
+		}
+	},
+	getCountryLangCode: () => {
+		switch (countryCode) {
+			case countryCodes.it:
+				return 'it_IT';
+			case countryCodes.es:
+				return 'es_ES';
+			default:
+				return '';
+		}
+	},
+	getCurrencyCode: () => {
+		switch (countryCode) {
+			case countryCodes.it:
+			case countryCodes.es:
+				return 'EUR';
+			default:
+				return '';
+		}
 	},
 	// Add content animation on scroll using GSAP and ScrollTrigger plugin in all pages
 	addContentAnimation: async () => {

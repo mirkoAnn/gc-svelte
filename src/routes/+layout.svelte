@@ -13,14 +13,16 @@
 	// Props passed from the server load function
 	let { data, children } = $props();
 
-	// Initialize data managers with server data and cookies
-	ageBannerManager.initialize(data.isAgeVerified);
-	favouritesManager.initialize(data.favouritesList);
-	casinosDataManager.initialize(data.casinos);
-	appManager.setCountryCode(data.countryCode);
+	// Keep data managers synchronized with the latest layout data.
+	$effect(() => {
+		ageBannerManager.initialize(data.isAgeVerified);
+		favouritesManager.initialize(data.favouritesList);
+		casinosDataManager.initialize(data.casinos);
+		appManager.setCountryCode(data.countryCode);
+	});
 
 	// Apply content animations and detect device type on initial load
-	onMount(async () => {
+	onMount(() => {
 		appManager.addContentAnimation(); // Apply animations on initial load
 		appManager.setDeviceType(); // Initialize app manager for country and device type with country code from server data
 	});

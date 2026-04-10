@@ -1,19 +1,49 @@
-import { dbManager } from "$lib/db-manager.svelte";
-import { error } from "@sveltejs/kit";
+import { dbManager } from '$lib/db-manager.svelte';
+import type { Content } from '$lib/types/content';
+import type { FAQ } from '$lib/types/faqs';
+import type { Slot } from '$lib/types/games';
+import { error } from '@sveltejs/kit';
+
+export type SlotsPageData = {
+	seo: {
+		title: string;
+		description: string;
+	};
+	content: Content;
+	faqs: FAQ[];
+	newSlots: Slot[];
+	bestSlots: Slot[];
+	barSlots: Slot[];
+	slotThemes: {
+		title: string;
+		slug: string;
+	}[];
+	providers: {
+		title: string;
+		slug: string;
+	}[];
+};
 
 export async function load() {
-  const query = `         
+	const query = `         
     query {
-      page: slotsPage {
+      page: slotsPage (locale:"it"){
         seo {
           title
           description
         }
-        introContent
-        whatAreSlotsContent
-        howToPlaySlotsContent
-        slotsCategoryContent
-        bestSlotsContent
+        content {
+          firstContent
+          secondContent
+          thirdContent
+          fourthContent
+          fifthContent
+          sixthContent
+          seventhContent
+          eighthContent
+          ninethContent
+          tenthContent
+        }
         faqs {
           id
           question
@@ -73,14 +103,14 @@ export async function load() {
     }
   `;
 
-  return await dbManager
-    .executeQuery(query)
-    .then((response: any) => {
-      return response.data;
-    })
-    .catch(() => {
-      throw error(404, {
-        message: "Error loading page",
-      });
-    });
+	return await dbManager
+		.executeQuery(query)
+		.then((response: { data: SlotsPageData }) => {
+			return response.data;
+		})
+		.catch(() => {
+			throw error(404, {
+				message: 'Error loading page'
+			});
+		});
 }

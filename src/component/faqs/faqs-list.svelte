@@ -1,52 +1,63 @@
 <script lang="ts">
-  import Faq from "./faq.svelte";
+	import { appManager } from '$lib/app-manager.svelte';
+	import type { FAQ } from '$lib/types/faqs';
+	import { m } from '../../paraglide/messages';
+	import Faq from './faq.svelte';
 
-  let { faqs } = $props();
+	let { faqs } = $props();
+
+	const locale = $derived(appManager.getCountryCode());
+
+	const jsonLd = $derived(
+		JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'FAQPage',
+			mainEntity: faqs.map((faq: FAQ) => ({
+				'@type': 'Question',
+				name: faq.question,
+				acceptedAnswer: {
+					'@type': 'Answer',
+					text: faq.answer
+						? faq.answer
+								.map((block) =>
+									'children' in block
+										? block.children.map((c) => ('text' in c ? c.text : '')).join('')
+										: ''
+								)
+								.join(' ')
+						: ''
+				}
+			}))
+		})
+	);
+
+	const jsonLdScript = $derived(`<script type="application/ld+json">${jsonLd}<\/script>`);
 </script>
 
 <div class="content faqs-container">
-  <h2 class="faqs-title">Domande Frequenti</h2>
-  <div class="faqs-inner">
-    {#each faqs as faq}
-      <Faq {faq} />
-    {/each}
-  </div>
+	<h2 class="faqs-title">{m.faqs({ locale })}</h2>
+	<div class="faqs-inner">
+		{#each faqs as faq ('faq' + faq.id)}
+			<Faq {faq} />
+		{/each}
+	</div>
 </div>
 
-{@html `
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [${faqs.map((faq: any) => {
-          return `
-          {
-            "@type": "Question",
-            "name": "${faq.question}",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "${faq.answer[0].children[0].text.replace(/"/g, "'").replace(/\n/g, " ")}"
-            }
-          }`;
-        })}
-        ]
-      }
-    </script>
-`}
+{@html jsonLdScript}
 
 <style>
-  .faqs-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 32px;
-    .faqs-title {
-      text-align: center;
-    }
-    .faqs-inner {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-  }
+	.faqs-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 32px;
+		.faqs-title {
+			text-align: center;
+		}
+		.faqs-inner {
+			display: flex;
+			flex-direction: column;
+			gap: 16px;
+		}
+	}
 </style>

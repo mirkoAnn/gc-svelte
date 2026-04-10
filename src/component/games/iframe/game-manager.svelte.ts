@@ -1,10 +1,11 @@
 import { workersManager } from '$lib/workers-manager.svelte';
 import gsap from 'gsap/dist/gsap';
 import { casinosDataManager } from '../../casino/casinos-data-manager.svelte';
+import type { Casino } from '$lib/types/casino';
 
 let isVisible = $state(false),
 	isOnFullscreen = $state(false),
-	relatedCasinos: any = $state([]);
+	relatedCasinos: Casino[] = $state([]);
 
 // Get related casinos from global casinos data based on the game provider title
 const getRelatedCasinosFromCasinosManager = (providerTitle: string) => {

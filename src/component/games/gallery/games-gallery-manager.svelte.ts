@@ -1,19 +1,21 @@
+import type { Filter, FilterCategory, FilterList } from '$lib/types/filters';
+import type { Game } from '$lib/types/games';
 import { workersManager } from '$lib/workers-manager.svelte';
 import gsap from 'gsap/dist/gsap';
 
 const gamesBatchSize = 20; // This is the number of games that we load in each batch when the user applies filters or when they click on the "Load More" button, you can adjust this number based on your needs and the performance of your server, but I recommend to keep it around 20 to 30 games per batch to avoid loading too many games at once and to improve the performance of the gallery
 
-let initialGames = $state([]), // This is used to keep track of the initial games that are loaded in the gallery, so we can reset the gallery to its initial state when the user clears all filters, this will allow us to show the initial games immediately without having to wait for them to be fetched from the server again
-	games: any = $state([]), // This is used to keep track of the games that are currently displayed in the gallery, so we can update the gallery when the user applies filters or when they navigate to a different page
-	preloadedGames: any = $state([]), // This is used to keep track of the games that are preloaded in the background, so we can show them immediately when the user applies filters without having to wait for the games to be fetched from the server
-	isLoadingGames: any = $state(false); // This is used ONLY to keep track of whether the NEW games are currently being loaded from the server (not with a load more action), so we can show a loading indicator in the gallery when the games are being loaded and hide it when the games are loaded
+let initialGames: Game[] = $state([]), // This is used to keep track of the initial games that are loaded in the gallery, so we can reset the gallery to its initial state when the user clears all filters, this will allow us to show the initial games immediately without having to wait for them to be fetched from the server again
+	games: Game[] = $state([]), // This is used to keep track of the games that are currently displayed in the gallery, so we can update the gallery when the user applies filters or when they navigate to a different page
+	preloadedGames: Game[] = $state([]), // This is used to keep track of the games that are preloaded in the background, so we can show them immediately when the user applies filters without having to wait for the games to be fetched from the server
+	isLoadingGames: boolean = $state(false); // This is used ONLY to keep track of whether the NEW games are currently being loaded from the server (not with a load more action), so we can show a loading indicator in the gallery when the games are being loaded and hide it when the games are loaded
 
 // This is a derived state that checks if there are more games available to load from the server based on the currently preloaded games, it will be used to determine whether to show the "Load More" button in the gallery and to prevent the user from trying to load more games when there are no more games to load
-let areMoreGamesAvailable = $derived.by(() => {
+const areMoreGamesAvailable = $derived.by(() => {
 	return preloadedGames.length > 0; // we check if there are more games available to load from the server based on the currently preloaded games, if there are preloaded games it means that there are more games available to load from the server, otherwise it means that there are no more games available to load from the server
 }); // This is used to keep track of whether there are more games available to load from the server based on the currently applied filters, so we can disable the "Load More" button when there are no more games to load and prevent the user from trying to load more games when there are no more games to load
 
-let filters: any = $state({
+let filters: FilterList = $state({
 	type: '',
 	categories: []
 }); // This is used to keep track of the filters that are currently in use, so we can use different filters in different pages and for different type of games (e.g. in the slot gallery we want to use different filters than in the table games or roulette gallery)
@@ -33,13 +35,13 @@ let filters: any = $state({
 //   },
 // ]
 
-let areFiltersVisible: any = $state(false), // This is used to keep track of whether there are filters in use or not, so we can open or close the filters panel accordingly
-	currentVisibleFilter: any = $state(''), // This is used to keep track of the currently visible filter, so we can close it when the user clicks on another filter or on the same filter again
-	initialAppliedFilters: any = $state({
+let areFiltersVisible: boolean = $state(false), // This is used to keep track of whether there are filters in use or not, so we can open or close the filters panel accordingly
+	currentVisibleFilter: string = $state(''), // This is used to keep track of the currently visible filter, so we can close it when the user clicks on another filter or on the same filter again
+	initialAppliedFilters: FilterList = $state({
 		type: '',
 		categories: []
 	}), // This is used to keep track of the filters that were initially applied when the gallery was first rendered, so we can reset the currently applied filters to the initial applied filters when the user clears all filters, this will allow us to show the initial games immediately without having to wait for them to be fetched from the server again
-	currentlyAppliedFilters: any = $state({
+	currentlyAppliedFilters: FilterList = $state({
 		type: '',
 		categories: []
 	}); // This is used to keep track of the filters that are currently applied to the games, so we can update the gallery accordingly when the user applies or removes filters
@@ -69,9 +71,9 @@ const toggleSubGalleriesCategories = async () => {
 
 export const gamesGalleryManager = {
 	initGalleryData: (
-		initialGamesData: any, // the initial games data that is loaded when the gallery is first rendered, it will be used to show the initial games immediately without having to wait for them to be fetched from the server again when filters cleared
-		categoryFilters: any, // the filters of the current category that is being rendered, they'll be displayed int he filters panel
-		newInitialAppliedFilters: any // the filters that were initially applied when the gallery was first rendered based on the current page, it will be used to also to reset the filter once filters are cleared
+		initialGamesData: Game[], // the initial games data that is loaded when the gallery is first rendered, it will be used to show the initial games immediately without having to wait for them to be fetched from the server again when filters cleared
+		categoryFilters: FilterList, // the filters of the current category that is being rendered, they'll be displayed int he filters panel
+		newInitialAppliedFilters: FilterList // the filters that were initially applied when the gallery was first rendered based on the current page, it will be used to also to reset the filter once filters are cleared
 	) => {
 		initialGames = initialGamesData; // we set the initial games to the initial games data that is loaded when the gallery is first rendered, this will allow us to show the initial games immediately without having to wait for them to be fetched from the server again when filters cleared
 		// if the initial games data contains more than gamesBatchSize games we want to show only the first gamesBatchSize games in the gallery and keep the rest of the games in the preloaded games variable, so we can show them immediately when the user ask for more games without having to wait for them to be fetched from the server again, otherwise we show all the initial games in the gallery and we don't have any preloaded games
@@ -93,11 +95,11 @@ export const gamesGalleryManager = {
 	getGames: () => {
 		return games;
 	},
-	updatePreloadedGames: (newGames: any) => {
+	updatePreloadedGames: (newGames: Game[]) => {
 		preloadedGames = newGames; // we add the new loaded games from the server to the preloaded games variable, so we can show them immediately when the user applies filters without having to wait for them to be fetched from the server again
 		isLoadingGames = false; // we set the loading state to false because the new games have been loaded
 	},
-	updateGames: (newGames: any) => {
+	updateGames: (newGames: Game[]) => {
 		if (newGames.length > gamesBatchSize) {
 			games = newGames.slice(0, gamesBatchSize); // we show only the first gamesBatchSize games in the gallery, this will allow us to show the games immediately without having to wait for all the games to be loaded, and it will also improve the performance of the gallery by not rendering too many games at once
 			preloadedGames = newGames.slice(gamesBatchSize); // we keep the rest of the games in the preloaded games variable, so we can show them immediately when the user applies filters without having to wait for them to be fetched from the server again
@@ -134,13 +136,13 @@ export const gamesGalleryManager = {
 	areMoreGamesAvailable: () => {
 		return areMoreGamesAvailable;
 	},
-	setCurrentVisibleFilter: (filter: any) => {
-		currentVisibleFilter = currentVisibleFilter === filter ? '' : filter;
+	setCurrentVisibleFilter: (filterName: string) => {
+		currentVisibleFilter = currentVisibleFilter === filterName ? '' : filterName; // if the user clicks on the same filter that is already visible we want to close it, otherwise we want to open the new filter, this will allow us to have a better user experience and to avoid having multiple filters opened at the same time which can be confusing for the users
 	},
 	getCurrentVisibleFilter: () => {
 		return currentVisibleFilter;
 	},
-	applyFilter: (filter: any) => {
+	applyFilter: (filter: { category: string; value: string }) => {
 		areFiltersInUse = true; // we set the filters in use state to true because when we apply a filter it means that there are filters in use, and we want to show the main gallery with the filtered games and hide the categories sub galleries carousels, this will allow us to have a better user experience and make it easier for the users to find the games they are looking for
 		games = []; // we clear the games in the gallery immediately when the user applies a filter to show the loading indicator while the new filtered games are being loaded, this will also improve the performance of the gallery by not rendering too many games at once and it will also give a feedback to the user that something is happening after they apply a filter
 		// This function is used to apply a filter to the games in the gallery, it will be called when the user clicks on a filter in the filters panel
@@ -150,7 +152,7 @@ export const gamesGalleryManager = {
 		//   value: "NetEnt" // the value of the filter, for example "NetEnt", "Slot", etc...
 		// }
 		const currentFilterCategory = currentlyAppliedFilters.categories.find(
-			(c: any) => c.name === filter.category
+			(c: FilterCategory) => c.name === filter.category
 		);
 		if (currentFilterCategory) {
 			if (currentFilterCategory.name === 'orderBy') {
@@ -158,10 +160,10 @@ export const gamesGalleryManager = {
 				currentFilterCategory.filters = [{ value: filter.value }];
 			} else if (
 				// for the other filters categories we can have multiple filters applied at the same time, so when we apply a new filter we want to check if it's already applied or not, if it's already applied we want to remove it from the currently applied filters, otherwise we want to add it to the currently applied filters, this will also be showed in the filters panel since only currently applied filters are shown as active
-				currentFilterCategory.filters.some((f: any) => f.value === filter.value)
+				currentFilterCategory.filters.some((f: Filter) => f.value === filter.value)
 			) {
 				currentFilterCategory.filters = currentFilterCategory.filters.filter(
-					(f: any) => f.value !== filter.value
+					(f: Filter) => f.value !== filter.value
 				);
 			} else {
 				currentFilterCategory.filters = [...currentFilterCategory.filters, { value: filter.value }];
@@ -203,9 +205,9 @@ export const gamesGalleryManager = {
 		toggleSubGalleriesCategories();
 	},
 	isThisFilterCurrentlyApplied: (category: string, value: string) => {
-		return currentlyAppliedFilters.categories.some((c: any) => {
+		return currentlyAppliedFilters.categories.some((c: FilterCategory) => {
 			if (c.name === category) {
-				return c.filters.some((f: any) => f.value === value);
+				return c.filters.some((f: Filter) => f.value === value);
 			}
 		});
 	}
