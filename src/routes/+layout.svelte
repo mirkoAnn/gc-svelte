@@ -13,13 +13,14 @@
 	// Props passed from the server load function
 	let { data, children } = $props();
 
-	// Keep data managers synchronized with the latest layout data.
-	$effect(() => {
-		ageBannerManager.initialize(data.isAgeVerified);
-		favouritesManager.initialize(data.favouritesList);
-		casinosDataManager.initialize(data.casinos);
-		appManager.setCountryCode(data.countryCode);
-	});
+	// svelte-ignore state_referenced_locally
+	ageBannerManager.initialize(data.isAgeVerified);
+	// svelte-ignore state_referenced_locally
+	favouritesManager.initialize(data.favouritesList);
+	// svelte-ignore state_referenced_locally
+	casinosDataManager.initialize(data.casinos);
+	// svelte-ignore state_referenced_locally
+	appManager.setCountryCode(data.countryCode);
 
 	// Apply content animations and detect device type on initial load
 	onMount(() => {

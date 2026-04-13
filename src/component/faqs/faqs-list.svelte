@@ -19,8 +19,8 @@
 					'@type': 'Answer',
 					text: faq.answer
 						? faq.answer
-								.map((block) =>
-									'children' in block
+								.map((block: { children?: { text?: string }[] }) =>
+									block.children
 										? block.children.map((c) => ('text' in c ? c.text : '')).join('')
 										: ''
 								)

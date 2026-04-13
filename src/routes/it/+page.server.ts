@@ -1,5 +1,5 @@
 import { dbManager } from '$lib/db-manager.svelte';
-import type { Content } from '$lib/types/content';
+import type { PageContent } from '$lib/types/content';
 import type { FAQ } from '$lib/types/faqs';
 import type { Slot, Roulette } from '$lib/types/games';
 import { error } from '@sveltejs/kit';
@@ -9,7 +9,7 @@ export type HomePageData = {
 		title: string;
 		description: string;
 	};
-	content: Content;
+	content: PageContent;
 	faqs: FAQ[];
 	slots: Slot[];
 	roulettes: Roulette[];

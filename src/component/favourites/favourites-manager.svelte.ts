@@ -1,7 +1,7 @@
 import type { Favourite, FavouritesList } from '$lib/types/favourites';
 import type { Slot } from '$lib/types/games';
 
-export const FAVOURITES_LIST_COOKIE_NAME = 'goi_favourites_list';
+export const FAVOURITES_LIST_COOKIE_NAME = 'gc_favourites_list';
 
 // Favourites list contains different categories; for now we only have "slots"
 let favouritesList: FavouritesList = $state({

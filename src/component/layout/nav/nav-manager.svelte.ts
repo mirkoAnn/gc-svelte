@@ -1,8 +1,12 @@
 import gsap from 'gsap/dist/gsap';
 import NavSearch from './search/nav-search.svelte';
 import FavouritesList from '../../favourites/favourites-list.svelte';
+import { appManager } from '$lib/app-manager.svelte';
+import { m } from '../../../paraglide/messages';
 
 let currentSection = $state('casino'); // Used to track the currently active section for styling purposes (e.g. casino or sport)
+
+const locale = $derived(appManager.getCountryCode());
 
 // Array of menu items for the navbar, including submenus and links
 const menuItems = [
@@ -13,75 +17,70 @@ const menuItems = [
 		selectorColor: '#3d6080ff',
 		items: [
 			{
-				label: 'Casino',
+				label: m.nav_casinos({ locale }),
 				category: 'casino',
 				// Submenu items
 				submenuItems: [
 					{
 						href: `/casino-online`,
-						title: 'Scopri tutti i migliori casino online in Italia' + new Date().getFullYear(),
-						label: 'Tutti i Casino',
+						title: m.nav_casinos_all_title({ year: new Date().getFullYear() }, { locale }),
+						label: m.nav_casinos_all({ locale }),
 						category: 'casino'
 					}
 				]
 			},
 			{
-				label: 'Slot',
+				label: m.nav_slots({ locale }),
 				category: 'slot',
 				// Submenu items
 				submenuItems: [
 					{
 						href: `/slot-gratis`,
-						title: 'Scopri tutte le migliori slot online in Italia' + new Date().getFullYear(),
-						label: 'Tutte le Slot',
+						title: m.nav_slots_all_title({ year: new Date().getFullYear() }, { locale }),
+						label: m.nav_slots_all({ locale }),
 						category: 'slot'
 					},
 					{
 						href: `/slot-gratis/slot-bar`,
-						title:
-							'Scopri tutte le migliori slot classiche online in Italia' + new Date().getFullYear(),
-						label: 'Slot Classiche',
+						title: m.nav_slots_classic_title({ year: new Date().getFullYear() }, { locale }),
+						label: m.nav_slots_classic({ locale }),
 						category: 'bar'
 					},
 					{
 						href: `/slot-gratis/slot-vlt`,
-						title: 'Scopri tutte le migliori slot VLT online in Italia' + new Date().getFullYear(),
-						label: 'Slot VLT',
+						title: m.nav_slots_vlt_title({ year: new Date().getFullYear() }, { locale }),
+						label: m.nav_slots_vlt({ locale }),
 						category: 'vlt'
 					},
 					{
 						href: `/slot-gratis/slot-piu-giocate`,
-						title:
-							'Scopri tutte le migliori slot più giocate online in Italia' +
-							new Date().getFullYear(),
-						label: 'Più Giocate',
+						title: m.nav_slots_top_title({ year: new Date().getFullYear() }, { locale }),
+						label: m.nav_slots_top({ locale }),
 						category: 'piu-giocate'
 					},
 					{
 						href: `/slot-gratis/slot-nuove`,
-						title: 'Scopri tutte le nuove slot online in Italia' + new Date().getFullYear(),
-						label: 'Nuove Slot',
+						title: m.nav_slots_new_title({ year: new Date().getFullYear() }, { locale }),
+						label: m.nav_slots_new({ locale }),
 						category: 'nuove'
 					}
 				]
 			},
 			{
-				label: 'Roulette',
+				label: m.nav_roulettes({ locale }),
 				category: 'roulette',
 				// Submenu items
 				submenuItems: [
 					{
 						href: `/roulette-gratis`,
-						title: 'Scopri tutte le migliori roulette online in Italia' + new Date().getFullYear(),
-						label: 'Tutte le Roulette',
+						title: m.nav_roulettes_all_title({ year: new Date().getFullYear() }, { locale }),
+						label: m.nav_roulettes_all({ locale }),
 						category: 'roulette'
 					},
 					{
 						href: `/roulette-gratis/roulette-francese`,
-						title:
-							'Scopri tutte le migliori roulette francese online in Italia' +
-							new Date().getFullYear(),
-						label: 'Roulette Francese',
+						title: m.nav_roulettes_french_title({ year: new Date().getFullYear() }, { locale }),
+						label: m.nav_roulettes_french({ locale }),
 						category: 'francese'
 					}
 				]

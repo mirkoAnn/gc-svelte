@@ -1,28 +1,15 @@
 import { dbManager } from '$lib/db-manager.svelte';
+import type { PageContent } from '$lib/types/content';
 import { error } from '@sveltejs/kit';
+import type Faq from '../../../component/faqs/faq.svelte';
 
 export type CasinoOnlinePageData = {
 	seo: {
 		title: string;
 		description: string;
 	};
-	content: {
-		firstContent: string;
-		secondContent: string;
-		thirdContent: string;
-		fourthContent: string;
-		fifthContent: string;
-		sixthContent: string;
-		seventhContent: string;
-		eighthContent: string;
-		ninethContent: string;
-		tenthContent: string;
-	};
-	faqs: {
-		id: number;
-		question: string;
-		answer: string;
-	}[];
+	content: PageContent;
+	faqs: Faq[];
 };
 
 export async function load() {

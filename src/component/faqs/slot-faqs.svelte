@@ -1,7 +1,11 @@
 <script lang="ts">
+	import { SITE_NAME } from './../metadata/sitedata-manager.svelte.ts';
 	import type { FAQ } from '$lib/types/faqs';
 	import type { TextContent } from '$lib/types/content';
 	import FaqsList from './faqs-list.svelte';
+	import { casinosDataManager } from '../casino/casinos-data-manager.svelte';
+	import { appManager } from '$lib/app-manager.svelte';
+	import { m } from '../../paraglide/messages';
 
 	let {
 		data
@@ -11,9 +15,12 @@
 				title: string;
 				info: {
 					rtp?: number;
+					volatility: string;
 					hasFreeSpins?: boolean;
 					hasBonusGame?: boolean;
 					hasJackpot?: boolean;
+					betMin?: number;
+					winMax?: number;
 				};
 				provider: { title: string };
 				slug: string;
@@ -26,45 +33,101 @@
 		return [{ type: 'paragraph', children: [{ type: 'text', text }] }];
 	};
 
+	const locale = $derived(appManager.getCountryCode());
+
+	const volatility = $derived(() => {
+		switch (data.page.info.volatility.toLowerCase()) {
+			case 'low':
+				return m.slot_volatility_low({ locale });
+			case 'medium-low':
+				return m.slot_volatility_medium_low({ locale });
+			case 'medium':
+				return m.slot_volatility_medium({ locale });
+			case 'medium-high':
+				return m.slot_volatility_medium_high({ locale });
+			case 'high':
+				return m.slot_volatility_high({ locale });
+			default:
+				return '';
+		}
+	});
+
 	let faqs: FAQ[] = $derived.by(() => {
 		const formattedFaqs: { id: string; question: string; answer: string }[] = [
 			{
 				id: `${data.page.slug}-faq-0`,
-				question: `Qual è l'RTP della slot machine ${data.page.title}?`,
-				answer: data.page.info.rtp
-					? `La slot ${data.page.title} ha un RTP del ${data.page.info.rtp}%`
-					: "Attualmente non abbiamo informazioni sull'RTP per questo gioco."
+				question: `${m.slot_faqs_casinos_question({ gameTitle: data.page.title }, { locale })}`,
+				answer: `${m.slot_faqs_casinos_answer(
+					{
+						gameTitle: data.page.title,
+						providerName: data.page.provider.title,
+						casinosList: casinosDataManager
+							.getCasinosByProviderTitle(data.page.provider.title)
+							.map((casino) => casino.title)
+							.join(', ')
+					},
+					{ locale }
+				)}`
 			},
 			{
 				id: `${data.page.slug}-faq-1`,
-				question: `Posso giocare alla slot machine ${data.page.title} gratis senza scaricare?`,
-				answer: `Sì, la slot machine ${data.page.title} è disponibile in una versione demo che puoi giocare gratis e senza dover scaricare alcun software`
+				question: `${m.slot_faqs_demo_question({ gameTitle: data.page.title }, { locale })}`,
+				answer: `${m.slot_faqs_demo_answer({ gameTitle: data.page.title }, { locale })}`
 			},
 			{
 				id: `${data.page.slug}-faq-2`,
-				question: `Posso giocare alla slot machine ${data.page.title} senza dovermi registrare?`,
-				answer:
-					'Sì, puoi giocare a tutte le slot machine su Betragaperras.es senza doverti registrare o creare un account.'
+				question: `${m.slot_faqs_no_registration_question({ gameTitle: data.page.title }, { locale })}`,
+				answer: `${m.slot_faqs_no_registration_answer({ siteName: SITE_NAME }, { locale })}`
 			},
 			{
 				id: `${data.page.slug}-faq-3`,
-				question: `Posso giocare alla slot machine ${data.page.title} sul mio dispositivo mobile?`,
-				answer: `Sì, puoi giocare alla slot machine ${data.page.title} dal tuo smartphone o qualsiasi altro dispositivo mobile, sia su dispositivi iOS che Android.`
+				question: `${m.slot_faqs_mobile_question({ gameTitle: data.page.title }, { locale })}`,
+				answer: `${m.slot_faqs_mobile_answer({ gameTitle: data.page.title }, { locale })}`
 			},
 			{
 				id: `${data.page.slug}-faq-4`,
-				question: `Chi è il fornitore della slot machine ${data.page.title}?`,
-				answer: `Il fornitore della slot machine ${data.page.title} è ${data.page.provider.title}`
+				question: `${m.slot_faqs_provider_question({ gameTitle: data.page.title }, { locale })}`,
+				answer: `${m.slot_faqs_provider_answer({ gameTitle: data.page.title, providerName: data.page.provider.title }, { locale })}`
 			},
 			{
 				id: `${data.page.slug}-faq-5`,
-				question: `Quali sono i bonus forniti dalla ${data.page.title}?`,
+				question: `${m.slot_faqs_bonus_question({ gameTitle: data.page.title }, { locale })}`,
 				answer:
 					!data.page.info.hasFreeSpins && !data.page.info.hasBonusGame && !data.page.info.hasJackpot
-						? 'Il gioco non ha funzioni bonus'
-						: `La slot machine ${data.page.title} ha le seguenti funzioni bonus: ${data.page.info.hasFreeSpins ? 'un bonus di giri gratuiti, ' : ''}${data.page.info.hasBonusGame ? 'un gioco bonus, ' : ''}${data.page.info.hasJackpot ? 'premi jackpot.' : ''}`
+						? `${m.slot_faqs_bonus_no_answer({ gameTitle: data.page.title }, { locale })}`
+						: `${m.slot_faqs_bonus_answer({ gameTitle: data.page.title }, { locale })}` +
+							(data.page.info.hasFreeSpins ? `, ${m.slot_free_spins_bonus({ locale })}` : '') +
+							(data.page.info.hasBonusGame ? `, ${m.slot_bonus_game({ locale })}` : '') +
+							(data.page.info.hasJackpot ? `, ${m.slot_jackpot({ locale })}` : '')
+			},
+			{
+				id: `${data.page.slug}-faq-6`,
+				question: `${m.slot_faqs_rtp_question({ gameTitle: data.page.title }, { locale })}`,
+				answer: data.page.info.rtp
+					? `${m.slot_faqs_rtp_answer({ gameTitle: data.page.title, rtp: data.page.info.rtp }, { locale })}`
+					: `${m.slot_faqs_rtp_no_answer({ gameTitle: data.page.title }, { locale })}`
+			},
+			{
+				id: `${data.page.slug}-faq-7`,
+				question: `${m.slot_faqs_volatility_question({ gameTitle: data.page.title }, { locale })}`,
+				answer: `${m.slot_faqs_volatility_answer({ gameTitle: data.page.title, gameVolatility: volatility() }, { locale })}`
+			},
+			{
+				id: `${data.page.slug}-faq-8`,
+				question: `${m.slot_faqs_bet_min_question({ gameTitle: data.page.title }, { locale })}`,
+				answer: data.page.info.betMin
+					? `${m.slot_faqs_bet_min_answer({ gameTitle: data.page.title, betMin: data.page.info.betMin }, { locale })}`
+					: `${m.slot_faqs_bet_min_no_answer({ gameTitle: data.page.title }, { locale })}`
+			},
+			{
+				id: `${data.page.slug}-faq-9`,
+				question: `${m.slot_faqs_win_max_question({ gameTitle: data.page.title }, { locale })}`,
+				answer: data.page.info.winMax
+					? `${m.slot_faqs_win_max_answer({ gameTitle: data.page.title, winMax: data.page.info.winMax }, { locale })}`
+					: `${m.slot_faqs_win_max_no_answer({ gameTitle: data.page.title }, { locale })}`
 			}
 		];
+
 		return formattedFaqs.map((faq, i) => {
 			return {
 				id: `${data.page.slug}-faq-${i}`,
