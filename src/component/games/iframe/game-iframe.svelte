@@ -20,7 +20,7 @@
 	<button
 		class="close-fullscreen-button"
 		onclick={gameManager.toggleFullscreen}
-		aria-label={m.fullscreen_close_button_text({ locale })}
+		aria-label={m.fullscreen_close_button_text({}, { locale })}
 	>
 		<svg class="close-fullscreen-icon">
 			<use href="/icons/icon-set.svg#close" />

@@ -173,7 +173,7 @@
 	<button
 		class="games-filters-toggler-arrow"
 		onclick={toggleFilters}
-		aria-label={m.toggle_filters({ locale })}
+		aria-label={m.toggle_filters({}, { locale })}
 	>
 		<svg class="games-filters-toggler-arrow-icon" viewBox="0 0 200 200">
 			<use href="/icons/icon-set.svg#arrow" />
@@ -187,19 +187,19 @@
 		<button
 			class="games-gallery-filters-reset"
 			onclick={clearFilters}
-			aria-label={m.clear_filters({ locale })}
+			aria-label={m.clear_filters({}, { locale })}
 		>
 			<svg class="games-gallery-filters-reset-icon" viewBox="0 0 24 24"
 				><use href="/icons/icon-set.svg#clear" />
 			</svg>
-			{m.clear_filters({ locale })}</button
+			{m.clear_filters({}, { locale })}</button
 		>
 	</div>
 	<!-- Filter Icon -->
 	<button
 		class="games-filters-toggler"
 		onclick={toggleFilters}
-		aria-label={m.toggle_filters({ locale })}
+		aria-label={m.toggle_filters({}, { locale })}
 	>
 		<svg class="games-filters-toggler-icon" viewBox="0 0 200 200">
 			<use href="/icons/icon-set.svg#filter" />

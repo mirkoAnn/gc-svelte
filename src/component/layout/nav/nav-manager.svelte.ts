@@ -9,7 +9,7 @@ let currentSection = $state('casino'); // Used to track the currently active sec
 const locale = $derived(appManager.getCountryCode());
 
 // Array of menu items for the navbar, including submenus and links
-const menuItems = [
+const menuItems = $derived([
 	// Each object represents a menu item
 	{
 		section: 'casino',
@@ -17,70 +17,70 @@ const menuItems = [
 		selectorColor: '#3d6080ff',
 		items: [
 			{
-				label: m.nav_casinos({ locale }),
+				label: m.nav_casinos({}, { locale }),
 				category: 'casino',
 				// Submenu items
 				submenuItems: [
 					{
 						href: `/casino-online`,
 						title: m.nav_casinos_all_title({ year: new Date().getFullYear() }, { locale }),
-						label: m.nav_casinos_all({ locale }),
+						label: m.nav_casinos_all({}, { locale }),
 						category: 'casino'
 					}
 				]
 			},
 			{
-				label: m.nav_slots({ locale }),
+				label: m.nav_slots({}, { locale }),
 				category: 'slot',
 				// Submenu items
 				submenuItems: [
 					{
 						href: `/slot-gratis`,
 						title: m.nav_slots_all_title({ year: new Date().getFullYear() }, { locale }),
-						label: m.nav_slots_all({ locale }),
+						label: m.nav_slots_all({}, { locale }),
 						category: 'slot'
 					},
 					{
 						href: `/slot-gratis/slot-bar`,
 						title: m.nav_slots_classic_title({ year: new Date().getFullYear() }, { locale }),
-						label: m.nav_slots_classic({ locale }),
+						label: m.nav_slots_classic({}, { locale }),
 						category: 'bar'
 					},
 					{
 						href: `/slot-gratis/slot-vlt`,
 						title: m.nav_slots_vlt_title({ year: new Date().getFullYear() }, { locale }),
-						label: m.nav_slots_vlt({ locale }),
+						label: m.nav_slots_vlt({}, { locale }),
 						category: 'vlt'
 					},
 					{
 						href: `/slot-gratis/slot-piu-giocate`,
 						title: m.nav_slots_top_title({ year: new Date().getFullYear() }, { locale }),
-						label: m.nav_slots_top({ locale }),
+						label: m.nav_slots_top({}, { locale }),
 						category: 'piu-giocate'
 					},
 					{
 						href: `/slot-gratis/slot-nuove`,
 						title: m.nav_slots_new_title({ year: new Date().getFullYear() }, { locale }),
-						label: m.nav_slots_new({ locale }),
+						label: m.nav_slots_new({}, { locale }),
 						category: 'nuove'
 					}
 				]
 			},
 			{
-				label: m.nav_roulettes({ locale }),
+				label: m.nav_roulettes({}, { locale }),
 				category: 'roulette',
 				// Submenu items
 				submenuItems: [
 					{
 						href: `/roulette-gratis`,
 						title: m.nav_roulettes_all_title({ year: new Date().getFullYear() }, { locale }),
-						label: m.nav_roulettes_all({ locale }),
+						label: m.nav_roulettes_all({}, { locale }),
 						category: 'roulette'
 					},
 					{
 						href: `/roulette-gratis/roulette-francese`,
 						title: m.nav_roulettes_french_title({ year: new Date().getFullYear() }, { locale }),
-						label: m.nav_roulettes_french({ locale }),
+						label: m.nav_roulettes_french({}, { locale }),
 						category: 'francese'
 					}
 				]
@@ -109,7 +109,7 @@ const menuItems = [
 	//     },
 	//   ],
 	// },
-];
+]);
 
 const menuActions = [
 	{ label: 'Search', category: 'search', component: NavSearch },

@@ -1,8 +1,10 @@
 import { dbManager } from '$lib/db-manager.svelte';
+import type { Author } from '$lib/types/author';
 import type { PageContent } from '$lib/types/content';
 import type { FAQ } from '$lib/types/faqs';
 import type { Slot, Roulette } from '$lib/types/games';
 import { error } from '@sveltejs/kit';
+import { basicQuery } from '$lib/query/basic-query';
 
 export type HomePageData = {
 	seo: {
@@ -11,37 +13,18 @@ export type HomePageData = {
 	};
 	content: PageContent;
 	faqs: FAQ[];
-	slots: Slot[];
-	roulettes: Roulette[];
+	author: Author;
+	pusblishedAt: string;
+	updatedAt: string;
 };
 
 export async function load() {
 	const query = `
     query {
       page: homePage (locale: "it") {
-        seo {
-          title
-          description
-        }
-        content {
-          firstContent
-          secondContent
-          thirdContent
-          fourthContent
-          fifthContent
-          sixthContent
-          seventhContent
-          eighthContent
-          ninethContent
-          tenthContent
-        }
-        faqs {
-          id
-          question
-          answer
-        }
+        ${basicQuery}
       }
-      slots(sort: "createdAt:desc", pagination: { page: 1, pageSize: 10 }) {
+      slots(locale:"it", sort: "createdAt:desc", pagination: { page: 1, pageSize: 10 }) {
         id:documentId
         title
         slug
@@ -58,7 +41,7 @@ export async function load() {
           slug
         }
       }
-      roulettes(sort: "createdAt:desc", pagination: { page: 1, pageSize: 10 }) {
+      roulettes(locale:"it", sort: "createdAt:desc", pagination: { page: 1, pageSize: 10 }) {
         id:documentId
         title
         slug

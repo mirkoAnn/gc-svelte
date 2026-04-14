@@ -1,10 +1,18 @@
 <script lang="ts">
-	import type { HeadingContent, ListContent, ListItem, TextChild } from '$lib/types/content';
+	import type {
+		ContentItem,
+		ContentSection,
+		HeadingContent,
+		ListContent,
+		ListItem,
+		TextChild
+	} from '$lib/types/content';
 
 	let {
 		content
 	}: {
-		content: string;
+		content: ContentItem;
+		// We use 'any' here because the content can have a complex structure with nested elements, and we will handle the typing more specifically within the functions that process the content based on their type and structure
 	} = $props();
 
 	// Function to handle headings based on their level
@@ -54,7 +62,7 @@
 	const formattedContent: { tag: string; text: string }[] = $derived.by(() => {
 		const result: { tag: string; text: string }[] = [];
 		if (content && Array.isArray(content) && content.length > 0) {
-			content.forEach((section) => {
+			content.forEach((section: ContentSection) => {
 				switch (section.type) {
 					case 'heading':
 						result.push(handleHeading(section));

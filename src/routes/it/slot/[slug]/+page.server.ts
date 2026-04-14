@@ -1,10 +1,11 @@
-import { dbManager } from "$lib/db-manager.svelte.js";
-import { error } from "@sveltejs/kit";
+import { dbManager } from '$lib/db-manager.svelte.js';
+import type { Slot } from '$lib/types/games.js';
+import { error } from '@sveltejs/kit';
 
 export async function load({ params }) {
-  const query = `
+	const query = `
     query {
-      page: slots(filters: { slug: { eq: "${params.slug}" } }) {
+      page: slots(locale: "it", filters: { slug: { eq: "${params.slug}" } }) {
           id:documentId
           seo {
               title
@@ -39,7 +40,7 @@ export async function load({ params }) {
           opinionContent
           slotThemes {
             slug
-            slots(pagination: { page: 1, pageSize: 10 }) {
+            slots(locale: "it", pagination: { page: 1, pageSize: 10 }) {
               id:documentId
               title
               slug
@@ -77,15 +78,16 @@ export async function load({ params }) {
     }
   `;
 
-  return await dbManager
-    .executeQuery(query)
-    .then((response: any) => {
-      response.data.page = response.data.page[0]; // Get the first item from the array response for a single slot page request
-      return response.data;
-    })
-    .catch(() => {
-      throw error(404, {
-        message: "Error loading page",
-      });
-    });
+	return await dbManager
+		.executeQuery(query)
+		.then((response: { data: { page: Slot[] } }) => {
+			return {
+				page: response.data.page[0]
+			};
+		})
+		.catch(() => {
+			throw error(404, {
+				message: 'Error loading page'
+			});
+		});
 }

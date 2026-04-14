@@ -20,7 +20,7 @@
 
 <div class="casino-comparator-table-container">
 	{#if casinos.length === 0}
-		<span class="warning-messsage">{m.casino_comparator_error({ locale })}</span>
+		<span class="warning-messsage">{m.casino_comparator_error({}, { locale })}</span>
 	{:else}
 		<div class="casino-comparator-table">
 			<div class="casino-comparator-section">
@@ -49,35 +49,35 @@
 			</div>
 			<div class="casino-comparator-section">
 				<CasinoComparatorGridSection
-					title={m.bonus({ locale })}
+					title={m.bonus({}, { locale })}
 					comparedCasinoValue={casinos[0].info.bonusRating}
 					currentCasinoValue={casinos[currentIndex].info.bonusRating}
 				/>
 			</div>
 			<div class="casino-comparator-section">
 				<CasinoComparatorGridSection
-					title={m.design({ locale })}
+					title={m.design({}, { locale })}
 					comparedCasinoValue={casinos[0].info.designRating}
 					currentCasinoValue={casinos[currentIndex].info.designRating}
 				/>
 			</div>
 			<div class="casino-comparator-section">
 				<CasinoComparatorGridSection
-					title={m.mobile({ locale })}
+					title={m.mobile({}, { locale })}
 					comparedCasinoValue={casinos[0].info.mobileRating}
 					currentCasinoValue={casinos[currentIndex].info.mobileRating}
 				/>
 			</div>
 			<div class="casino-comparator-section">
 				<CasinoComparatorGridSection
-					title={m.games({ locale })}
+					title={m.games({}, { locale })}
 					comparedCasinoValue={casinos[0].info.gamesRating}
 					currentCasinoValue={casinos[currentIndex].info.gamesRating}
 				/>
 			</div>
 			<div class="casino-comparator-section">
 				<CasinoComparatorGridSection
-					title={m.support({ locale })}
+					title={m.support({}, { locale })}
 					comparedCasinoValue={casinos[0].info.supportRating}
 					currentCasinoValue={casinos[currentIndex].info.supportRating}
 				/>
@@ -86,7 +86,7 @@
 		<div class="arrows-container">
 			<button
 				class="arrow left-arrow"
-				aria-label={m.casino_comparator_show_previous({ locale })}
+				aria-label={m.casino_comparator_show_previous({}, { locale })}
 				onclick={() => (currentIndex = Math.max(currentIndex - 1, 1))}
 				disabled={currentIndex === 1}
 			>
@@ -96,7 +96,7 @@
 			</button>
 			<button
 				class="arrow right-arrow"
-				aria-label={m.casino_comparator_show_next({ locale })}
+				aria-label={m.casino_comparator_show_next({}, { locale })}
 				onclick={() => (currentIndex = Math.min(currentIndex + 1, casinos.length - 1))}
 				disabled={currentIndex === casinos.length - 1}
 			>

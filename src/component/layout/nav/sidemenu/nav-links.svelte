@@ -17,7 +17,7 @@
 				? 'initial-section'
 				: ''}"
 			role="tablist"
-			aria-label={m.nav_links_menu_aria_label({ locale })}
+			aria-label={m.nav_links_menu_aria_label({}, { locale })}
 			style="--nav-submenu-links-bg-color: var(--nav-submenu-links-bg-color-{menuItem.section});"
 		>
 			{#each menuItem.items as item, i (item.category)}

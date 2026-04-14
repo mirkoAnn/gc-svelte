@@ -14,7 +14,7 @@
 	target="_blank"
 	rel="external noopener noreferrer"
 	title={m.casino_cta_title({ casinoTitle: casinoGlobalData.title }, { locale })}
-	>{m.casino_cta_text({ locale })}
+	>{m.casino_cta_text({}, { locale })}
 	<svg class="casino-info-cta-button-icon">
 		<use href="/icons/icon-set.svg#arrow" />
 	</svg></a
@@ -26,7 +26,7 @@
 	rel="external noopener noreferrer"
 	title={m.tc_title({ casinoTitle: casinoGlobalData.title }, { locale })}
 >
-	{m.responsible_gambling_title({ locale })}{m.tc_text({ locale })}</a
+	{m.responsible_gambling_title({}, { locale })}{m.tc_text({}, { locale })}</a
 >
 
 <style>

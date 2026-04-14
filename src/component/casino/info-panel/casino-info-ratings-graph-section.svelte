@@ -24,33 +24,33 @@
 				casinoGlobalData.info.supportRating
 			]}
 			labels={[
-				m.bonus({ locale }),
-				m.design({ locale }),
-				m.mobile({ locale }),
-				m.games({ locale }),
-				m.support({ locale })
+				m.bonus({}, { locale }),
+				m.design({}, { locale }),
+				m.mobile({}, { locale }),
+				m.games({}, { locale }),
+				m.support({}, { locale })
 			]}
 		/>
 		<div class="casino-graph-data">
 			<ul class="casino-graph-data-list">
 				<li class="casino-graph-data-item">
-					{m.bonus({ locale })}:
+					{m.bonus({}, { locale })}:
 					<span class="casino-graph-data-value">{casinoGlobalData.info.bonusRating}</span>/5
 				</li>
 				<li class="casino-graph-data-item">
-					{m.design({ locale })}:
+					{m.design({}, { locale })}:
 					<span class="casino-graph-data-value">{casinoGlobalData.info.designRating}</span>/5
 				</li>
 				<li class="casino-graph-data-item">
-					{m.mobile({ locale })}:
+					{m.mobile({}, { locale })}:
 					<span class="casino-graph-data-value">{casinoGlobalData.info.mobileRating}</span>/5
 				</li>
 				<li class="casino-graph-data-item">
-					{m.games({ locale })}:
+					{m.games({}, { locale })}:
 					<span class="casino-graph-data-value">{casinoGlobalData.info.gamesRating}</span>/5
 				</li>
 				<li class="casino-graph-data-item">
-					{m.support({ locale })}:
+					{m.support({}, { locale })}:
 					<span class="casino-graph-data-value">{casinoGlobalData.info.supportRating}</span>/5
 				</li>
 			</ul>

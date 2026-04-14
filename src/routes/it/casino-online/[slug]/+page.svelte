@@ -1,16 +1,17 @@
 <script lang="ts">
-	import Author from '../../../../component/author/author.svelte';
+	import ContentContainer from './../../../../component/content/content-container.svelte';
+	import AuthorBox from '../../../../component/author/author-box.svelte';
 	import Breadcrumbs from '../../../../component/breadcrumbs/breadcrumbs.svelte';
 	import CasinoComparatorGrid from '../../../../component/casino/casino-comparator-grid.svelte';
 	import CasinoInfoPanel from '../../../../component/casino/info-panel/casino-info-panel.svelte';
-	import Content from '../../../../component/content/content.svelte';
 	import ImgPreview from '../../../../component/content/img-preview.svelte';
+	import FaqsList from '../../../../component/faqs/faqs-list.svelte';
 	import PageMetadata from '../../../../component/metadata/page-metadata.svelte';
 	import ProvidersGallery from '../../../../component/providers/providers-gallery.svelte';
 	import { appManager } from '../../../../lib/app-manager.svelte';
-	import type { CasinoPageData } from './+page.server';
+	import type { Casino } from '$lib/types/casino';
 
-	let { data }: { data: { page: CasinoPageData } } = $props();
+	let { data }: { data: { page: Casino } } = $props();
 </script>
 
 <PageMetadata
@@ -44,9 +45,7 @@
 
 <!-- Site design content section -->
 <div id="siteDesignContent" class="section-content">
-	<div class="content site-design-content">
-		<Content content={data.page.siteDesignContent} />
-	</div>
+	<ContentContainer content={data.page.content.firstContent} />
 	<ImgPreview
 		imgId={appManager.isMobile() ? data.page.imagesMobile[0].id : data.page.images[0].id}
 		imgUrl={appManager.isMobile()
@@ -60,9 +59,7 @@
 </div>
 
 <!-- Welcome Bonus section -->
-<div id="bonusContent" class="content bonus-content">
-	<Content content={data.page.bonusContent} />
-</div>
+<ContentContainer content={data.page.content.secondContent} />
 <div id="casinoComparatorContent" class="content casino-comparator-panel">
 	<h2 class="casino-comparator-title">Confronta con altri casino online</h2>
 	<!-- <CasinoComparator currentId={data.page.id} /> -->
@@ -71,9 +68,7 @@
 
 <!-- Slots content section -->
 <div id="slotsContent" class="section-content">
-	<div class="content slots-content">
-		<Content content={data.page.slotsContent} />
-	</div>
+	<ContentContainer content={data.page.content.thirdContent} />
 	<ImgPreview
 		imgId={appManager.isMobile() ? data.page.imagesMobile[1].id : data.page.images[1].id}
 		imgUrl={appManager.isMobile()
@@ -98,9 +93,7 @@
 
 <!-- Live content section -->
 <div id="liveContent" class="section-content">
-	<div class="content live-content">
-		<Content content={data.page.liveContent} />
-	</div>
+	<ContentContainer content={data.page.content.fourthContent} />
 	<ImgPreview
 		imgId={appManager.isMobile() ? data.page.imagesMobile[2].id : data.page.images[2].id}
 		imgUrl={appManager.isMobile()
@@ -115,9 +108,7 @@
 
 <!-- Sport content section -->
 <div id="sportContent" class="section-content">
-	<div class="content sport-content">
-		<Content content={data.page.sportContent} />
-	</div>
+	<ContentContainer content={data.page.content.fifthContent} />
 	<ImgPreview
 		imgId={appManager.isMobile() ? data.page.imagesMobile[3].id : data.page.images[3].id}
 		imgUrl={appManager.isMobile()
@@ -132,9 +123,7 @@
 
 <!-- Payment content section -->
 <div id="securityPaymentsContent" class="section-content">
-	<div class="content security-payments-content">
-		<Content content={data.page.securityPaymentsContent} />
-	</div>
+	<ContentContainer content={data.page.content.sixthContent} />
 	<ImgPreview
 		imgId={appManager.isMobile() ? data.page.imagesMobile[4].id : data.page.images[4].id}
 		imgUrl={appManager.isMobile()
@@ -148,8 +137,12 @@
 </div>
 
 <!-- Opinion content section -->
-<div id="opinionContent" class="content opinion-content">
-	<Content content={data.page.opinionContent} />
-</div>
+<ContentContainer content={data.page.content.seventhContent} />
 
-<Author author={data.page.author} />
+<ContentContainer content={data.page.content.eighthContent} />
+<ContentContainer content={data.page.content.ninethContent} />
+<ContentContainer content={data.page.content.tenthContent} />
+
+<FaqsList faqs={data.page.faqs} />
+
+<AuthorBox author={data.page.author} />

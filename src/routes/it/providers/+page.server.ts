@@ -1,16 +1,30 @@
-import { dbManager } from "$lib/db-manager.svelte";
-import { error } from "@sveltejs/kit";
+import { dbManager } from '$lib/db-manager.svelte';
+import type { PageContent } from '$lib/types/content';
+import type { Provider } from '$lib/types/provider';
+import { error } from '@sveltejs/kit';
+import type Faq from '../../../component/faqs/faq.svelte';
+import type { Author } from '$lib/types/author';
+import { basicQuery } from '$lib/query/basic-query';
+
+export type ProvidersPageData = {
+	seo: {
+		title: string;
+		description: string;
+	};
+	content: PageContent;
+	faqs: Faq[];
+	author: Author;
+	publishedAt: string;
+	updatedAt: string;
+};
 
 export async function load() {
-  const query = `
+	const query = `
     query {
-      page: providersPage {
-        seo {
-          title
-          description
-        }
+      page: providersPage(locale: "it") {
+        ${basicQuery}        
       }
-      providers(pagination: { page: 1, pageSize: 500 }) {
+      providers(locale: "it", pagination: { page: 1, pageSize: 500 }) {
         title
         slug
         logo {
@@ -22,14 +36,14 @@ export async function load() {
       }
     }
   `;
-  return await dbManager
-    .executeQuery(query)
-    .then((response: any) => {
-      return response.data;
-    })
-    .catch(() => {
-      throw error(404, {
-        message: "Error loading page",
-      });
-    });
+	return await dbManager
+		.executeQuery(query)
+		.then((response: { data: { page: ProvidersPageData; providers: Provider[] } }) => {
+			return response.data;
+		})
+		.catch(() => {
+			throw error(404, {
+				message: 'Error loading page'
+			});
+		});
 }

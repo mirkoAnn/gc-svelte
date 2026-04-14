@@ -2,24 +2,28 @@
 	import gsap from 'gsap/dist/gsap';
 	import { onMount } from 'svelte';
 	import { m } from '../../paraglide/messages';
+	import { appManager } from '$lib/app-manager.svelte';
 
 	let {
 		imgId, // Unique identifier for the image element to target with GSAP animations
 		imgUrl,
 		imgWidth,
 		imgHeight,
-		imgSize
+		imgSize,
+		imgAlt
 	}: {
 		imgId: string;
 		imgUrl: string;
 		imgWidth: string;
 		imgHeight: string;
 		imgSize: string;
+		imgAlt: string;
 	} = $props();
 
 	let isExpanded = $state(false);
+	const locale = $derived(appManager.getCountryCode());
 
-	const photoAlt = $derived(m.img_carousel_alt_text({ locale: '' }));
+	const photoAlt = $derived(m.img_carousel_alt_text({ imgAlt }, { locale }));
 
 	const togglePreview = () => {
 		isExpanded = !isExpanded;

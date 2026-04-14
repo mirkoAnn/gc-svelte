@@ -13,8 +13,8 @@
 	<div class="footer-inner">
 		<div class="footer-column">
 			<NavBranding />
-			<p class="footer-text">{m.footer_site_description({ locale })}</p>
-			<p class="footer-text">{m.responsible_gambling_title({ locale })}</p>
+			<p class="footer-text">{m.footer_site_description({}, { locale })}</p>
+			<p class="footer-text">{m.responsible_gambling_title({}, { locale })}</p>
 		</div>
 		<div class="footer-column">
 			{#each navManager.getMenuItemByIndex(0).submenuItems as item (item.label)}
@@ -42,16 +42,16 @@
 		</div>
 	</div>
 	<div class="subfooter">
-		{m.casino_legal_message({ locale })}
+		{m.casino_legal_message({}, { locale })}
 		<svg class="subfooter-small-icon">
 			<use href="/icons/icon-set.svg#+18"></use>
 		</svg>
 		<a
-			href={m.casino_legal_message_link({ locale })}
+			href={m.casino_legal_message_link({}, { locale })}
 			class="footer-link"
 			target="_blank"
 			rel="external noopener noreferrer"
-			aria-label={m.casino_legal_message_link_text({ locale })}
+			aria-label={m.casino_legal_message_link_text({}, { locale })}
 		>
 			<svg class="subfooter-big-icon">
 				<use href="/icons/icon-set.svg#adm"></use>

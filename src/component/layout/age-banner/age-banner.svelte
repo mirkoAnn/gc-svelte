@@ -25,15 +25,15 @@
 				<use href="/icons/icon-set.svg#+18" />
 			</svg>
 			<p class="age-banner-text">
-				{m.age_restriction_title({ locale })}
+				{m.age_restriction_title({}, { locale })}
 			</p>
-			<p class="age-banner-subtext">{m.age_restriction_subtext({ locale })}</p>
+			<p class="age-banner-subtext">{m.age_restriction_subtext({}, { locale })}</p>
 			<div class="age-banner-buttons">
 				<button class="age-banner-button yes" onclick={ageBannerManager.verifyAge}
-					>{m.age_restriction_button({ locale })}</button
+					>{m.age_restriction_button({}, { locale })}</button
 				>
 				<button class="age-banner-button no" onclick={ageBannerManager.denyAccess}
-					>{m.age_restriction_error({ locale })}</button
+					>{m.age_restriction_error({}, { locale })}</button
 				>
 			</div>
 		</div>

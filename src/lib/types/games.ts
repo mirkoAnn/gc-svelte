@@ -1,8 +1,14 @@
+import type { Author } from './author';
+import type { ContentItem } from './content';
 import type { Provider } from './provider';
 import type { Rating } from './rating';
 
 export type Game = {
 	id: string;
+	seo: {
+		title: string;
+		description: string;
+	};
 	title: string;
 	slug: string;
 	gameUrl: string;
@@ -13,11 +19,14 @@ export type Game = {
 		url: string;
 	};
 	provider: Provider;
-	slotThemes: {
-		slug: string;
-	}[];
 	sessions: number;
 	rating: Rating;
+	author: Author;
+	publishedAt: string;
+	updatedAt: string;
+};
+
+export type Slot = Game & {
 	info: {
 		rtp: string;
 		volatility: string;
@@ -31,8 +40,14 @@ export type Game = {
 		hasFreeSpins: boolean;
 		hasJackpot: boolean;
 	};
+	introContent: ContentItem;
+	rulesContent: ContentItem;
+	bonusContent: ContentItem;
+	opinionContent: ContentItem;
+	slotThemes: {
+		slug: string;
+		slots: Slot[];
+	}[];
 };
-
-export type Slot = Game;
 
 export type Roulette = Game;

@@ -93,11 +93,11 @@
 								casinoInfo.supportRating
 							]}
 							labels={[
-								m.bonus({ locale }),
-								m.design({ locale }),
-								m.mobile({ locale }),
-								m.games({ locale }),
-								m.support({ locale })
+								m.bonus({}, { locale }),
+								m.design({}, { locale }),
+								m.mobile({}, { locale }),
+								m.games({}, { locale }),
+								m.support({}, { locale })
 							]}
 							textColor={casino.colors.text}
 						/>
@@ -105,13 +105,13 @@
 				{/if}
 				<div id={`bonus-info-${casino.id}`} class="bonus-info-disclaimer">
 					<span class="bonus-info-disclaimer-title"
-						>{m.bonus_no_deposit_requirements_title({ locale })}</span
+						>{m.bonus_no_deposit_requirements_title({}, { locale })}</span
 					>
 					<span class="bonus-info-disclaimer-list-item">
 						{casino.welcomeBonus.noDepositRequirements}
 					</span>
 					<span class="bonus-info-disclaimer-title"
-						>{m.bonus_with_deposit_requirements_title({ locale })}</span
+						>{m.bonus_with_deposit_requirements_title({}, { locale })}</span
 					>
 					<span class="bonus-info-disclaimer-list-item">
 						{casino.welcomeBonus.withDepositRequirements}

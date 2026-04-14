@@ -1,6 +1,6 @@
 <script lang="ts">
 	import gsap from 'gsap/dist/gsap';
-	import Content from '../content/content.svelte';
+	import Content from '../content/content-element.svelte';
 
 	let { faq } = $props();
 

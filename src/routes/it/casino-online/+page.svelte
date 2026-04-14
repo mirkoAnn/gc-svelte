@@ -1,19 +1,20 @@
 <script lang="ts">
-	import Content from './../../../component/content/content.svelte';
 	import FaqsList from './../../../component/faqs/faqs-list.svelte';
 	import Breadcrumbs from './../../../component/breadcrumbs/breadcrumbs.svelte';
 	import CasinoTable from './../../../component/casino/casino-table.svelte';
 	import { casinosDataManager } from './../../../component/casino/casinos-data-manager.svelte';
 	import PageMetadata from './../../../component/metadata/page-metadata.svelte';
-	import type { CasinoOnlinePageData } from './+page.server';
 	import { appManager } from '$lib/app-manager.svelte';
+	import ContentContainer from '../../../component/content/content-container.svelte';
+	import type { CasinoOnlinePageData } from './+page.server';
+	import AuthorBox from '../../../component/author/author-box.svelte';
 
-	let { data }: { data: CasinoOnlinePageData } = $props();
+	let { data }: { data: { page: CasinoOnlinePageData } } = $props();
 
 	const locale = $derived(appManager.getCountryCode());
 </script>
 
-<PageMetadata title={data.seo.title} description={data.seo.description} />
+<PageMetadata title={data.page.seo.title} description={data.page.seo.description} />
 
 <Breadcrumbs
 	breadcrumbs={[
@@ -28,35 +29,26 @@
 <h1 class="page-title">I migliori casino online in Italia: recensioni, bonus e giochi</h1>
 <CasinoTable casinos={casinosDataManager.getCasinos()} />
 
-<div class="content first-content">
-	<Content content={data.content.firstContent} />
-</div>
-<div class="content">
-	<Content content={data.content.secondContent} />
-</div>
-<div class="content">
-	<Content content={data.content.thirdContent} />
-</div>
-<div class="content">
-	<Content content={data.content.fourthContent} />
-</div>
-<div class="content">
-	<Content content={data.content.fifthContent} />
-</div>
-<div class="content">
-	<Content content={data.content.sixthContent} />
-</div>
-<div class="content">
-	<Content content={data.content.seventhContent} />
-</div>
-<div class="content">
-	<Content content={data.content.eighthContent} />
-</div>
-<div class="content">
-	<Content content={data.content.ninethContent} />
-</div>
-<div class="content">
-	<Content content={data.content.tenthContent} />
-</div>
+<ContentContainer content={data.page.content.firstContent} />
 
-<FaqsList faqs={data.faqs} />
+<ContentContainer content={data.page.content.secondContent} />
+
+<ContentContainer content={data.page.content.thirdContent} />
+
+<ContentContainer content={data.page.content.fourthContent} />
+
+<ContentContainer content={data.page.content.fifthContent} />
+
+<ContentContainer content={data.page.content.sixthContent} />
+
+<ContentContainer content={data.page.content.seventhContent} />
+
+<ContentContainer content={data.page.content.eighthContent} />
+
+<ContentContainer content={data.page.content.ninethContent} />
+
+<ContentContainer content={data.page.content.tenthContent} />
+
+<FaqsList faqs={data.page.faqs} />
+
+<AuthorBox author={data.page.author} />

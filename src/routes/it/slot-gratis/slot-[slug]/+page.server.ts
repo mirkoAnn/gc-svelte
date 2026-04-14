@@ -1,35 +1,38 @@
-import { dbManager } from "$lib/db-manager.svelte.js";
-import { error } from "@sveltejs/kit";
+import { dbManager } from '$lib/db-manager.svelte.js';
+import { basicQuery } from '$lib/query/basic-query.js';
+import { error } from '@sveltejs/kit';
+import type { Slot } from '$lib/types/games.js';
+import type Faq from '../../../../component/faqs/faq.svelte';
+import type { Author } from '$lib/types/author.js';
+import type { Provider } from '$lib/types/provider.js';
+import type { PageContent } from '$lib/types/content.js';
+
+export type SlotThemePageData = {
+	id: string;
+	title: string;
+	slug: string;
+	seo: {
+		title: string;
+		description: string;
+	};
+	content: PageContent;
+	faqs: Faq[];
+	author: Author;
+	publishedAt: string;
+	updatedAt: string;
+};
 
 export async function load({ params }) {
-  const slotsCount = 40; // Number of slots for the initial fetching
+	const slotsCount = 40; // Number of slots for the initial fetching
 
-  const query = `
+	const query = `
     query {
-      page: slotThemes(filters: { slug: { eq: "${params.slug}" } }) {
-        id:documentId
-        seo {
-          title
-          description
-        }
+      page: slotThemes(locale:"it", filters: { slug: { eq: "${params.slug}" } }) {
+        ${basicQuery}
         title
-        slug
-        introContent
-        firstContent
-        secondContent
-        author {
-          name
-          image {
-            url
-          }
-          description
-          facebookProfile
-          linkedinProfile
-        }
-        publishedAt
-        updatedAt
+        slug        
       }
-      slots(filters: {slotThemes: { slug: { eq: "${params.slug}" } }}, pagination: { page: 1, pageSize: ${slotsCount} }) {
+      slots(filters: {locale: "it", slotThemes: { slug: { eq: "${params.slug}" } }}, pagination: { page: 1, pageSize: ${slotsCount} }) {
         id:documentId
         title
         slug
@@ -43,26 +46,39 @@ export async function load({ params }) {
           slug
         }
       }
-      slotThemes (pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
+      slotThemes (locale:"it", pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
         title
         slug
       }
-      providers (pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
+      providers (locale:"it", pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
         title
         slug
       }
     }
   `;
 
-  return await dbManager
-    .executeQuery(query)
-    .then((response: any) => {
-      response.data.page = response.data.page[0]; // Get the first item from the array response for a single slot page request
-      return response.data;
-    })
-    .catch(() => {
-      throw error(404, {
-        message: "Error loading page",
-      });
-    });
+	return await dbManager
+		.executeQuery(query)
+		.then(
+			(response: {
+				data: {
+					page: SlotThemePageData[];
+					slots: Slot[];
+					slotThemes: SlotThemePageData[];
+					providers: Provider[];
+				};
+			}) => {
+				return {
+					page: response.data.page[0], // Assuming the query returns an array and we need the first item
+					slots: response.data.slots,
+					slotThemes: response.data.slotThemes,
+					providers: response.data.providers
+				};
+			}
+		)
+		.catch(() => {
+			throw error(404, {
+				message: 'Error loading page'
+			});
+		});
 }

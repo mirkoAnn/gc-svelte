@@ -22,7 +22,7 @@
 		id="nav-links-submenu"
 		class="nav-links-submenu"
 		role="list"
-		aria-label={m.nav_links_submenu_aria_label({ locale })}
+		aria-label={m.nav_links_submenu_aria_label({}, { locale })}
 	>
 		{#each menu.submenuItems as subitem, index ('submenu' + index)}
 			<li class="nav-links-submenu-item">

@@ -47,7 +47,7 @@
 	"casino_comparator_show_previous": "Mostra il casino precedente",
 	"casino_comparator_show_next": "Mostra il casino successivo",
 	"casino": "Casinò",
-	"img_carousel_alt_text": "Visualizza l'immagine in anteprima ingrandita o ridotta",
+	"img_carousel_alt_text": "{imgAlt} - Visualizza l'immagine in anteprima ingrandita o ridotta",
 	"favourites_slots_title": "Le Tue Slot Preferite",
 	"social_follow_us_on": "Seguici su {social}",
 	"age_restriction_title": "Devi avere almeno 18 anni per accedere a questo sito. Per favore conferma la tua età.",

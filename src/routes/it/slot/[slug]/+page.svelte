@@ -3,17 +3,18 @@
 	import SlotFaqs from './../../../../component/faqs/slot-faqs.svelte';
 	import CasinoCards from './../../../../component/casino/casino-cards.svelte';
 	import Breadcrumbs from './../../../../component/breadcrumbs/breadcrumbs.svelte';
-	import Author from './../../../../component/author/author.svelte';
 	import PageMetadata from './../../../../component/metadata/page-metadata.svelte';
 	import GameWrapper from './../../../../component/games/iframe/game-wrapper.svelte';
 	import GameInfo from './../../../../component/games/info-panel/game-info.svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { gameManager } from './../../../../component/games/iframe/game-manager.svelte';
-	import Content from './../../../../component/content/content.svelte';
+	import Content from '../../../../component/content/content-element.svelte';
 	import { onMount } from 'svelte';
 	import Gallery from './../../../../component/games/gallery/games-gallery.svelte';
+	import AuthorBox from '../../../../component/author/author-box.svelte';
+	import type { Slot } from '$lib/types/games';
 
-	let { data }: { data: any } = $props();
+	let { data }: { data: { page: Slot } } = $props();
 
 	onMount(() => {
 		// Initialize game manager state and get the Related Casinos from Casinos Global Manager for the current game provider.
@@ -39,7 +40,7 @@
 		'Slot Machine',
 		'Slot Machine Gratis',
 		'Slot Machine Gratis Online Senza Registrazione',
-		data.page.seo.metaTitle
+		data.page.seo.title
 	]}
 	publishedAt={data.page.publishedAt}
 	updatedAt={data.page.updatedAt}
@@ -48,12 +49,12 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/slot-gratis' },
+			route: { id: '/it/slot-gratis' },
 			title: 'Gioca gratis alle Slot Online',
 			label: 'Slot Gratis'
 		},
 		{
-			route: { id: `/slot/[slug]`, params: { slug: data.page.slug } },
+			route: { id: `/it/slot/[slug]`, params: { slug: data.page.slug } },
 			title: `Gioca Gratis alla Slot Machine ${data.page.title} Online`,
 			label: data.page.title
 		}
@@ -107,11 +108,11 @@
 	<Content content={data.page.opinionContent} />
 </div>
 
-<SlotFaqs {data} />
+<SlotFaqs data={data.page} />
 
-<Author author={data.page.author} />
+<AuthorBox author={data.page.author} />
 
-<SlotMetadata {data} />
+<SlotMetadata data={data.page} />
 
 <style>
 	.casinos-provider-container {

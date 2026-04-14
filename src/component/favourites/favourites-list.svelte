@@ -12,7 +12,7 @@
 		<Gallery
 			games={favouritesManager.getListByCategory('slot')}
 			category="slot"
-			title={m.favourites_slots_title({ locale })}
+			title={m.favourites_slots_title({}, { locale })}
 			type="carousel"
 		/>
 	{/if}

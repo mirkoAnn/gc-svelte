@@ -20,7 +20,7 @@
 					<svg class="casino-info-utils-item-icon" width="16" height="16"
 						><use href="/icons/casino-set.svg#web"></use></svg
 					>
-					{m.web_site({ locale })}:</span
+					{m.web_site({}, { locale })}:</span
 				>
 				<a
 					class="casino-info-utils-item-value casino-info-utils-link"
@@ -34,7 +34,7 @@
 					<svg class="casino-info-utils-item-icon" width="16" height="16"
 						><use href="/icons/casino-set.svg#email"></use></svg
 					>
-					{m.email({ locale })}:</span
+					{m.email({}, { locale })}:</span
 				>
 				<a
 					class="casino-info-utils-item-value casino-info-utils-link"
@@ -46,7 +46,7 @@
 					<svg class="casino-info-utils-item-icon" width="16" height="16"
 						><use href="/icons/casino-set.svg#phone"></use></svg
 					>
-					{m.telephone({ locale })}:</span
+					{m.telephone({}, { locale })}:</span
 				>
 				<a
 					class="casino-info-utils-item-value casino-info-utils-link"
@@ -61,7 +61,7 @@
 					<svg class="casino-info-utils-item-icon" width="16" height="16"
 						><use href="/icons/casino-set.svg#money"></use></svg
 					>
-					{m.casino_deposit_min({ locale })}:</span
+					{m.casino_deposit_min({}, { locale })}:</span
 				>
 				<span class="casino-info-utils-item-value">
 					{casinoGlobalData.info.depositMin} €
@@ -72,7 +72,7 @@
 					<svg class="casino-info-utils-item-icon" width="16" height="16"
 						><use href="/icons/casino-set.svg#money"></use></svg
 					>
-					{m.casino_withdrawal_min({ locale })}:</span
+					{m.casino_withdrawal_min({}, { locale })}:</span
 				>
 				<span class="casino-info-utils-item-value">
 					{casinoGlobalData.info.withdrawalMin} €
@@ -83,7 +83,7 @@
 					<svg class="casino-info-utils-item-icon" width="16" height="16"
 						><use href="/icons/casino-set.svg#clock"></use></svg
 					>
-					{m.casino_withdrawal_time({ locale })}:</span
+					{m.casino_withdrawal_time({}, { locale })}:</span
 				>
 				<span class="casino-info-utils-item-value">
 					{casinoGlobalData.info.withdrawalTime} h

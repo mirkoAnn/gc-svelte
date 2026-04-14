@@ -1,14 +1,14 @@
 export type PageContent = {
-	introContent: string;
-	secondContent: string;
-	thirdContent: string;
-	fourthContent: string;
-	fifthContent: string;
-	sixthContent: string;
-	seventhContent: string;
-	eighthContent: string;
-	ninethContent: string;
-	tenthContent: string;
+	firstContent: ContentItem;
+	secondContent: ContentItem;
+	thirdContent: ContentItem;
+	fourthContent: ContentItem;
+	fifthContent: ContentItem;
+	sixthContent: ContentItem;
+	seventhContent: ContentItem;
+	eighthContent: ContentItem;
+	ninethContent: ContentItem;
+	tenthContent: ContentItem;
 };
 
 export type TextChild = {
@@ -43,3 +43,7 @@ export type ListContent = {
 	format?: string;
 	children: ListItem[];
 };
+
+export type ContentSection = HeadingContent | TextContent | ListContent;
+
+export type ContentItem = ContentSection[];

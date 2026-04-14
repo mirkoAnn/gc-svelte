@@ -68,13 +68,13 @@
 	};
 </script>
 
-<span class="casino-info-legal">{m.responsible_gambling_title({ locale })}</span>
+<span class="casino-info-legal">{m.responsible_gambling_title({}, { locale })}</span>
 <table class="casino-table">
 	<thead class="casino-table-header">
 		<tr class="casino-table-row">
-			<th class="casino-table-th">{m.casino({ locale })}</th>
-			<th class="casino-table-th">{m.bonus_no_deposit_title({ locale })}</th>
-			<th class="casino-table-th">{m.bonus_with_deposit_title({ locale })}</th>
+			<th class="casino-table-th">{m.casino({}, { locale })}</th>
+			<th class="casino-table-th">{m.bonus_no_deposit_title({}, { locale })}</th>
+			<th class="casino-table-th">{m.bonus_with_deposit_title({}, { locale })}</th>
 			<th class="casino-table-th"></th>
 		</tr>
 	</thead>
@@ -103,7 +103,7 @@
 							rel="noopener noreferrer external"
 							href={casino.affiliationUrl}
 						>
-							<span class="mobile-bonus-label">{m.bonus_no_deposit_title({ locale })}</span>
+							<span class="mobile-bonus-label">{m.bonus_no_deposit_title({}, { locale })}</span>
 							<span class="mobile-bonus-value">{casino.welcomeBonus.noDeposit}</span>
 						</a>
 					</div>
@@ -135,7 +135,7 @@
 							rel="noopener noreferrer external"
 							href={casino.affiliationUrl}
 						>
-							<span class="mobile-bonus-label">{m.bonus_with_deposit_title({ locale })}</span>
+							<span class="mobile-bonus-label">{m.bonus_with_deposit_title({}, { locale })}</span>
 							<span class="mobile-bonus-value">{casino.welcomeBonus.withDeposit}</span>
 						</a>
 					</div>
@@ -162,8 +162,10 @@
 					<a
 						class="casino-table-button casino-table-review-button"
 						title={m.casino_review_link_title({ casinoTitle: casino.title }, { locale })}
-						href={resolve(`/${appManager.getCountryCode()}/casino-online/${casino.slug}`)}
-						>{m.casino_review_link_text({ locale })}
+						href={resolve(`/${locale}/casino-online/[slug]`, {
+							slug: casino.slug
+						})}
+						>{m.casino_review_link_text({}, { locale })}
 						<svg class="casino-table-icon"><use href="/icons/icon-set.svg#arrow" /></svg></a
 					>
 					<a
@@ -172,7 +174,7 @@
 						target="_blank"
 						rel="noopener noreferrer external"
 						href={casino.affiliationUrl}
-						>{m.casino_cta_text({ locale })}
+						>{m.casino_cta_text({}, { locale })}
 						<svg class="casino-table-icon"><use href="/icons/icon-set.svg#arrow" /></svg></a
 					>
 				</td>

@@ -11,7 +11,7 @@
 <div class="casino-info-payments-and-providers">
 	<div class="casino-info-list-container casino-info-payment-methods">
 		<h2 class="casino-info-subtitle">
-			{m.payment_methods_title({ locale })}
+			{m.payment_methods_title({}, { locale })}
 		</h2>
 		<ul class="casino-info-list">
 			{#each casino.paymentMethods as paymentMethod (paymentMethod.slug)}
@@ -25,7 +25,7 @@
 	</div>
 	<div class="casino-info-list-container casino-info-providers">
 		<h2 class="casino-info-subtitle">
-			{m.providers_title({ locale })}
+			{m.providers_title({}, { locale })}
 		</h2>
 		<ul class="casino-info-list">
 			{#each casino.providers.slice(0, 10) as provider (provider.title)}
@@ -43,7 +43,7 @@
 			{/each}
 			<a href="#providersGallery" class="casino-info-list-item-more">
 				+{casino.providers.length - 10}
-				{m.other({ locale })}
+				{m.other({}, { locale })}
 			</a>
 		</ul>
 	</div>

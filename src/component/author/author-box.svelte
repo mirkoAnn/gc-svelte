@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Content from '../content/content.svelte';
+	import Content from '../content/content-element.svelte';
 	import type { Author } from '$lib/types/author';
 	import { m } from '../../paraglide/messages';
 	import { appManager } from '$lib/app-manager.svelte';

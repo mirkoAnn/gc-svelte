@@ -1,20 +1,40 @@
-import { dbManager } from "$lib/db-manager.svelte.js";
-import { error } from "@sveltejs/kit";
+import { dbManager } from '$lib/db-manager.svelte.js';
+import type { Author } from '$lib/types/author.js';
+import type { PageContent } from '$lib/types/content.js';
+import type { Slot } from '$lib/types/games.js';
+import { error } from '@sveltejs/kit';
+import type Faq from '../../../../component/faqs/faq.svelte';
+import { basicQuery } from '$lib/query/basic-query';
+
+export type ProviderPageData = {
+	seo: {
+		title: string;
+		description: string;
+	};
+	title: string;
+	slug: string;
+	logo: {
+		url: string;
+	};
+	slots: Slot[];
+	content: PageContent;
+	faqs: Faq[];
+	author: Author;
+	publishedAt: string;
+	updatedAt: string;
+};
 
 export async function load({ params }) {
-  const query = `
+	const query = `
     query {
-      page: providers(filters: { slug: { eq: "${params.slug}" } }) {
-        seo {
-          title
-          description
-        }
+      page: providers(locale: "it",filters: { slug: { eq: "${params.slug}" } }) {
+        ${basicQuery}
         title
         slug
         logo {
           url
         }
-        slots(pagination: { page: 1, pageSize: 20 }) {
+        slots(locale: "it",pagination: { page: 1, pageSize: 20 }) {
           id: documentId
           title
           slug
@@ -28,38 +48,38 @@ export async function load({ params }) {
             slug
           }
         }
-        author {
-          name
-          image {
-            url
-          }
-          description
-          facebookProfile
-          linkedinProfile
-        }
-        publishedAt
-        updatedAt
       }
-      slotThemes (pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
+      slotThemes (locale: "it",pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
         title
         slug
       }
-      providers (pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
+      providers (locale: "it",pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
         title
         slug
       }
     }
   `;
 
-  return await dbManager
-    .executeQuery(query)
-    .then((response: any) => {
-      response.data.page = response.data.page[0]; // Get the first item from the array response for a single slot page request
-      return response.data;
-    })
-    .catch(() => {
-      throw error(404, {
-        message: "Error loading page",
-      });
-    });
+	return await dbManager
+		.executeQuery(query)
+		.then(
+			(response: {
+				data: {
+					page: ProviderPageData[];
+					slotThemes: { title: string; slug: string }[];
+					providers: { title: string; slug: string }[];
+				};
+			}) => {
+				return {
+					page: response.data.page[0], // since the query returns an array of providers that match the slug filter but we know that there will be only one provider that matches the slug filter because slugs are unique, we can safely take the first element of the array to get the provider data
+					slotThemes: response.data.slotThemes,
+					providers: response.data.providers
+				};
+			}
+		)
+		.catch(() => {
+			throw error(404, {
+				message: 'Error loading page'
+			});
+		});
 }

@@ -120,7 +120,7 @@
 				<div class="arrows-container">
 					<button
 						class="arrow left-arrow"
-						aria-label={m.show_previous_games({ locale })}
+						aria-label={m.show_previous_games({}, { locale })}
 						onclick={() => scroll('left')}
 					>
 						<svg class="arrow-icon">
@@ -129,7 +129,7 @@
 					</button>
 					<button
 						class="arrow right-arrow"
-						aria-label={m.show_next_games({ locale })}
+						aria-label={m.show_next_games({}, { locale })}
 						onclick={() => scroll('right')}
 					>
 						<svg class="arrow-icon">
@@ -171,7 +171,7 @@
 				class="game-card more-games-card load-more-button"
 				onclick={() => gamesGalleryManager.loadMoreGames()}
 				disabled={!gamesGalleryManager.areMoreGamesAvailable()}
-				aria-label={m.load_more_games({ locale })}
+				aria-label={m.load_more_games({}, { locale })}
 			>
 				<svg class="more-games-card-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
 					<path

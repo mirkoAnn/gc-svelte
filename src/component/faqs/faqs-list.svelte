@@ -35,7 +35,7 @@
 </script>
 
 <div class="content faqs-container">
-	<h2 class="faqs-title">{m.faqs({ locale })}</h2>
+	<h2 class="faqs-title">{m.faqs({}, { locale })}</h2>
 	<div class="faqs-inner">
 		{#each faqs as faq ('faq' + faq.id)}
 			<Faq {faq} />

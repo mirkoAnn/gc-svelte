@@ -1,52 +1,69 @@
 <script lang="ts">
+	import AuthorBox from '../../component/author/author-box.svelte';
+	import CasinoTable from '../../component/casino/casino-table.svelte';
+	import { casinosDataManager } from '../../component/casino/casinos-data-manager.svelte';
+	import ContentContainer from '../../component/content/content-container.svelte';
+	import FaqsList from '../../component/faqs/faqs-list.svelte';
+	import GamesGallery from '../../component/games/gallery/games-gallery.svelte';
+	import PageMetadata from '../../component/metadata/page-metadata.svelte';
 	import type { HomePageData } from './+page.server';
+	import type { Slot, Roulette } from '$lib/types/games';
 
-	// import CasinoTable from '../../component/casino/casino-table.svelte';
-	// import { casinosDataManager } from '../../component/casino/casinos-data-manager.svelte';
-	// import Content from '../../component/content/content.svelte';
-	// import FaqsList from '../../component/faqs/faqs-list.svelte';
-	// import GamesGallery from '../../component/games/gallery/games-gallery.svelte';
-	// import PageMetadata from '../../component/metadata/page-metadata.svelte';
-	// import Faq from '../../component/faqs/faq.svelte';
-
-	let { data }: { data: HomePageData } = $props();
+	let { data }: { data: { page: HomePageData; slots: Slot[]; roulettes: Roulette[] } } = $props();
 </script>
 
-<!-- 
-<PageMetadata
-  title={data.page.seo.title}
-  description={data.page.seo.description}
-/>
+<PageMetadata title={data.page.seo.title} description={data.page.seo.description} />
 
 <div class="game-categories">
-  <GamesGallery
-    games={data.slots}
-    category="slot"
-    title="Nuove Slot"
-    type="carousel"
-    categoryLink="/slot-gratis"
-  />
-  <GamesGallery
-    games={data.roulettes}
-    category="roulette"
-    title="Nuove Roulette"
-    type="carousel"
-    categoryLink="/roulette-gratis"
-  />
+	<GamesGallery
+		games={data.slots}
+		category="slot"
+		title="Nuove Slot"
+		type="carousel"
+		categoryLink="/slot-gratis"
+	/>
+	<GamesGallery
+		games={data.roulettes}
+		category="roulette"
+		title="Nuove Roulette"
+		type="carousel"
+		categoryLink="/roulette-gratis"
+	/>
 </div>
 
-<div id="introContent" class="content">
-  <Content content={data.page.introContent} />
-</div>
-<div id="whyChooseSGOContent" class="content">
-  <Content content={data.page.whyChooseSGOContent} />
-</div>
-<div id="howToPlaySlotsContent" class="content">
-  <Content content={data.page.howToPlaySlotsContent} />
-</div>
-<div id="jackpotContent" class="content">
-  <Content content={data.page.jackpotContent} />
-</div>
+{#if data.page.content.firstContent}
+	<ContentContainer content={data.page.content.firstContent} />
+{/if}
+{#if data.page.content.secondContent}
+	<ContentContainer content={data.page.content.secondContent} />
+{/if}
+{#if data.page.content.thirdContent}
+	<ContentContainer content={data.page.content.thirdContent} />
+{/if}
+{#if data.page.content.fourthContent}
+	<ContentContainer content={data.page.content.fourthContent} />
+{/if}
+{#if data.page.content.fifthContent}
+	<ContentContainer content={data.page.content.fifthContent} />
+{/if}
+{#if data.page.content.sixthContent}
+	<ContentContainer content={data.page.content.sixthContent} />
+{/if}
+{#if data.page.content.seventhContent}
+	<ContentContainer content={data.page.content.seventhContent} />
+{/if}
+{#if data.page.content.eighthContent}
+	<ContentContainer content={data.page.content.eighthContent} />
+{/if}
+{#if data.page.content.ninethContent}
+	<ContentContainer content={data.page.content.ninethContent} />
+{/if}
+{#if data.page.content.tenthContent}
+	<ContentContainer content={data.page.content.tenthContent} />
+{/if}
+
 <CasinoTable casinos={casinosDataManager.getTopCasinos(10)} />
 
-<FaqsList faqs={data.page.faqs} /> -->
+<FaqsList faqs={data.page.faqs} />
+
+<AuthorBox author={data.page.author} />

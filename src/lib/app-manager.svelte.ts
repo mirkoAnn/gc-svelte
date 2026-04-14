@@ -1,8 +1,7 @@
 import gsap from 'gsap/dist/gsap';
 
 export enum countryCodes {
-	it = 'it',
-	es = 'es'
+	it = 'it'
 }
 
 let isMobile = $state<boolean>(false),
@@ -25,8 +24,6 @@ export const appManager = {
 		switch (countryCode) {
 			case countryCodes.it:
 				return 'Italia';
-			case countryCodes.es:
-				return 'España';
 			default:
 				return '';
 		}
@@ -35,8 +32,6 @@ export const appManager = {
 		switch (countryCode) {
 			case countryCodes.it:
 				return 'it_IT';
-			case countryCodes.es:
-				return 'es_ES';
 			default:
 				return '';
 		}
@@ -44,7 +39,6 @@ export const appManager = {
 	getCurrencyCode: () => {
 		switch (countryCode) {
 			case countryCodes.it:
-			case countryCodes.es:
 				return 'EUR';
 			default:
 				return '';

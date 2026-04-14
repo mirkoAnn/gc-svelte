@@ -11,7 +11,7 @@
 
 <div class="game-intro-container">
 	<h1 class="page-title">{game.title}</h1>
-	<p class="choose-mode-message">{m.choose_mode_message({ locale })}</p>
+	<p class="choose-mode-message">{m.choose_mode_message({}, { locale })}</p>
 	<div class="buttons-container">
 		<button
 			class="demo-button"
@@ -19,7 +19,7 @@
 				gameManager.toggleGame(game.id, game.sessions + 1, category);
 			}}
 		>
-			{m.demo_button_text({ locale })}
+			{m.demo_button_text({}, { locale })}
 		</button>
 		{#if gameManager.getRelatedCasinos()[0]?.affiliationUrl}
 			<a
@@ -27,13 +27,13 @@
 				rel="noopener noreferrer nofollow external"
 				class="real-money-button"
 				title={m.real_money_title({ gameTitle: game.title }, { locale })}
-				>{m.real_money_text({ locale })}</a
+				>{m.real_money_text({}, { locale })}</a
 			>
 		{/if}
 	</div>
 	<p class="disclaimer">
-		<span class="disclaimer-phrase">{m.responsible_gambling_title_small({ locale })}</span>
-		<span class="disclaimer-phrase">{m.game_play_legal_message({ locale })}</span>
+		<span class="disclaimer-phrase">{m.responsible_gambling_title_small({}, { locale })}</span>
+		<span class="disclaimer-phrase">{m.game_play_legal_message({}, { locale })}</span>
 	</p>
 </div>
 

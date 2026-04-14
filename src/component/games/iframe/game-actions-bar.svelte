@@ -15,7 +15,7 @@
 		<button
 			class="action-container game-error-button"
 			onclick={gameManager.toggleErrorPopup}
-			aria-label={m.game_error_button_text({ locale })}
+			aria-label={m.game_error_button_text({}, { locale })}
 		>
 			<svg class="action-icon help-icon">
 				<use href="/icons/icon-set.svg#error" />
@@ -30,7 +30,7 @@
 				rel="noopener noreferrer nofollow external"
 				class="real-money-button"
 				title={m.real_money_title({ gameTitle: game.title }, { locale })}
-				>{m.real_money_text({ locale })}
+				>{m.real_money_text({}, { locale })}
 			</a>
 		{/if}
 		<div class="favourite-container">
@@ -39,7 +39,7 @@
 		<button
 			class="action-container fullscreen-button"
 			onclick={gameManager.toggleFullscreen}
-			aria-label={m.fullscreen_button_text({ locale })}
+			aria-label={m.fullscreen_button_text({}, { locale })}
 		>
 			<svg class="action-icon fullscreen-icon">
 				<use href="/icons/icon-set.svg#fullscreen" />

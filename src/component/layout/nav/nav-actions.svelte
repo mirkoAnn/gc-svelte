@@ -28,7 +28,7 @@
 					<svg class="nav-action-icon nav-action-close-icon" aria-hidden="true">
 						<use href="/icons/icon-set.svg#close"></use>
 					</svg>
-					<span class="nav-action-close-label">{m.close({ locale })}</span>
+					<span class="nav-action-close-label">{m.close({}, { locale })}</span>
 				</span>
 			</button>
 		{:else}
@@ -50,7 +50,7 @@
 					<svg class="nav-action-icon nav-action-close-icon" aria-hidden="true">
 						<use href="/icons/icon-set.svg#close"></use>
 					</svg>
-					<span class="nav-action-close-label">{m.close({ locale })}</span>
+					<span class="nav-action-close-label">{m.close({}, { locale })}</span>
 				</span>
 			</button>
 		{/if}

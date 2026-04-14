@@ -1,10 +1,11 @@
+import type { ContentItem } from './content';
+
 export type Author = {
 	name: string;
-	description: string;
+	description: ContentItem;
 	image: {
 		url: string;
 	};
 	facebookProfile?: string;
 	linkedinProfile?: string;
-	email?: string;
 };

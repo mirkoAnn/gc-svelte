@@ -16,7 +16,7 @@
 
 <div
 	class="nav"
-	aria-label={m.main_navigation_label({ locale })}
+	aria-label={m.main_navigation_label({}, { locale })}
 	role="presentation"
 	style="--nav-bg-color: var(--navbar-bg-color-{initialSection});"
 >

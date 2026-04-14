@@ -6,26 +6,12 @@
 	import { casinosDataManager } from '../casino/casinos-data-manager.svelte';
 	import { appManager } from '$lib/app-manager.svelte';
 	import { m } from '../../paraglide/messages';
+	import type { Slot } from '$lib/types/games';
 
 	let {
 		data
 	}: {
-		data: {
-			page: {
-				title: string;
-				info: {
-					rtp?: number;
-					volatility: string;
-					hasFreeSpins?: boolean;
-					hasBonusGame?: boolean;
-					hasJackpot?: boolean;
-					betMin?: number;
-					winMax?: number;
-				};
-				provider: { title: string };
-				slug: string;
-			};
-		};
+		data: Slot;
 	} = $props();
 	// Helper function to create content structure from plain text answers
 	// The content structure is an array of blocks, each block has a type and children, similar to content structure used by fetched rich text.
@@ -36,17 +22,17 @@
 	const locale = $derived(appManager.getCountryCode());
 
 	const volatility = $derived(() => {
-		switch (data.page.info.volatility.toLowerCase()) {
+		switch (data.info.volatility.toLowerCase()) {
 			case 'low':
-				return m.slot_volatility_low({ locale });
+				return m.slot_volatility_low({}, { locale });
 			case 'medium-low':
-				return m.slot_volatility_medium_low({ locale });
+				return m.slot_volatility_medium_low({}, { locale });
 			case 'medium':
-				return m.slot_volatility_medium({ locale });
+				return m.slot_volatility_medium({}, { locale });
 			case 'medium-high':
-				return m.slot_volatility_medium_high({ locale });
+				return m.slot_volatility_medium_high({}, { locale });
 			case 'high':
-				return m.slot_volatility_high({ locale });
+				return m.slot_volatility_high({}, { locale });
 			default:
 				return '';
 		}
@@ -55,14 +41,14 @@
 	let faqs: FAQ[] = $derived.by(() => {
 		const formattedFaqs: { id: string; question: string; answer: string }[] = [
 			{
-				id: `${data.page.slug}-faq-0`,
-				question: `${m.slot_faqs_casinos_question({ gameTitle: data.page.title }, { locale })}`,
+				id: `${data.slug}-faq-0`,
+				question: `${m.slot_faqs_casinos_question({ gameTitle: data.title }, { locale })}`,
 				answer: `${m.slot_faqs_casinos_answer(
 					{
-						gameTitle: data.page.title,
-						providerName: data.page.provider.title,
+						gameTitle: data.title,
+						providerName: data.provider.title,
 						casinosList: casinosDataManager
-							.getCasinosByProviderTitle(data.page.provider.title)
+							.getCasinosByProviderTitle(data.provider.title)
 							.map((casino) => casino.title)
 							.join(', ')
 					},
@@ -70,67 +56,67 @@
 				)}`
 			},
 			{
-				id: `${data.page.slug}-faq-1`,
-				question: `${m.slot_faqs_demo_question({ gameTitle: data.page.title }, { locale })}`,
-				answer: `${m.slot_faqs_demo_answer({ gameTitle: data.page.title }, { locale })}`
+				id: `${data.slug}-faq-1`,
+				question: `${m.slot_faqs_demo_question({ gameTitle: data.title }, { locale })}`,
+				answer: `${m.slot_faqs_demo_answer({ gameTitle: data.title }, { locale })}`
 			},
 			{
-				id: `${data.page.slug}-faq-2`,
-				question: `${m.slot_faqs_no_registration_question({ gameTitle: data.page.title }, { locale })}`,
+				id: `${data.slug}-faq-2`,
+				question: `${m.slot_faqs_no_registration_question({ gameTitle: data.title }, { locale })}`,
 				answer: `${m.slot_faqs_no_registration_answer({ siteName: SITE_NAME }, { locale })}`
 			},
 			{
-				id: `${data.page.slug}-faq-3`,
-				question: `${m.slot_faqs_mobile_question({ gameTitle: data.page.title }, { locale })}`,
-				answer: `${m.slot_faqs_mobile_answer({ gameTitle: data.page.title }, { locale })}`
+				id: `${data.slug}-faq-3`,
+				question: `${m.slot_faqs_mobile_question({ gameTitle: data.title }, { locale })}`,
+				answer: `${m.slot_faqs_mobile_answer({ gameTitle: data.title }, { locale })}`
 			},
 			{
-				id: `${data.page.slug}-faq-4`,
-				question: `${m.slot_faqs_provider_question({ gameTitle: data.page.title }, { locale })}`,
-				answer: `${m.slot_faqs_provider_answer({ gameTitle: data.page.title, providerName: data.page.provider.title }, { locale })}`
+				id: `${data.slug}-faq-4`,
+				question: `${m.slot_faqs_provider_question({ gameTitle: data.title }, { locale })}`,
+				answer: `${m.slot_faqs_provider_answer({ gameTitle: data.title, providerName: data.provider.title }, { locale })}`
 			},
 			{
-				id: `${data.page.slug}-faq-5`,
-				question: `${m.slot_faqs_bonus_question({ gameTitle: data.page.title }, { locale })}`,
+				id: `${data.slug}-faq-5`,
+				question: `${m.slot_faqs_bonus_question({ gameTitle: data.title }, { locale })}`,
 				answer:
-					!data.page.info.hasFreeSpins && !data.page.info.hasBonusGame && !data.page.info.hasJackpot
-						? `${m.slot_faqs_bonus_no_answer({ gameTitle: data.page.title }, { locale })}`
-						: `${m.slot_faqs_bonus_answer({ gameTitle: data.page.title }, { locale })}` +
-							(data.page.info.hasFreeSpins ? `, ${m.slot_free_spins_bonus({ locale })}` : '') +
-							(data.page.info.hasBonusGame ? `, ${m.slot_bonus_game({ locale })}` : '') +
-							(data.page.info.hasJackpot ? `, ${m.slot_jackpot({ locale })}` : '')
+					!data.info.hasFreeSpins && !data.info.hasBonusGame && !data.info.hasJackpot
+						? `${m.slot_faqs_bonus_no_answer({ gameTitle: data.title }, { locale })}`
+						: `${m.slot_faqs_bonus_answer({ gameTitle: data.title }, { locale })}` +
+							(data.info.hasFreeSpins ? `, ${m.slot_free_spins_bonus({}, { locale })}` : '') +
+							(data.info.hasBonusGame ? `, ${m.slot_bonus_game({}, { locale })}` : '') +
+							(data.info.hasJackpot ? `, ${m.slot_jackpot({}, { locale })}` : '')
 			},
 			{
-				id: `${data.page.slug}-faq-6`,
-				question: `${m.slot_faqs_rtp_question({ gameTitle: data.page.title }, { locale })}`,
-				answer: data.page.info.rtp
-					? `${m.slot_faqs_rtp_answer({ gameTitle: data.page.title, rtp: data.page.info.rtp }, { locale })}`
-					: `${m.slot_faqs_rtp_no_answer({ gameTitle: data.page.title }, { locale })}`
+				id: `${data.slug}-faq-6`,
+				question: `${m.slot_faqs_rtp_question({ gameTitle: data.title }, { locale })}`,
+				answer: data.info.rtp
+					? `${m.slot_faqs_rtp_answer({ gameTitle: data.title, rtp: data.info.rtp }, { locale })}`
+					: `${m.slot_faqs_rtp_no_answer({ gameTitle: data.title }, { locale })}`
 			},
 			{
-				id: `${data.page.slug}-faq-7`,
-				question: `${m.slot_faqs_volatility_question({ gameTitle: data.page.title }, { locale })}`,
-				answer: `${m.slot_faqs_volatility_answer({ gameTitle: data.page.title, gameVolatility: volatility() }, { locale })}`
+				id: `${data.slug}-faq-7`,
+				question: `${m.slot_faqs_volatility_question({ gameTitle: data.title }, { locale })}`,
+				answer: `${m.slot_faqs_volatility_answer({ gameTitle: data.title, gameVolatility: volatility() }, { locale })}`
 			},
 			{
-				id: `${data.page.slug}-faq-8`,
-				question: `${m.slot_faqs_bet_min_question({ gameTitle: data.page.title }, { locale })}`,
-				answer: data.page.info.betMin
-					? `${m.slot_faqs_bet_min_answer({ gameTitle: data.page.title, betMin: data.page.info.betMin }, { locale })}`
-					: `${m.slot_faqs_bet_min_no_answer({ gameTitle: data.page.title }, { locale })}`
+				id: `${data.slug}-faq-8`,
+				question: `${m.slot_faqs_bet_min_question({ gameTitle: data.title }, { locale })}`,
+				answer: data.info.betMin
+					? `${m.slot_faqs_bet_min_answer({ gameTitle: data.title, betMin: data.info.betMin }, { locale })}`
+					: `${m.slot_faqs_bet_min_no_answer({ gameTitle: data.title }, { locale })}`
 			},
 			{
-				id: `${data.page.slug}-faq-9`,
-				question: `${m.slot_faqs_win_max_question({ gameTitle: data.page.title }, { locale })}`,
-				answer: data.page.info.winMax
-					? `${m.slot_faqs_win_max_answer({ gameTitle: data.page.title, winMax: data.page.info.winMax }, { locale })}`
-					: `${m.slot_faqs_win_max_no_answer({ gameTitle: data.page.title }, { locale })}`
+				id: `${data.slug}-faq-9`,
+				question: `${m.slot_faqs_win_max_question({ gameTitle: data.title }, { locale })}`,
+				answer: data.info.winMax
+					? `${m.slot_faqs_win_max_answer({ gameTitle: data.title, winMax: data.info.winMax }, { locale })}`
+					: `${m.slot_faqs_win_max_no_answer({ gameTitle: data.title }, { locale })}`
 			}
 		];
 
 		return formattedFaqs.map((faq, i) => {
 			return {
-				id: `${data.page.slug}-faq-${i}`,
+				id: `${data.slug}-faq-${i}`,
 				question: faq.question,
 				answer: createContentFromText(faq.answer) as FAQ['answer']
 			};

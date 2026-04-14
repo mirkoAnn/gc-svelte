@@ -28,7 +28,7 @@
 		<div class="navbar-search-results-container">
 			{#if navSearchManager.getSearchResults().casinosIds.length > 0}
 				<div class="results-category-container">
-					<h3 class="results-category-title">{m.casinos({ locale })}</h3>
+					<h3 class="results-category-title">{m.casinos({}, { locale })}</h3>
 					<CasinoCards
 						casinos={casinosDataManager.getCasinosByIds(
 							navSearchManager.getSearchResults().casinosIds
@@ -38,7 +38,7 @@
 			{/if}
 			{#if navSearchManager.getSearchResults().slots.length > 0}
 				<div class="results-category-container">
-					<h3 class="results-category-title">{m.slots({ locale })}</h3>
+					<h3 class="results-category-title">{m.slots({}, { locale })}</h3>
 					<GamesGallery
 						games={navSearchManager.getSearchResults().slots}
 						category="slot"
@@ -48,7 +48,7 @@
 			{/if}
 			{#if navSearchManager.getSearchResults().roulettes.length > 0}
 				<div class="results-category-container">
-					<h3 class="results-category-title">{m.roulettes({ locale })}</h3>
+					<h3 class="results-category-title">{m.roulettes({}, { locale })}</h3>
 					<!-- <GamesCarousel
 					games={navSearchManager.getSearchResults().roulettes}
 					category="roulettes"
@@ -57,7 +57,7 @@
 			{/if}
 			{#if navSearchManager.getSearchResults().providers.length > 0}
 				<div class="results-category-container">
-					<h3 class="results-category-title">{m.providers({ locale })}</h3>
+					<h3 class="results-category-title">{m.providers({}, { locale })}</h3>
 					<ProvidersGallery providers={navSearchManager.getSearchResults().providers} />
 				</div>
 			{/if}

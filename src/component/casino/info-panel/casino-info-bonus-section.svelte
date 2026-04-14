@@ -17,7 +17,7 @@
 		<h2 class="casino-info-subtitle casino-info-bonus-item-title">
 			<svg class="casino-info-bonus-item-icon">
 				<use href="/icons/icon-set.svg#gift" />
-			</svg>{m.bonus_no_deposit_title({ locale })}
+			</svg>{m.bonus_no_deposit_title({}, { locale })}
 		</h2>
 		<h3 class="casino-info-bonus-item-subtitle">
 			<a
@@ -40,7 +40,7 @@
 		<h2 class="casino-info-subtitle casino-info-bonus-item-title">
 			<svg class="casino-info-bonus-item-icon">
 				<use href="/icons/icon-set.svg#gift" />
-			</svg>{m.bonus_with_deposit_title({ locale })}
+			</svg>{m.bonus_with_deposit_title({}, { locale })}
 		</h2>
 		<h3 class="casino-info-bonus-item-subtitle">
 			<a
