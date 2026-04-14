@@ -1,20 +1,14 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation';
 	import { appManager } from '$lib/app-manager.svelte';
-	import type { Game } from '$lib/types/games';
+	import type { Slot } from '$lib/types/games';
 	import gsap from 'gsap/dist/gsap';
 	import { m } from '../../../paraglide/messages';
+	import { formatCurrency } from '$lib/utils.svelte';
 
-	let { game }: { game: Game } = $props();
+	let { game }: { game: Slot } = $props();
 
 	const locale = $derived(appManager.getCountryCode());
-
-	const formatCurrency = (value: string) => {
-		return parseFloat(value).toLocaleString(appManager.getCountryLangCode(), {
-			style: 'currency',
-			currency: appManager.getCurrencyCode()
-		});
-	};
 
 	afterNavigate(async () => {
 		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
@@ -52,6 +46,10 @@
 			</ul>
 			<ul class="game-info-list">
 				<li class="game-info">
+					<span class="game-info-label">{m.game_release_year({}, { locale })}: </span>
+					<span class="game-info-value">{game.info.releaseYear}</span>
+				</li>
+				<li class="game-info">
 					<span class="game-info-label">{m.game_reels({}, { locale })}: </span>
 					<span class="game-info-value">{game.info.reels}</span>
 				</li>
@@ -66,10 +64,6 @@
 				<li class="game-info">
 					<span class="game-info-label">{m.game_bet_max({}, { locale })}: </span>
 					<span class="game-info-value">{formatCurrency(game.info.betMax)}</span>
-				</li>
-				<li class="game-info">
-					<span class="game-info-label">{m.game_win_min({}, { locale })}: </span>
-					<span class="game-info-value">{formatCurrency(game.info.winMin)}</span>
 				</li>
 				<li class="game-info">
 					<span class="game-info-label">{m.game_win_max({}, { locale })}: </span>

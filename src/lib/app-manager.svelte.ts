@@ -31,7 +31,7 @@ export const appManager = {
 	getCountryLangCode: () => {
 		switch (countryCode) {
 			case countryCodes.it:
-				return 'it_IT';
+				return 'it-IT';
 			default:
 				return '';
 		}

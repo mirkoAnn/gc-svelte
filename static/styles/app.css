@@ -149,9 +149,16 @@ svg {
 }
 
 img {
+  width: 100%;
   max-width: 100%;
   height: auto;
   display: block;
+  margin: 0 auto;
+  &.full-width {
+    max-width: 1000px;
+    margin: 32px auto;
+    border-radius: 8px;
+  }
 }
 
 button {
@@ -188,7 +195,7 @@ h6 {
 .content {
   width: 90%;
   max-width: 1200px;
-  margin: 50px auto;
+  margin: 150px auto;
   @media (max-width: 768px) {
     padding: 16px;
   }

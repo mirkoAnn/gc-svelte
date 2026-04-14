@@ -7,6 +7,7 @@
 	import { appManager } from '$lib/app-manager.svelte';
 	import { m } from '../../paraglide/messages';
 	import type { Slot } from '$lib/types/games';
+	import { formatCurrency } from '$lib/utils.svelte.ts';
 
 	let {
 		data
@@ -102,14 +103,14 @@
 				id: `${data.slug}-faq-8`,
 				question: `${m.slot_faqs_bet_min_question({ gameTitle: data.title }, { locale })}`,
 				answer: data.info.betMin
-					? `${m.slot_faqs_bet_min_answer({ gameTitle: data.title, betMin: data.info.betMin }, { locale })}`
+					? `${m.slot_faqs_bet_min_answer({ gameTitle: data.title, betMin: formatCurrency(data.info.betMin) }, { locale })}`
 					: `${m.slot_faqs_bet_min_no_answer({ gameTitle: data.title }, { locale })}`
 			},
 			{
 				id: `${data.slug}-faq-9`,
 				question: `${m.slot_faqs_win_max_question({ gameTitle: data.title }, { locale })}`,
 				answer: data.info.winMax
-					? `${m.slot_faqs_win_max_answer({ gameTitle: data.title, winMax: data.info.winMax }, { locale })}`
+					? `${m.slot_faqs_win_max_answer({ gameTitle: data.title, winMax: formatCurrency(data.info.winMax) }, { locale })}`
 					: `${m.slot_faqs_win_max_no_answer({ gameTitle: data.title }, { locale })}`
 			}
 		];

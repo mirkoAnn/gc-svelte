@@ -37,7 +37,7 @@
       "name": "${data.title}",
       "image": {
         "type": "ImageObject",
-        "url": "${data.gameplay.url}",
+        "url": "${data.images[0]?.image.url}",
         "width": 1000,
         "height": 562
       },

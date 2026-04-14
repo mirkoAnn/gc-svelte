@@ -15,9 +15,12 @@ export type Game = {
 	logo: {
 		url: string;
 	};
-	gameplay: {
-		url: string;
-	};
+	images: {
+		image: {
+			url: string;
+		};
+		description: string;
+	}[];
 	provider: Provider;
 	sessions: number;
 	rating: Rating;
@@ -28,13 +31,13 @@ export type Game = {
 
 export type Slot = Game & {
 	info: {
+		releaseYear: string;
 		rtp: string;
 		volatility: string;
 		reels: string;
 		paylines: string;
 		betMin: string;
 		betMax: string;
-		winMin: string;
 		winMax: string;
 		hasBonusGame: boolean;
 		hasFreeSpins: boolean;

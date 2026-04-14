@@ -81,24 +81,42 @@
 </div>
 <GameInfo game={data.page} />
 
-<div id="introContent" class="content">
-	<h2 class="content-title">{data.page.title} Slot Machine</h2>
-	<Content content={data.page.introContent} />
-</div>
-<div id="rulesContent" class="content">
-	<h2 class="content-title">Come provare {data.page.title} gratuitamente e da dove iniziare</h2>
-	<Content content={data.page.rulesContent} />
-</div>
-<div id="bonusContent" class="content content-columns">
+<div id="introContent" class="content content-columns">
+	<img
+		class="img medium-img"
+		src={data.page.images[0]?.image.url}
+		alt={data.page.images[0]?.description}
+		title={data.page.images[0]?.description}
+		width="600"
+		height="400"
+	/>
 	<div class="content-text">
-		<h2 class="content-title">Funzioni Bonus della Slot {data.page.title}</h2>
-		<Content content={data.page.bonusContent} />
+		<h2 class="content-title">{data.page.title} Slot Machine</h2>
+		<Content content={data.page.introContent} />
+	</div>
+</div>
+<div id="rulesContent" class="content content-columns">
+	<div class="content-text">
+		<h2 class="content-title">Come provare {data.page.title} gratuitamente e da dove iniziare</h2>
+		<Content content={data.page.rulesContent} />
 	</div>
 	<img
 		class="img medium-img"
-		src={data.page.gameplay.url.replace('/upload/', '/upload/f_avif/w_700/')}
-		alt={`Logo della slot ${data.page.title}`}
-		title={`Logo della slot ${data.page.title}`}
+		src={data.page.images[1]?.image.url}
+		alt={data.page.images[1]?.description}
+		title={data.page.images[1]?.description}
+		width="600"
+		height="400"
+	/>
+</div>
+<div id="bonusContent" class="content">
+	<h2 class="content-title">Funzioni Bonus della Slot {data.page.title}</h2>
+	<Content content={data.page.bonusContent} />
+	<img
+		class="img full-width"
+		src={data.page.images[2]?.image.url.replace('/upload/', '/upload/f_avif/w_700/')}
+		alt={data.page.images[2]?.description}
+		title={data.page.images[2]?.description}
 		width="600"
 		height="400"
 	/>

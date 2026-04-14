@@ -17,18 +17,21 @@ export async function load({ params }) {
           logo {
               url
           }
-          gameplay {
+          images {
+            image {
               url
+            }
+            description
           }
           gameUrl
           info {
+              releaseYear
               rtp
               volatility
               reels
               paylines
               betMin
               betMax
-              winMin
               winMax
               hasFreeSpins
               hasBonusGame
@@ -40,7 +43,9 @@ export async function load({ params }) {
           opinionContent
           slotThemes {
             slug
-            slots(locale: "it", pagination: { page: 1, pageSize: 10 }) {
+            slots(filters:{locale:  {
+               eq:"it"
+            } } pagination: { page: 1, pageSize: 10 }) {
               id:documentId
               title
               slug
@@ -77,6 +82,8 @@ export async function load({ params }) {
       }
     }
   `;
+
+	console.log(query);
 
 	return await dbManager
 		.executeQuery(query)
