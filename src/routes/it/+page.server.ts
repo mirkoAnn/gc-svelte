@@ -31,8 +31,11 @@ export async function load() {
         logo {
           url
         }
-        gameplay {
-          url
+        images {
+          image {
+            url
+          }
+          description
         }
         provider {
           title
