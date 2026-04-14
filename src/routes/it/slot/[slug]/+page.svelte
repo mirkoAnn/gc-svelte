@@ -86,12 +86,12 @@
 	<Content content={data.page.introContent} />
 </div>
 <div id="rulesContent" class="content">
-	<h2 class="content-title">Le Regole</h2>
+	<h2 class="content-title">Come provare {data.page.title} gratuitamente e da dove iniziare</h2>
 	<Content content={data.page.rulesContent} />
 </div>
 <div id="bonusContent" class="content content-columns">
 	<div class="content-text">
-		<h2 class="content-title">I Bonus della Slot {data.page.title}</h2>
+		<h2 class="content-title">Funzioni Bonus della Slot {data.page.title}</h2>
 		<Content content={data.page.bonusContent} />
 	</div>
 	<img
@@ -104,7 +104,7 @@
 	/>
 </div>
 <div id="opinionContent" class="content">
-	<h2 class="content-title">Le nostre Opinioni</h2>
+	<h2 class="content-title">Opinioni {data.page.title}</h2>
 	<Content content={data.page.opinionContent} />
 </div>
 

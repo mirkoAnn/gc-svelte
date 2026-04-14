@@ -156,7 +156,7 @@
 		<!-- Link to the category for carousel type -->
 		{#if categoryLink}
 			<a
-				href={`/${locale}/${categoryLink}`}
+				href={`/${locale}${categoryLink}`}
 				class="game-card more-games-card"
 				aria-label={m.show_all_by_category({ category }, { locale })}
 				title={m.show_all_by_category({ category }, { locale })}

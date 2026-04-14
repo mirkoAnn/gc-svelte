@@ -1,10 +1,11 @@
 <script lang="ts">
-	import type { Game } from '$lib/types/games';
+	import type { Slot } from '$lib/types/games';
+	import { resolve } from '$app/paths';
 	import { appManager } from '../../../lib/app-manager.svelte';
 	import { m } from '../../../paraglide/messages';
 	import FavouritesToggler from '../../favourites/favourites-toggler.svelte';
 
-	let { game, category }: { game: Game; category: string } = $props();
+	let { game, category }: { game: Slot; category: 'slot' } = $props();
 
 	const locale = $derived(appManager.getCountryCode());
 </script>
@@ -12,7 +13,7 @@
 <div class="game-card">
 	<div class="game-card-inner">
 		<div class="game-img-container">
-			<a href={`/${locale}/${category}/${game.slug}`} class="game-link">
+			<a href={resolve(`/${locale}/${category}/[slug]`, { slug: game.slug })} class="game-link">
 				<img
 					src={game.logo.url}
 					alt={m.play_game_free({ gameTitle: game.title }, { locale })}
@@ -36,7 +37,7 @@
 				</div>
 			</div>
 		</div>
-		{#if game.slotThemes.length > 0}
+		{#if category === 'slot' && game.slotThemes.length > 0}
 			<div class="game-themes-container">
 				<div class="game-themes-inner">
 					{#each game.slotThemes as theme (theme.slug)}
@@ -49,7 +50,9 @@
 		{/if}
 	</div>
 	<span class="game-title">{game.title}</span>
-	<span class="game-provider">{game.provider.title}</span>
+	{#if game.provider}
+		<span class="game-provider">{game.provider.title}</span>
+	{/if}
 </div>
 
 <style>
@@ -66,7 +69,7 @@
 				height: auto;
 				overflow: hidden;
 				border-radius: 10%;
-				&::after {
+				/* &::after {
 					content: '';
 					position: absolute;
 					top: 0;
@@ -75,7 +78,7 @@
 					height: 100%;
 					background: var(--light-brown-900-opacity-100);
 					pointer-events: none;
-				}
+				} */
 				.game-actions-container {
 					position: absolute;
 					top: -1px;
