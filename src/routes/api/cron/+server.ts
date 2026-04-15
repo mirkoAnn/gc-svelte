@@ -47,7 +47,7 @@ export async function GET() {
 			Object.values(CountryCodes).map(async (code) => {
 				const query = `query {
           casinos(locale: "${code}") {
-            id
+            id:documentId
             title
             rating {
               up
