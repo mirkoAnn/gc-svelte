@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { appManager } from '$lib/app-manager.svelte';
-	import type { Game } from '$lib/types/games';
+	import type { Slot } from '$lib/types/games';
 	import { m } from '../../../paraglide/messages';
 	import FavouritesToggler from '../../favourites/favourites-toggler.svelte';
 	import Rating from '../../rating/rating.svelte';
 	import { gameManager } from './game-manager.svelte';
 
-	let { game, category }: { game: Game; category: string } = $props();
+	let { game, category }: { game: Slot; category: string } = $props();
 	const locale = $derived(appManager.getCountryCode());
 </script>
 

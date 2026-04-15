@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { appManager } from '$lib/app-manager.svelte';
 	import type {
 		ContentItem,
 		ContentSection,
@@ -15,6 +16,8 @@
 		// We use 'any' here because the content can have a complex structure with nested elements, and we will handle the typing more specifically within the functions that process the content based on their type and structure
 	} = $props();
 
+	const locale = $derived(appManager.getCountryCode());
+
 	// Function to handle headings based on their level
 	const handleHeading = (section: HeadingContent): { tag: string; text: string } => ({
 		tag: `h${section.level}`,
@@ -30,7 +33,7 @@
 					paragraphText += child.text;
 					break;
 				case 'link':
-					paragraphText += `<a href="${child.url}" ${child.rel ? `rel="${child.rel}"` : ''} ${child.target ? `target="${child.target}"` : ''}>${child.children ? child.children[0].text : ''}</a>`;
+					paragraphText += `<a href="/${locale}${child.url}" ${child.rel ? `rel="${child.rel}"` : ''} ${child.target ? `target="${child.target}"` : ''}>${child.children ? child.children[0].text : ''}</a>`;
 					break;
 				default:
 					paragraphText += child.text;

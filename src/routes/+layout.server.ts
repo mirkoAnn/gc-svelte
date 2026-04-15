@@ -1,6 +1,6 @@
 import { AGE_VERIFICATION_COOKIE_NAME } from '../component/layout/age-banner/age-banner-manager.svelte';
 import { FAVOURITES_LIST_COOKIE_NAME } from '../component/favourites/favourites-manager.svelte';
-import { appManager, CountryCodes } from '../lib/app-manager.svelte';
+import { appManager } from '../lib/app-manager.svelte';
 import { dbManager } from '../lib/db-manager.svelte';
 import type { Slot } from '$lib/types/games';
 import type { Casino } from '$lib/types/casino';
@@ -38,15 +38,7 @@ export const load = async ({ request, cookies }: LoadInput) => {
 	const listSavedCookie = cookies.get(FAVOURITES_LIST_COOKIE_NAME);
 	const favouritesList = parseFavouritesList(listSavedCookie);
 
-	const countryHeader = request.headers.get('x-vercel-ip-country')?.toLowerCase();
-	const countryCode =
-		countryHeader && countryHeader in CountryCodes
-			? CountryCodes[countryHeader as keyof typeof CountryCodes]
-			: CountryCodes.it; // Default to "it" if header is missing or unrecognized
-
-	// Set country code in app manager for use in other parts of the app, with fallback to "it"
-	// this is necessary to ensure that the app manager has the correct country code before any database queries are made, allowing for proper server address selection based on the user's location.
-	appManager.setCountryCode(countryCode);
+	const countryCode = appManager.fetchCountryCode(request);
 
 	// Fetching casinos data from the database that will be used in multiple parts of the site
 	let casinos: Casino[];

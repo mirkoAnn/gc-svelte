@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { afterNavigate } from '$app/navigation';
+	import { page } from '$app/state';
 	import { appManager } from '$lib/app-manager.svelte';
 	import { SITE_LOGO_URL, SITE_NAME } from './sitedata-manager.svelte';
 
@@ -25,12 +25,8 @@
 		updatedAt?: string;
 	} = $props();
 
-	let pageUrl = $state('');
-	afterNavigate(() => {
-		pageUrl = window.location.href.replace('/?', '');
-	});
-
-	const locale = $derived(appManager.getCountryCode());
+	const pageUrl = $derived(page.url.href.replace('/?', '?'));
+	const locale = $derived(appManager.getCountryCode() ?? 'it');
 </script>
 
 <svelte:head>

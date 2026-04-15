@@ -1,9 +1,10 @@
+import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte';
 import type { Author } from '$lib/types/author';
 import type { PageContent } from '$lib/types/content';
 import type { FAQ } from '$lib/types/faqs';
 import type { Slot, Roulette } from '$lib/types/games';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { basicQuery } from '$lib/query/basic-query';
 
 export type HomePageData = {
@@ -18,7 +19,12 @@ export type HomePageData = {
 	updatedAt: string;
 };
 
-export async function load() {
+export async function load({ request }) {
+	const redirectPath = appManager.getCountryRedirectPath(request, CountryCodes.it);
+	if (redirectPath) {
+		throw redirect(307, redirectPath);
+	}
+
 	const query = `
     query {
       page: homePage (locale: "it") {

@@ -1,6 +1,7 @@
+import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte';
 import type { PageContent } from '$lib/types/content';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type Faq from '../../../component/faqs/faq.svelte';
 import type { Roulette } from '$lib/types/games';
 import type { Author } from '$lib/types/author';
@@ -18,7 +19,12 @@ export type RouletteGratisPageData = {
 	updatedAt: string;
 };
 
-export async function load() {
+export async function load({ request }) {
+	const redirectPath = appManager.getCountryRedirectPath(request, CountryCodes.it);
+	if (redirectPath) {
+		throw redirect(307, redirectPath);
+	}
+
 	const query = `         
     query {
         page: roulettePage (locale: "it"){

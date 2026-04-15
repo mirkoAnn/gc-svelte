@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { CountryCodes } from '$lib/app-manager.svelte';
 	import NavSidemenu from '../component/layout/nav/sidemenu/nav-sidemenu.svelte';
 	import Nav from '../component/layout/nav/nav.svelte';
 	import Footer from '../component/layout/footer/footer.svelte';
@@ -9,6 +10,7 @@
 	import { favouritesManager } from '../component/favourites/favourites-manager.svelte';
 	import { ageBannerManager } from '../component/layout/age-banner/age-banner-manager.svelte';
 	import { casinosDataManager } from '../component/casino/casinos-data-manager.svelte';
+	import { SITE_URL } from '../component/metadata/sitedata-manager.svelte.js';
 
 	// Props passed from the server load function
 	let { data, children } = $props();
@@ -19,11 +21,10 @@
 	favouritesManager.initialize(data.favouritesList);
 	// svelte-ignore state_referenced_locally
 	casinosDataManager.initialize(data.casinos);
-	// svelte-ignore state_referenced_locally
-	appManager.setCountryCode(data.countryCode);
 
 	// Apply content animations and detect device type on initial load
 	onMount(() => {
+		appManager.setCountryCode(data.countryCode); // Keep locale manager mutation client-side only
 		appManager.addContentAnimation(); // Apply animations on initial load
 		appManager.setDeviceType(); // Initialize app manager for country and device type with country code from server data
 	});
@@ -33,9 +34,17 @@
 		appManager.scrollToTop(); // Scroll to top after navigation
 		appManager.addContentAnimation(); // Reapply animations after navigation
 	});
+
+	const alternateLocales = Object.keys(CountryCodes).filter(
+		(code) => code !== data.countryCode
+	);
 </script>
 
 <svelte:head>
+	{#each alternateLocales as locale (locale)}
+		<link rel="alternate" hrefLang={locale} href={`${SITE_URL}/${locale}`} />
+	{/each}
+	<link rel="canonical" href={`${SITE_URL}/${data.countryCode}`} />
 	<!-- Preconnect with Render Hosting Service -->
 	<link rel="preconnect" href="https://gc-strapi.onrender.com" crossorigin="anonymous" />
 	<!-- Google tag (gtag.js) -->

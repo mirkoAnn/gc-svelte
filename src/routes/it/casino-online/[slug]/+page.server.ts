@@ -1,9 +1,15 @@
+import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte.js';
 import { basicQuery } from '$lib/query/basic-query';
 import type { Casino } from '$lib/types/casino.js';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
-export async function load({ params }) {
+export async function load({ request, params }) {
+	const redirectPath = appManager.getCountryRedirectPath(request, CountryCodes.it);
+	if (redirectPath) {
+		throw redirect(307, redirectPath);
+	}
+
 	const query = `
     query {
       page: casinos(filters: { slug: { eq: "${params.slug}" }, locale: { eq: "it" } }) {
