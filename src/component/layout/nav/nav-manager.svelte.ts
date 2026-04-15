@@ -76,13 +76,25 @@ const menuItems = $derived([
 						title: m.nav_roulettes_all_title({ year: new Date().getFullYear() }, { locale }),
 						label: m.nav_roulettes_all({}, { locale }),
 						category: 'roulette'
-					},
-					{
-						href: `/roulette-gratis/roulette-francese`,
-						title: m.nav_roulettes_french_title({ year: new Date().getFullYear() }, { locale }),
-						label: m.nav_roulettes_french({}, { locale }),
-						category: 'francese'
 					}
+					// {
+					// 	href: `/roulette-gratis/roulette-francese`,
+					// 	title: m.nav_roulettes_french_title({ year: new Date().getFullYear() }, { locale }),
+					// 	label: m.nav_roulettes_french({}, { locale }),
+					// 	category: 'francese'
+					// },
+					// {
+					// 	href: `/roulette-gratis/roulette-europea`,
+					// 	title: m.nav_roulettes_european_title({ year: new Date().getFullYear() }, { locale }),
+					// 	label: m.nav_roulettes_european({}, { locale }),
+					// 	category: 'europea'
+					// },
+					// {
+					// 	href: `/roulette-gratis/roulette-americana`,
+					// 	title: m.nav_roulettes_american_title({ year: new Date().getFullYear() }, { locale }),
+					// 	label: m.nav_roulettes_american({}, { locale }),
+					// 	category: 'americana'
+					// }
 				]
 			}
 		]

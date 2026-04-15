@@ -16,7 +16,7 @@
 			.to(
 				`#faq-item-${faq.id} .faq-icon`,
 				{
-					rotate: isVisible ? 180 : 0
+					rotate: isVisible ? 0 : 180
 				},
 				0
 			);
@@ -61,6 +61,7 @@
 			.faq-icon {
 				width: 16px;
 				height: 16px;
+				transform: rotate(180deg);
 			}
 		}
 		.faq-answer {

@@ -1,34 +1,30 @@
-import { dbManager } from "$lib/db-manager.svelte";
-import { capitalizeFirstLetter } from "$lib/utils.svelte";
-import { casinosDataManager } from "../../../component/casino/casinos-data-manager.svelte";
+import { appManager, CountryCodes } from '$lib/app-manager.svelte';
+import { dbManager } from '$lib/db-manager.svelte';
+import type { Casino } from '$lib/types/casino';
+import { capitalizeFirstLetter } from '$lib/utils.svelte';
 
-const updateCasinoRatingTrend = async (casino: any) => {
-  return new Promise((resolve, reject) => {
-    const casinotrendData = casino.rating.trend
-      ? casino.rating.trend.slice(-11)
-      : [];
-    casinotrendData.push({
-      month: capitalizeFirstLetter(
-        new Date().toLocaleString("it-IT", {
-          month: "long",
-        }),
-      ),
-      value: (
-        (casino.rating.up * 100) /
-        (casino.rating.up + casino.rating.down)
-      ).toFixed(),
-    });
-    const query = `mutation {
-      updateCasino(documentId: "${casino.id}",data:{
+const updateCasinoRatingTrend = async (casino: Casino, code: CountryCodes) => {
+	const casinotrendData = casino.rating.trend ? casino.rating.trend.slice(-11) : [];
+	casinotrendData.push({
+		month: capitalizeFirstLetter(
+			new Date().toLocaleString(appManager.getCountryLangCode(code), {
+				month: 'long'
+			})
+		),
+		value: Number(((casino.rating.up * 100) / (casino.rating.up + casino.rating.down)).toFixed())
+	});
+	const query = `mutation {
+      updateCasino(documentId: "${casino.id}", locale: "${code}", data:{
         rating:  {
         up: ${casino.rating.up},
         down: ${casino.rating.down},
         trend: [
         ${casinotrendData
-          .map(
-            (item: any) => `{ month: "${item.month}", value: ${item.value} }`,
-          )
-          .join(",")}
+					.map(
+						(item: { month: string; value: number }) =>
+							`{ month: "${item.month}", value: ${item.value} }`
+					)
+					.join(',')}
           ]
         }
       })
@@ -37,31 +33,41 @@ const updateCasinoRatingTrend = async (casino: any) => {
       }
     }
   `;
-    // execute a single query to update each casino rating trend in the database
-    dbManager
-      .executeQuery(query)
-      .then((response: any) => {
-        console.log(`Casino ${casino.title} rating trend updated successfully`);
-        resolve(response);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+	// execute a single query to update each casino rating trend in the database
+	const response = (await dbManager.executeQuery(query)) as {
+		data: { updateCasino: { title: string } };
+	};
+	console.log(`Casino ${casino.title} rating trend updated successfully`);
+	return response;
 };
 
 export async function GET() {
-  await Promise.all(
-    casinosDataManager
-      .getCasinos()
-      .map((casino: any) => updateCasinoRatingTrend(casino)),
-  ).catch((error) => {
-    return new Response(
-      `Error updating casino rating trends: ${error.message}`,
-      { status: 500 },
-    );
-  });
+	try {
+		await Promise.all(
+			Object.values(CountryCodes).map(async (code) => {
+				const query = `query {
+          casinos(locale: "${code}") {
+            id
+            title
+            rating {
+              up
+              down
+              trend 
+            }
+          }
+        }`;
+				const response = (await dbManager.executeQuery(query)) as { data: { casinos: Casino[] } };
+				await Promise.all(
+					response.data.casinos.map((casino: Casino) =>
+						updateCasinoRatingTrend(casino, CountryCodes[code])
+					)
+				);
+			})
+		);
+	} catch (error: unknown) {
+		const message = error instanceof Error ? error.message : String(error);
+		return new Response(`Cron job failed: ${message}`, { status: 500 });
+	}
 
-  // if all updates are successful, exit with a 200 code
-  return new Response("Cron job executed", { status: 200 });
+	return new Response('Cron job executed', { status: 200 });
 }

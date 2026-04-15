@@ -6,7 +6,7 @@ import { error } from '@sveltejs/kit';
 export async function load({ params }) {
 	const query = `
     query {
-      page: casinos(locale: "it",filters: { slug: { eq: "${params.slug}" } }) {
+      page: casinos(filters: { slug: { eq: "${params.slug}" }, locale: { eq: "it" } }) {
         ${basicQuery} 
         title
         slug
@@ -45,7 +45,7 @@ export async function load({ params }) {
           telephone
           depositMin
           withdrawalMin
-          withdrawalTime
+          withdrawalTimes
           hasApp
           hasGreatDesign
           hasRoulette
@@ -55,9 +55,13 @@ export async function load({ params }) {
           hasSportBetting
         }
         paymentMethods {
+          title
           slug
+          logo {
+            url
+          }
         }
-        providers (locale: "it") {
+        providers (filters: { locale: { eq: "it" } }) {
           title
           slug
           logo {
@@ -74,7 +78,9 @@ export async function load({ params }) {
 	return await dbManager
 		.executeQuery(query)
 		.then((response: { data: { page: Casino[] } }) => {
-			return response.data.page[0];
+			return {
+				page: response.data.page[0]
+			};
 		})
 		.catch(() => {
 			throw error(404, {

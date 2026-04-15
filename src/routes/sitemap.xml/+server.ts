@@ -1,4 +1,4 @@
-import { countryCodes } from '$lib/app-manager.svelte';
+import { CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte';
 import { capitalizeFirstLetter } from '$lib/utils.svelte';
 import { error } from '@sveltejs/kit';
@@ -7,7 +7,7 @@ export async function GET() {
 	// Build GraphQL query to fetch updatedAt for main pages and collections for all country codes
 	let query = `query Sitemap {`;
 	// Iterate over country codes to build query for each country's pages and collections
-	Object.values(countryCodes).forEach((countryCode) => {
+	Object.values(CountryCodes).forEach((countryCode) => {
 		const countrySuffix = capitalizeFirstLetter(countryCode);
 		query += `
       homePage${countrySuffix}: homePage(locale: "${countryCode}") {
@@ -146,7 +146,7 @@ export async function GET() {
 	};
 
 	// Main Pages and collection entries
-	Object.values(countryCodes).forEach((countryCode) => {
+	Object.values(CountryCodes).forEach((countryCode) => {
 		const countrySuffix = capitalizeFirstLetter(countryCode);
 		const homePageKey = `homePage${countrySuffix}` as keyof typeof normalized.pages;
 		const slotsPageKey = `slotsPage${countrySuffix}` as keyof typeof normalized.pages;

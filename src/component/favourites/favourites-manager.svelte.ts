@@ -33,8 +33,8 @@ export const favouritesManager = {
 				const index = favouritesList.slots.findIndex((slot: Slot) => {
 					return slot.id === favourite.id;
 				});
-				if (index < 0 && favourite.data) {
-					favouritesList.slots = [...favouritesList.slots, favourite.data];
+				if (index < 0) {
+					favouritesList.slots = [...favouritesList.slots, favourite];
 				} else {
 					favouritesList.slots = [
 						...favouritesList.slots.slice(0, index),

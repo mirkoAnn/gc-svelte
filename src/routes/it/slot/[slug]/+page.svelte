@@ -128,8 +128,9 @@
 
 <SlotFaqs data={data.page} />
 
-<AuthorBox author={data.page.author} />
-
+{#if data.page.author}
+	<AuthorBox author={data.page.author} />
+{/if}
 <SlotMetadata data={data.page} />
 
 <style>

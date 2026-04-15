@@ -28,7 +28,9 @@ export async function load() {
 	return await dbManager
 		.executeQuery(query)
 		.then((response: { data: { page: CasinoOnlinePageData } }) => {
-			return response.data.page;
+			return {
+				page: response.data.page
+			};
 		})
 		.catch(() => {
 			throw error(404, {

@@ -27,14 +27,14 @@ export type ProviderPageData = {
 export async function load({ params }) {
 	const query = `
     query {
-      page: providers(locale: "it",filters: { slug: { eq: "${params.slug}" } }) {
+      page: providers(filters: { slug: { eq: "${params.slug}" }, locale: { eq: "it" } }) {
         ${basicQuery}
         title
         slug
         logo {
           url
         }
-        slots(locale: "it",pagination: { page: 1, pageSize: 20 }) {
+        slots(filters: { locale: { eq: "it" } }, pagination: { page: 1, pageSize: 20 }) {
           id: documentId
           title
           slug
@@ -49,11 +49,11 @@ export async function load({ params }) {
           }
         }
       }
-      slotThemes (locale: "it",pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
+      slotThemes (filters: { locale: { eq: "it" } }, pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
         title
         slug
       }
-      providers (locale: "it",pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
+      providers (filters: { locale: { eq: "it" } }, pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
         title
         slug
       }
@@ -70,6 +70,7 @@ export async function load({ params }) {
 					providers: { title: string; slug: string }[];
 				};
 			}) => {
+				console.log('Provider page data:', response);
 				return {
 					page: response.data.page[0], // since the query returns an array of providers that match the slug filter but we know that there will be only one provider that matches the slug filter because slugs are unique, we can safely take the first element of the array to get the provider data
 					slotThemes: response.data.slotThemes,

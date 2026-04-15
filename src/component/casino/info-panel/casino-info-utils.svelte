@@ -86,7 +86,7 @@
 					{m.casino_withdrawal_time({}, { locale })}:</span
 				>
 				<span class="casino-info-utils-item-value">
-					{casinoGlobalData.info.withdrawalTime} h
+					{casinoGlobalData.info.withdrawalTimes} h
 				</span>
 			</li>
 		</ul>

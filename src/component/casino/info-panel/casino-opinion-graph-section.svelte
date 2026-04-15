@@ -12,10 +12,8 @@
 		{m.casino_opninion_graph_title({ locale: appManager.getCountryCode() })}
 	</h2>
 	<LineChart
-		data={JSON.parse(casinoGlobalData.rating.trend).map(
-			(item: { value: number; month: string }) => item.value
-		)}
-		labels={JSON.parse(casinoGlobalData.rating.trend).map(
+		data={casinoGlobalData.rating.trend.map((item: { value: number; month: string }) => item.value)}
+		labels={casinoGlobalData.rating.trend.map(
 			(item: { value: number; month: string }) => item.month
 		)}
 	/>

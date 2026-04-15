@@ -4,7 +4,4 @@ export type FavouritesList = {
 	slots: Slot[];
 };
 
-export type Favourite = {
-	id: string;
-	data?: Slot;
-};
+export type Favourite = Slot;

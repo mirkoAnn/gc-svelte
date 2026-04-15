@@ -32,7 +32,7 @@ export type Casino = {
 		telephone: string;
 		depositMin: number;
 		withdrawalMin: number;
-		withdrawalTime: string;
+		withdrawalTimes: string;
 		hasApp: boolean;
 		hasGreatDesign: boolean;
 		hasRoulette: boolean;

@@ -170,10 +170,10 @@ export const navSearchManager = {
 	},
 	// This function is called to update the search results in the UI after receiving the response from the search worker
 	updateSearchResults: (response: SearchResults) => {
-		searchResults.slots = [...response.slots]; // Update slots with the fetched data for slots
-		searchResults.roulettes = [...response.roulettes]; // Update roulettes with the fetched data for roulettes
-		searchResults.casinosIds = response.casinosIds; // Update casinosIds with the fetched data for casinosIds
-		searchResults.providers = [...response.providers]; // Update providers with the fetched data for providers
+		searchResults.slots = response.slots ? [...response.slots] : []; // Update slots with the fetched data for slots
+		searchResults.roulettes = response.roulettes ? [...response.roulettes] : []; // Update roulettes with the fetched data for roulettes
+		searchResults.casinosIds = response.casinosIds ? response.casinosIds : []; // Update casinosIds with the fetched data for casinosIds
+		searchResults.providers = response.providers ? [...response.providers] : []; // Update providers with the fetched data for providers
 		isSearchInputLoading = false;
 	},
 	getSearchHints: (maxResults: number = 10) => {

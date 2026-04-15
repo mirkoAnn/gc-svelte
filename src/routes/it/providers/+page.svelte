@@ -31,17 +31,41 @@
 
 <ProvidersGallery providers={data.providers} />
 
-<ContentContainer content={data.page.content.firstContent} />
-<ContentContainer content={data.page.content.secondContent} />
-<ContentContainer content={data.page.content.thirdContent} />
-<ContentContainer content={data.page.content.fourthContent} />
-<ContentContainer content={data.page.content.fifthContent} />
-<ContentContainer content={data.page.content.sixthContent} />
-<ContentContainer content={data.page.content.seventhContent} />
-<ContentContainer content={data.page.content.eighthContent} />
-<ContentContainer content={data.page.content.ninethContent} />
-<ContentContainer content={data.page.content.tenthContent} />
+{#if data.page.content.firstContent}
+	<ContentContainer content={data.page.content.firstContent} />
+{/if}
+{#if data.page.content.secondContent}
+	<ContentContainer content={data.page.content.secondContent} />
+{/if}
+{#if data.page.content.thirdContent}
+	<ContentContainer content={data.page.content.thirdContent} />
+{/if}
+{#if data.page.content.fourthContent}
+	<ContentContainer content={data.page.content.fourthContent} />
+{/if}
+{#if data.page.content.fifthContent}
+	<ContentContainer content={data.page.content.fifthContent} />
+{/if}
+{#if data.page.content.sixthContent}
+	<ContentContainer content={data.page.content.sixthContent} />
+{/if}
+{#if data.page.content.seventhContent}
+	<ContentContainer content={data.page.content.seventhContent} />
+{/if}
+{#if data.page.content.eighthContent}
+	<ContentContainer content={data.page.content.eighthContent} />
+{/if}
+{#if data.page.content.ninethContent}
+	<ContentContainer content={data.page.content.ninethContent} />
+{/if}
+{#if data.page.content.tenthContent}
+	<ContentContainer content={data.page.content.tenthContent} />
+{/if}
 
-<FaqsList faqs={data.page.faqs} />
+{#if data.page.faqs.length > 0}
+	<FaqsList faqs={data.page.faqs} />
+{/if}
 
-<AuthorBox author={data.page.author} />
+{#if data.page.author}
+	<AuthorBox author={data.page.author} />
+{/if}

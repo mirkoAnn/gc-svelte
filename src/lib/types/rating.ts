@@ -1,7 +1,10 @@
 export type Rating = {
 	up: number;
 	down: number;
-	trend: string;
+	trend: {
+		value: number;
+		month: string;
+	}[];
 };
 
 export type RatingData = {

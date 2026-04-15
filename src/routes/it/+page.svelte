@@ -64,6 +64,9 @@
 
 <CasinoTable casinos={casinosDataManager.getTopCasinos(10)} />
 
-<FaqsList faqs={data.page.faqs} />
-
-<AuthorBox author={data.page.author} />
+{#if data.page.faqs.length > 0}
+	<FaqsList faqs={data.page.faqs} />
+{/if}
+{#if data.page.author}
+	<AuthorBox author={data.page.author} />
+{/if}

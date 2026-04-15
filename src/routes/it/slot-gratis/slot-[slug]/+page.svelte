@@ -142,6 +142,10 @@
 	<ContentContainer content={data.page.content.tenthContent} />
 {/if}
 
-<FaqsList faqs={data.page.faqs} />
+{#if data.page.faqs.length > 0}
+	<FaqsList faqs={data.page.faqs} />
+{/if}
 
-<AuthorBox author={data.page.author} />
+{#if data.page.author}
+	<AuthorBox author={data.page.author} />
+{/if}

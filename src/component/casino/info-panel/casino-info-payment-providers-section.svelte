@@ -16,9 +16,14 @@
 		<ul class="casino-info-list">
 			{#each casino.paymentMethods as paymentMethod (paymentMethod.slug)}
 				<li>
-					<svg class="casino-info-list-item-icon" width="48" height="48">
-						<use href={'/icons/payment-methods.svg#' + paymentMethod.slug} />
-					</svg>
+					<img
+						class="casino-info-list-item-icon"
+						src={paymentMethod.logo.url}
+						alt={paymentMethod.title}
+						title={paymentMethod.title}
+						width={48}
+						height={48}
+					/>
 				</li>
 			{/each}
 		</ul>

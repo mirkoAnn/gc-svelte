@@ -83,8 +83,6 @@ export async function load({ params }) {
     }
   `;
 
-	console.log(query);
-
 	return await dbManager
 		.executeQuery(query)
 		.then((response: { data: { page: Slot[] } }) => {
