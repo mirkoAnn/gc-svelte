@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { Menu } from '$lib/types/nav';
-	import { resolve } from '$app/paths';
 	import { appManager } from '../../../../lib/app-manager.svelte';
 	import { navManager } from '../nav-manager.svelte';
 	import { m } from '../../../../paraglide/messages';
+	import type { NavMenu } from '$lib/types/nav';
+	import { resolve } from '$app/paths';
 
-	let { menu, menuIndex }: { menu: Menu; menuIndex: number } = $props();
+	let { menu, menuIndex }: { menu: NavMenu; menuIndex: number } = $props();
 
 	const locale = $derived(appManager.getCountryCode());
 </script>
@@ -25,21 +25,25 @@
 		aria-label={m.nav_links_submenu_aria_label({}, { locale })}
 	>
 		{#each menu.submenuItems as subitem, index ('submenu' + index)}
-			<li class="nav-links-submenu-item">
-				<svg class="nav-links-submenu-item-icon" aria-hidden="true">
-					<use href="/icons/{menu.category}-set.svg#{subitem.category}"></use>
-				</svg>
-				<a
-					class="nav-links-submenu-item-link"
-					title={m.go_to_page({ page: subitem.label }, { locale })}
-					href={`/${locale}${subitem.href}`}
-				>
-					{subitem.label}
-				</a>
-				<svg class="nav-links-submenu-item-link-icon" aria-hidden="true">
-					<use href="/icons/icon-set.svg#arrow" />
-				</svg>
-			</li>
+			{#if locale}
+				{#if !subitem.onlyForCountries || subitem.onlyForCountries.includes(locale)}
+					<li class="nav-links-submenu-item">
+						<svg class="nav-links-submenu-item-icon" aria-hidden="true">
+							<use href="/icons/{menu.category}-set.svg#{subitem.category}"></use>
+						</svg>
+						<a
+							class="nav-links-submenu-item-link"
+							title={m.go_to_page({ page: subitem.label }, { locale })}
+							href={resolve(`/${locale}${subitem.href}`)}
+						>
+							{subitem.label}
+						</a>
+						<svg class="nav-links-submenu-item-link-icon" aria-hidden="true">
+							<use href="/icons/icon-set.svg#arrow" />
+						</svg>
+					</li>
+				{/if}
+			{/if}
 		{/each}
 	</ul>
 </div>

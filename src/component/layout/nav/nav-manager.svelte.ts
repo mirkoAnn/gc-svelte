@@ -1,7 +1,7 @@
 import gsap from 'gsap/dist/gsap';
 import NavSearch from './search/nav-search.svelte';
 import FavouritesList from '../../favourites/favourites-list.svelte';
-import { appManager } from '$lib/app-manager.svelte';
+import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { m } from '../../../paraglide/messages';
 
 let currentSection = $state('casino'); // Used to track the currently active section for styling purposes (e.g. casino or sport)
@@ -50,7 +50,8 @@ const menuItems = $derived([
 						href: `/slot-gratis/slot-vlt`,
 						title: m.nav_slots_vlt_title({ year: new Date().getFullYear() }, { locale }),
 						label: m.nav_slots_vlt({}, { locale }),
-						category: 'vlt'
+						category: 'vlt',
+						onlyForCountries: [CountryCodes.it]
 					},
 					{
 						href: `/slot-gratis/slot-piu-giocate`,
