@@ -5,7 +5,7 @@ export enum CountryCodes {
 	es = 'es'
 }
 
-const ROUTABLE_COUNTRIES: CountryCodes[] = [CountryCodes.it];
+const ROUTABLE_COUNTRIES: CountryCodes[] = [CountryCodes.it, CountryCodes.es];
 
 const parseCookieValue = (cookieHeader: string | null, cookieName: string): string | undefined => {
 	if (!cookieHeader) {
