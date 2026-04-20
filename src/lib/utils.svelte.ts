@@ -5,8 +5,11 @@ export const capitalizeFirstLetter = (str: string) => {
 };
 
 export const formatCurrency = (value: string) => {
-	return parseFloat(value).toLocaleString(appManager.getCountryLangCode(), {
+	const locale = appManager.getCountryLangCode() || 'it-IT';
+	const currency = appManager.getCurrencyCode() || 'EUR';
+
+	return parseFloat(value).toLocaleString(locale, {
 		style: 'currency',
-		currency: appManager.getCurrencyCode()
+		currency
 	});
 };

@@ -5,27 +5,27 @@
 	const socialLinks = [
 		{
 			label: 'Facebook',
-			url: 'https://www.facebook.com/slotgratisonline.it/',
+			url: 'https://www.facebook.com/profile.php?id=61570662777578',
 			icon: 'facebook'
 		},
 		{
 			label: 'Instagram',
-			url: 'https://www.instagram.com/sgonl_ine/',
+			url: '',
 			icon: 'instagram'
 		},
 		{
 			label: 'X',
-			url: 'https://x.com/gratis_slo56877',
+			url: 'https://x.com/GamLub25323',
 			icon: 'x'
 		},
 		{
 			label: 'LinkedIn',
-			url: 'https://www.linkedin.com/company/100037252/admin/dashboard/',
+			url: 'https://www.linkedin.com/company/gamlub/about/?viewAsMember=true',
 			icon: 'linkedin'
 		},
 		{
 			label: 'email',
-			url: 'mailto:info@slotgratisonline.it',
+			url: 'mailto:info@gamlub.com',
 			icon: 'email'
 		}
 	];

@@ -6,6 +6,7 @@
 	import AgeBanner from '../component/layout/age-banner/age-banner.svelte';
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
+	import { browser } from '$app/environment';
 	import { appManager } from '../lib/app-manager.svelte';
 	import { favouritesManager } from '../component/favourites/favourites-manager.svelte';
 	import { ageBannerManager } from '../component/layout/age-banner/age-banner-manager.svelte';
@@ -15,16 +16,20 @@
 	// Props passed from the server load function
 	let { data, children } = $props();
 
-	// svelte-ignore state_referenced_locally
-	ageBannerManager.initialize(data.isAgeVerified);
-	// svelte-ignore state_referenced_locally
-	favouritesManager.initialize(data.favouritesList);
-	// svelte-ignore state_referenced_locally
-	casinosDataManager.initialize(data.casinos);
+	const initializeClientManagers = () => {
+		if (!browser) {
+			return;
+		}
+		ageBannerManager.initialize(data.isAgeVerified);
+		favouritesManager.initialize(data.favouritesList);
+		casinosDataManager.initialize(data.casinos);
+		appManager.setCountryCode(data.countryCode);
+	};
+
+	initializeClientManagers();
 
 	// Apply content animations and detect device type on initial load
 	onMount(() => {
-		appManager.setCountryCode(data.countryCode); // Keep locale manager mutation client-side only
 		appManager.addContentAnimation(); // Apply animations on initial load
 		appManager.setDeviceType(); // Initialize app manager for country and device type with country code from server data
 	});
@@ -35,16 +40,43 @@
 		appManager.addContentAnimation(); // Reapply animations after navigation
 	});
 
-	const alternateLocales = Object.keys(CountryCodes).filter(
-		(code) => code !== data.countryCode
-	);
+	const normalizePath = (path: string) => {
+		if (!path || path === '/') {
+			return '';
+		}
+
+		return path.replace(/\/+$/, '');
+	};
+
+	const buildLocalePath = (targetLocale: string) => {
+		const currentPath = normalizePath(data.requestPath);
+		const currentPrefix = `/${data.countryCode}`;
+		const targetPrefix = `/${targetLocale}`;
+
+		if (currentPath === '') {
+			return targetPrefix;
+		}
+
+		if (currentPath === currentPrefix) {
+			return targetPrefix;
+		}
+
+		if (currentPath.startsWith(`${currentPrefix}/`)) {
+			return `${targetPrefix}${currentPath.slice(currentPrefix.length)}`;
+		}
+
+		return `${targetPrefix}${currentPath}`;
+	};
+
+	const canonicalPath = $derived.by(() => buildLocalePath(data.countryCode));
+	const alternateLocales = Object.keys(CountryCodes).filter((code) => code !== data.countryCode);
 </script>
 
 <svelte:head>
 	{#each alternateLocales as locale (locale)}
-		<link rel="alternate" hrefLang={locale} href={`${SITE_URL}/${locale}`} />
+		<link rel="alternate" hreflang={locale} href={`${SITE_URL}${buildLocalePath(locale)}`} />
 	{/each}
-	<link rel="canonical" href={`${SITE_URL}/${data.countryCode}`} />
+	<link rel="canonical" href={`${SITE_URL}${canonicalPath}`} />
 	<!-- Preconnect with Render Hosting Service -->
 	<link rel="preconnect" href="https://gc-strapi.onrender.com" crossorigin="anonymous" />
 	<!-- Google tag (gtag.js) -->

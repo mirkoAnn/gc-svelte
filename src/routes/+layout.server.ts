@@ -32,6 +32,7 @@ const parseFavouritesList = (cookieValue: string | undefined): FavouritesList =>
 };
 
 export const load = async ({ request, cookies }: LoadInput) => {
+	const requestPath = new URL(request.url).pathname;
 	const isAgeVerified = cookies.get(AGE_VERIFICATION_COOKIE_NAME) === 'true';
 
 	// Initialize favourites manager with data from cookies
@@ -108,6 +109,7 @@ export const load = async ({ request, cookies }: LoadInput) => {
 		isAgeVerified,
 		favouritesList,
 		casinos,
-		countryCode
+		countryCode,
+		requestPath
 	};
 };
