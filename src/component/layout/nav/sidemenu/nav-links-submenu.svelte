@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { appManager } from '../../../../lib/app-manager.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
 	import { navManager } from '../nav-manager.svelte';
 	import { m } from '../../../../paraglide/messages';
 	import type { NavMenu } from '$lib/types/nav';
@@ -7,7 +9,9 @@
 
 	let { menu, menuIndex }: { menu: NavMenu; menuIndex: number } = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <div
@@ -34,7 +38,7 @@
 						<a
 							class="nav-links-submenu-item-link"
 							title={m.go_to_page({ page: subitem.label }, { locale })}
-							href={resolve(`/${locale}${subitem.href}`)}
+							href={resolve(`/${locale}${subitem.href}` as any)}
 						>
 							{subitem.label}
 						</a>

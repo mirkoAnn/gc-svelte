@@ -49,6 +49,7 @@ export type Slot = Game & {
 	opinionContent: ContentItem;
 	slotThemes: {
 		slug: string;
+		iconId: string;
 		slots: Slot[];
 	}[];
 };

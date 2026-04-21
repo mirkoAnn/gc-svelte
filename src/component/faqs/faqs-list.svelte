@@ -1,12 +1,16 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { appManager } from '$lib/app-manager.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
 	import type { FAQ } from '$lib/types/faqs';
 	import { m } from '../../paraglide/messages';
 	import Faq from './faq.svelte';
 
 	let { faqs } = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	const jsonLd = $derived(
 		JSON.stringify({

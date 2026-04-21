@@ -235,3 +235,12 @@ ol {
   padding-left: 20px;
   margin-bottom: 16px;
 }
+
+.game-galleries-outer {
+		min-height: 100vh;
+		.game-categories {
+			display: flex;
+			flex-direction: column;
+			gap: 48px;
+		}
+	}

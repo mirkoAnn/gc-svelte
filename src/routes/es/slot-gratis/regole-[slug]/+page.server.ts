@@ -1,6 +1,6 @@
 import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte.js';
-import { basicQuery } from '$lib/query/basic-query.js';
+import { basicQuery, slotsQuery } from '$lib/query/basic-query.js';
 import type { PageContent } from '$lib/types/content.js';
 import type { Slot } from '$lib/types/games.js';
 import { error, redirect } from '@sveltejs/kit';
@@ -39,18 +39,7 @@ export async function load({ request, params }) {
         slug
       }
       slots(filters: {locale: "es", slotMechanic: { slug: { eq: "${params.slug}" } }}, pagination: { page: 1, pageSize: 20 }) {
-        id:documentId
-        title
-        slug
-        logo {
-          url
-        }
-        provider {
-          title
-        }
-        slotThemes {
-          slug
-        }
+         ${slotsQuery}
       }
       slotThemes (locale: "es", pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
         title

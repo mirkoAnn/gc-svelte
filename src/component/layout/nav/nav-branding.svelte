@@ -1,9 +1,12 @@
 <script>
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import { resolve } from '$app/paths';
 	import { m } from '../../../paraglide/messages';
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <a
@@ -13,7 +16,7 @@
 	aria-label={m.site_description({ year: new Date().getFullYear() }, { locale })}
 >
 	<svg class="site-logo" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
-		<use href="/icons/logo.svg#{appManager.getCountryCode()}" />
+		<use href="/icons/logo.svg#{locale}" />
 	</svg></a
 >
 

@@ -67,6 +67,7 @@ onmessage = ({ data: { searchValue } }) => {
           }
           slotThemes {
             slug
+            iconId
           }
         }
         casinos (filters: { slug: { containsi: "${searchValue}" } }, pagination: { page: 1, pageSize: 10 }) {

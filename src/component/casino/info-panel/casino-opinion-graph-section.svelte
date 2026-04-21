@@ -1,15 +1,20 @@
 <script lang="ts">
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { Casino } from '$lib/types/casino';
 	import { m } from '../../../paraglide/messages';
 	import LineChart from '../../graphics/charts/line-chart.svelte';
 
 	let { casinoGlobalData }: { casinoGlobalData: Casino } = $props();
+
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <div class="casino-opinion-graph-container">
 	<h2 class="casino-info-subtitle">
-		{m.casino_opninion_graph_title({ locale: appManager.getCountryCode() })}
+		{m.casino_opninion_graph_title({ locale })}
 	</h2>
 	<LineChart
 		data={casinoGlobalData.rating.trend.map((item: { value: number; month: string }) => item.value)}

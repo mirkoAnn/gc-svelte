@@ -1,13 +1,17 @@
 <script lang="ts">
-	import type { Slot } from '$lib/types/games';
+	import { page } from '$app/state';
+	import type { Roulette, Slot } from '$lib/types/games';
 	import { resolve } from '$app/paths';
-	import { appManager } from '../../../lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '../../../lib/app-manager.svelte';
 	import { m } from '../../../paraglide/messages';
 	import FavouritesToggler from '../../favourites/favourites-toggler.svelte';
+	import { formatImageUrl } from '$lib/utils.svelte';
 
-	let { game, category }: { game: Slot; category: 'slot' } = $props();
+	let { game, category }: { game: Slot | Roulette; category: 'slot' | 'roulette' } = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <div class="game-card">
@@ -15,20 +19,14 @@
 		<div class="game-img-container">
 			<a href={resolve(`/${locale}/${category}/[slug]`, { slug: game.slug })} class="game-link">
 				<img
-					src={game.logo.url}
+					src={formatImageUrl(game.logo.url, 300)}
 					alt={m.play_game_free({ gameTitle: game.title }, { locale })}
 					title={m.play_game_free({ gameTitle: game.title }, { locale })}
 					class="game-image"
 					loading="lazy"
 					width="300"
 					height="300"
-					onerror={(event: Event) => {
-						const img = event.currentTarget;
-						if (img instanceof HTMLImageElement) {
-							img.onerror = null; // Prevent infinite loop if fallback image also fails
-							img.src = '/icons/icon-set.svg#slot';
-						}
-					}}
+					decoding="async"
 				/>
 			</a>
 			<div class="game-actions-container">
@@ -37,12 +35,12 @@
 				</div>
 			</div>
 		</div>
-		{#if category === 'slot' && game.slotThemes.length > 0}
+		{#if category === 'slot' && (game as Slot).slotThemes.length > 0}
 			<div class="game-themes-container">
 				<div class="game-themes-inner">
-					{#each game.slotThemes as theme (theme.slug)}
+					{#each (game as Slot).slotThemes as theme (theme.slug)}
 						<svg class="game-theme-icon">
-							<use href="/icons/slot-set.svg#{theme.slug}"></use>
+							<use href="/icons/slot-set.svg#{theme.iconId}"></use>
 						</svg>
 					{/each}
 				</div>
@@ -69,16 +67,6 @@
 				height: auto;
 				overflow: hidden;
 				border-radius: 10%;
-				/* &::after {
-					content: '';
-					position: absolute;
-					top: 0;
-					left: 0;
-					width: 100%;
-					height: 100%;
-					background: var(--light-brown-900-opacity-100);
-					pointer-events: none;
-				} */
 				.game-actions-container {
 					position: absolute;
 					top: -1px;

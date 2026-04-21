@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import gsap from 'gsap/dist/gsap';
 	import { casinosDataManager } from './casinos-data-manager.svelte';
 	import RadialChart from '../graphics/charts/radial-chart.svelte';
 	import type { Casino } from '$lib/types/casino';
 	import { resolve } from '$app/paths';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import { m } from '../../paraglide/messages';
 
 	let {
@@ -14,7 +15,9 @@
 
 	let areBonusInfosVisible: boolean = $state(false);
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	const toogleBonusDisclaimer = (casinoId: string) => {
 		areBonusInfosVisible = !areBonusInfosVisible;
@@ -56,7 +59,7 @@
 		>
 			<a
 				class="casino-card-link"
-				href={resolve(`/${appManager.getCountryCode()}/casino-online/[slug]`, {
+				href={resolve(`/${locale}/casino-online/[slug]`, {
 					slug: casino.slug
 				})}
 				title={m.casino_review_link_title({ casinoTitle: casino.title }, { locale })}

@@ -5,7 +5,7 @@ import type { PageContent } from '$lib/types/content';
 import type { FAQ } from '$lib/types/faqs';
 import type { Slot } from '$lib/types/games';
 import { error, redirect } from '@sveltejs/kit';
-import { basicQuery } from '$lib/query/basic-query';
+import { basicQuery, slotsQuery } from '$lib/query/basic-query';
 
 export type SlotsPageData = {
 	seo: {
@@ -31,46 +31,13 @@ export async function load({ request }) {
         ${basicQuery}
       }
       newSlots: slots(locale: "es", sort: "createdAt:desc", pagination: { page: 1, pageSize: 20 }) {
-        id:documentId
-        title
-        slug
-        logo {
-          url
-        }
-        provider {
-          title
-        }
-        slotThemes {
-          slug
-        }
+       ${slotsQuery}
       }
       bestSlots: slots(locale: "es", sort: "sessions:desc", pagination: { page: 1, pageSize: 20 }) {
-        id:documentId
-        title
-        slug
-        logo {
-          url
-        }
-        provider {
-          title
-        }
-        slotThemes {
-          slug
-        }
+         ${slotsQuery}
       }
       barSlots: slots(locale: "es", filters: { slotThemes: { slug: { eq: "bar" } } }, pagination: { page: 1, pageSize: 20 }) {
-        id:documentId
-        title
-        slug
-        logo {
-          url
-        }
-        provider {
-          title
-        }
-        slotThemes {
-          slug
-        }
+        ${slotsQuery}
       }
       slotThemes (locale: "es", pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
         title

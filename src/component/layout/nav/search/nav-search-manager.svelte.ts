@@ -1,11 +1,14 @@
 import { workersManager } from '$lib/workers-manager.svelte';
 import { m } from '../../../../paraglide/messages';
-import { appManager } from '$lib/app-manager.svelte';
+import { page } from '$app/state';
+import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import type { SearchHints, SearchResults } from '$lib/types/search';
 
-const searchInputPlaceholder: string = $state(
-	m.search_input_placeholder({ locale: appManager.getCountryCode() })
+const locale = $derived.by(
+	() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 );
+
+const searchInputPlaceholder = $derived(m.search_input_placeholder({}, { locale }));
 
 const isResultsListEmpty = $derived.by(() => {
 	return (

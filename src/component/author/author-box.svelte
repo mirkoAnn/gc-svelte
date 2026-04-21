@@ -1,12 +1,15 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import Content from '../content/content-element.svelte';
 	import type { Author } from '$lib/types/author';
 	import { m } from '../../paraglide/messages';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 
 	let { author }: { author: Author } = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 	const photoAlt = $derived(m.author_photo_description({ authorName: author.name }, { locale }));
 </script>
 

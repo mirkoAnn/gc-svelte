@@ -5,7 +5,7 @@ import type { PageContent } from '$lib/types/content.js';
 import type { Slot } from '$lib/types/games.js';
 import { error, redirect } from '@sveltejs/kit';
 import type Faq from '../../../../component/faqs/faq.svelte';
-import { basicQuery } from '$lib/query/basic-query';
+import { basicQuery, slotsQuery } from '$lib/query/basic-query';
 
 export type ProviderPageData = {
 	seo: {
@@ -41,18 +41,7 @@ export async function load({ request, params }) {
           url
         }
         slots(filters: { locale: { eq: "es" } }, pagination: { page: 1, pageSize: 20 }) {
-          id: documentId
-          title
-          slug
-          logo {
-            url
-          }
-          provider {
-            title
-          }
-          slotThemes {
-            slug
-          }
+        	${slotsQuery}
         }
       }
       slotThemes (filters: { locale: { eq: "es" } }, pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {

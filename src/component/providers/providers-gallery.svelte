@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { Provider } from '$lib/types/provider';
 	import { resolve } from '$app/paths';
 	import { m } from '../../paraglide/messages';
 
 	let { providers }: { providers: Provider[] } = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <div class="providers-gallery">

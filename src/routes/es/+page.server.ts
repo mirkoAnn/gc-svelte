@@ -48,6 +48,7 @@ export async function load({ request }) {
         }
         slotThemes {
           slug
+          iconId
         }
       }
       roulettes(locale:"es", sort: "createdAt:desc", pagination: { page: 1, pageSize: 10 }) {

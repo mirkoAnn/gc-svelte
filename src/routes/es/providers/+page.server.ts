@@ -1,22 +1,25 @@
 import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte';
 import type { PageContent } from '$lib/types/content';
-import type { Provider } from '$lib/types/provider';
 import { error, redirect } from '@sveltejs/kit';
 import type Faq from '../../../component/faqs/faq.svelte';
 import type { Author } from '$lib/types/author';
 import { basicQuery } from '$lib/query/basic-query';
+import type { Provider } from '$lib/types/provider';
 
 export type ProvidersPageData = {
-	seo: {
-		title: string;
-		description: string;
+	page: {
+		seo: {
+			title: string;
+			description: string;
+		};
+		content: PageContent;
+		faqs: Faq[];
+		author: Author;
+		publishedAt: string;
+		updatedAt: string;
 	};
-	content: PageContent;
-	faqs: Faq[];
-	author: Author;
-	publishedAt: string;
-	updatedAt: string;
+	providers: Provider[];
 };
 
 export async function load({ request }) {
@@ -44,7 +47,7 @@ export async function load({ request }) {
   `;
 	return await dbManager
 		.executeQuery(query)
-		.then((response: { data: { page: ProvidersPageData; providers: Provider[] } }) => {
+		.then((response: { data: ProvidersPageData }) => {
 			return response.data;
 		})
 		.catch(() => {

@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { Casino } from '$lib/types/casino';
 	import { m } from '../../../paraglide/messages';
 	import CasinoCtaButton from './casino-cta-button.svelte';
 	let { casinoGlobalData }: { casinoGlobalData: Casino } = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 	const ctaTitle = $derived(
 		m.casino_cta_title({ casinoTitle: casinoGlobalData.title }, { locale })
 	);

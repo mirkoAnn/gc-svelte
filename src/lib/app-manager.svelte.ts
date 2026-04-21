@@ -5,7 +5,33 @@ export enum CountryCodes {
 	es = 'es'
 }
 
-const ROUTABLE_COUNTRIES: CountryCodes[] = [CountryCodes.it, CountryCodes.es];
+type CountryConfig = {
+	name: string;
+	languageTag: string;
+	currencyCode: string;
+	routeEnabled: boolean;
+};
+
+const DEFAULT_COUNTRY_CODE = CountryCodes.it;
+
+const COUNTRY_CONFIG: Record<CountryCodes, CountryConfig> = {
+	[CountryCodes.it]: {
+		name: 'Italia',
+		languageTag: 'it-IT',
+		currencyCode: 'EUR',
+		routeEnabled: true
+	},
+	[CountryCodes.es]: {
+		name: 'España',
+		languageTag: 'es-ES',
+		currencyCode: 'EUR',
+		routeEnabled: true
+	}
+};
+
+const ALL_COUNTRY_CODES = Object.values(CountryCodes);
+
+const ROUTABLE_COUNTRIES = ALL_COUNTRY_CODES.filter((code) => COUNTRY_CONFIG[code].routeEnabled);
 
 const parseCookieValue = (cookieHeader: string | null, cookieName: string): string | undefined => {
 	if (!cookieHeader) {
@@ -35,9 +61,14 @@ const toCountryCode = (value: string | undefined): CountryCodes | undefined => {
 	}
 
 	const baseValue = value.toLowerCase().split('-')[0];
-	return baseValue in CountryCodes
-		? CountryCodes[baseValue as keyof typeof CountryCodes]
+	return ALL_COUNTRY_CODES.includes(baseValue as CountryCodes)
+		? (baseValue as CountryCodes)
 		: undefined;
+};
+
+const getCountryFromPathname = (pathname: string): CountryCodes | undefined => {
+	const firstSegment = pathname.split('/').filter(Boolean)[0];
+	return toCountryCode(firstSegment);
 };
 
 const extractPreferredCountryFromAcceptLanguage = (
@@ -106,6 +137,11 @@ export const appManager = {
 		countryCode = code;
 	},
 	fetchCountryCode: (request: Request) => {
+		const pathCountry = getCountryFromPathname(extractPathname(request.url));
+		if (pathCountry && appManager.canRouteToCountry(pathCountry)) {
+			return pathCountry;
+		}
+
 		const cookieHeader = request.headers.get('cookie');
 		const cookieLocale =
 			toCountryCode(parseCookieValue(cookieHeader, 'locale')) ??
@@ -128,10 +164,16 @@ export const appManager = {
 			return countryFromAcceptLanguage;
 		}
 
-		return CountryCodes.it;
+		return DEFAULT_COUNTRY_CODE;
 	},
 	canRouteToCountry: (code: CountryCodes) => {
 		return ROUTABLE_COUNTRIES.includes(code);
+	},
+	getRouteCountries: () => {
+		return ROUTABLE_COUNTRIES;
+	},
+	getCountryCodeFromPathname: (pathname: string) => {
+		return getCountryFromPathname(pathname);
 	},
 	getCountryRedirectPath: (request: Request, currentCountry: CountryCodes) => {
 		const targetCountry = appManager.fetchCountryCode(request);
@@ -145,33 +187,15 @@ export const appManager = {
 		return countryCode;
 	},
 	getCountryName: () => {
-		switch (countryCode) {
-			case CountryCodes.it:
-				return 'Italia';
-			case CountryCodes.es:
-				return 'España';
-			default:
-				return '';
-		}
+		return countryCode ? COUNTRY_CONFIG[countryCode].name : '';
 	},
 	getCountryLangCode: (country?: CountryCodes) => {
-		switch (country ?? countryCode) {
-			case CountryCodes.it:
-				return 'it-IT';
-			case CountryCodes.es:
-				return 'es-ES';
-			default:
-				return '';
-		}
+		const selectedCountry = country ?? countryCode;
+		return selectedCountry ? COUNTRY_CONFIG[selectedCountry].languageTag : '';
 	},
 	getCurrencyCode: (country?: CountryCodes) => {
-		switch (country ?? countryCode) {
-			case CountryCodes.it:
-			case CountryCodes.es:
-				return 'EUR';
-			default:
-				return '';
-		}
+		const selectedCountry = country ?? countryCode;
+		return selectedCountry ? COUNTRY_CONFIG[selectedCountry].currencyCode : '';
 	},
 	// Add content animation on scroll using GSAP and ScrollTrigger plugin in all pages
 	addContentAnimation: async () => {

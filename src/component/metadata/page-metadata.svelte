@@ -26,7 +26,9 @@
 	} = $props();
 
 	const pageUrl = $derived(page.url.href.replace('/?', '?'));
-	const locale = $derived(appManager.getCountryCode() ?? 'it');
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? 'it'
+	);
 </script>
 
 <svelte:head>

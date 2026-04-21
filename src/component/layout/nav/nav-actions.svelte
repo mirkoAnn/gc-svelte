@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import { m } from '../../../paraglide/messages';
 	import { navManager } from './nav-manager.svelte';
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <div class="nav-actions-container" role="tablist">

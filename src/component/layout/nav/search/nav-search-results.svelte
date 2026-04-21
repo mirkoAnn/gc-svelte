@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import SquaresLoader from './../../../graphics/loader/squares-loader.svelte';
 	import CasinoCards from '../../../casino/casino-cards.svelte';
 	import { casinosDataManager } from '../../../casino/casinos-data-manager.svelte';
@@ -6,9 +7,11 @@
 	import { navSearchManager } from './nav-search-manager.svelte';
 	import ProvidersGallery from '../../../providers/providers-gallery.svelte';
 	import { m } from '../../../../paraglide/messages';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <div class="navbar-search-results">

@@ -1,14 +1,17 @@
 <script lang="ts">
-	import { appManager } from '../../lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '../../lib/app-manager.svelte';
 	import type { Breadcrumb } from '$lib/types/breadcrumb';
 	import { resolve } from '$app/paths';
 
 	let { breadcrumbs }: { breadcrumbs: Breadcrumb[] } = $props();
 
-	const countryCode = $derived.by(appManager.getCountryCode);
+	const countryCode = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	let jsonLdItems = $derived.by(() => {
-		const countryCode = appManager.getCountryCode();
 		return [
 			{
 				'@type': 'ListItem',

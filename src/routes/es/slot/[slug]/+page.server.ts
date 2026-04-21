@@ -49,6 +49,7 @@ export async function load({ request, params }) {
           opinionContent
           slotThemes {
             slug
+            iconId
             slots(filters:{locale:  {
                eq: "es"
             } } pagination: { page: 1, pageSize: 10 }) {
@@ -63,6 +64,7 @@ export async function load({ request, params }) {
               }
               slotThemes {
                 slug
+                iconId
               }
             }    
           }

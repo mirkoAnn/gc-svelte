@@ -33,3 +33,19 @@ export const basicQuery = `
     publishedAt
     updatedAt
 `;
+
+export const slotsQuery = `
+    id:documentId
+    title
+    slug
+    logo {
+        url
+    }
+    provider {
+        title
+    }
+    slotThemes {
+        slug
+        iconId
+    }
+`;

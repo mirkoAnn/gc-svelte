@@ -13,8 +13,11 @@
 	import Gallery from './../../../../component/games/gallery/games-gallery.svelte';
 	import AuthorBox from '../../../../component/author/author-box.svelte';
 	import type { Slot } from '$lib/types/games';
+	import { CountryCodes } from '$lib/app-manager.svelte';
 
 	let { data }: { data: { page: Slot } } = $props();
+
+	const locale = CountryCodes.it;
 
 	onMount(() => {
 		// Initialize game manager state and get the Related Casinos from Casinos Global Manager for the current game provider.
@@ -84,7 +87,7 @@
 <div id="introContent" class="content content-columns">
 	<img
 		class="img medium-img"
-		src={data.page.images[0]?.image.url}
+		src={data.page.images[0]?.image.url.replace('/upload/', '/upload/w_1000,f_avif,q_auto/')}
 		alt={data.page.images[0]?.description}
 		title={data.page.images[0]?.description}
 		width="600"
@@ -102,7 +105,7 @@
 	</div>
 	<img
 		class="img medium-img"
-		src={data.page.images[1]?.image.url}
+		src={data.page.images[1]?.image.url.replace('/upload/', '/upload/w_1000,f_avif,q_auto/')}
 		alt={data.page.images[1]?.description}
 		title={data.page.images[1]?.description}
 		width="600"
@@ -114,7 +117,7 @@
 	<Content content={data.page.bonusContent} />
 	<img
 		class="img full-width"
-		src={data.page.images[2]?.image.url.replace('/upload/', '/upload/f_avif/w_700/')}
+		src={data.page.images[2]?.image.url.replace('/upload/', '/upload/w_1000,f_avif,q_auto/')}
 		alt={data.page.images[2]?.description}
 		title={data.page.images[2]?.description}
 		width="600"
@@ -126,7 +129,7 @@
 	<Content content={data.page.opinionContent} />
 </div>
 
-<SlotFaqs data={data.page} />
+<SlotFaqs data={data.page} {locale} />
 
 {#if data.page.author}
 	<AuthorBox author={data.page.author} />

@@ -1,9 +1,6 @@
-import { appManager } from './app-manager.svelte';
 import { dbManager } from './db-manager.svelte';
 
-const locale = appManager.getCountryLangCode() || 'it-IT';
-
-onmessage = ({ data: { id, sessions, category } }) => {
+onmessage = ({ data: { id, sessions, category, countryCode } }) => {
 	// Build the mutation query based on category and send to DB manager to update sessions count
 	let query = `mutation { `;
 	switch (category) {
@@ -14,7 +11,7 @@ onmessage = ({ data: { id, sessions, category } }) => {
 			return;
 	}
 
-	query += `(documentId: "${id}", locale:"${locale}", data: { sessions: ${sessions} }) 
+	query += `(documentId: "${id}", locale:"${countryCode}", data: { sessions: ${sessions} }) 
               { 
               documentId
             } 

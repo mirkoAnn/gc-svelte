@@ -165,14 +165,3 @@
 {#if data.page.author}
 	<AuthorBox author={data.page.author} />
 {/if}
-
-<style>
-	.game-galleries-outer {
-		min-height: 100vh;
-		.game-categories {
-			display: flex;
-			flex-direction: column;
-			gap: 48px;
-		}
-	}
-</style>

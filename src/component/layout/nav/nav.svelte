@@ -4,14 +4,17 @@
 	import NavMenuPanel from './nav-menu-panel.svelte';
 	import { navManager } from './nav-manager.svelte';
 	import { beforeNavigate } from '$app/navigation';
+	import { page } from '$app/state';
 	import { m } from '../../../paraglide/messages';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 
 	beforeNavigate(() => {
 		navManager.toggleMenu(-1);
 	});
 	const initialSection = navManager.getCurrentSection();
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <div

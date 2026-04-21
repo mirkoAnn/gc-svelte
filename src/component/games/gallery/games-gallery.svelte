@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { appManager } from '../../../lib/app-manager.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
 	import SquaresLoader from './../../graphics/loader/squares-loader.svelte';
 	import gsap from 'gsap/dist/gsap';
 	import GameCard from './games-gallery-card.svelte';
@@ -7,7 +9,7 @@
 	import GamesGalleryFilters from './games-gallery-filters.svelte';
 	import { capitalizeFirstLetter } from '$lib/utils.svelte';
 	import { m } from '../../../paraglide/messages';
-	import type { Game } from '$lib/types/games';
+	import type { Roulette, Slot } from '$lib/types/games';
 
 	let {
 		games, // Optional: if provided, it will use these games instead of the ones from the gamesGalleryManager, allowing to have multiple galleries with different games on the same page, like in the similar games section of the game page
@@ -18,16 +20,18 @@
 		categoryLink, // Optional: if provided a last card will be rendered linking to the category page with the provided URL and label "Vedi tutte le [category]"
 		hasFilters = false // Optional: if true, it will show a button to toggle the filters and the games will be filtered based on the selected filters in the gamesGalleryManager, used in the main games-gallery page to allow filtering the games by type, provider, etc..
 	}: {
-		games?: Game[];
+		games?: Slot[] | Roulette[];
 		excludeId?: string;
-		category: string;
+		category: 'slot' | 'roulette';
 		title?: string;
 		categoryLink?: string;
-		type: string;
+		type: 'carousel' | 'grid';
 		hasFilters?: boolean;
 	} = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	// Generate a unique ID for the carousel instance to avoid conflicts when multiple carousels are present on the same page
 	const carouselID = `carousel-${Math.floor(Math.random() * 90000) + 10000}`;

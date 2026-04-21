@@ -1,14 +1,17 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { Slot } from '$lib/types/games';
 	import gsap from 'gsap/dist/gsap';
 	import { m } from '../../../paraglide/messages';
-	import { formatCurrency } from '$lib/utils.svelte';
+	import { formatCurrency, formatImageUrl } from '$lib/utils.svelte';
 
 	let { game }: { game: Slot } = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	afterNavigate(async () => {
 		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
@@ -32,7 +35,15 @@
 <div class="content game-info-panel">
 	<h2 class="game-info-title">{m.usefull_info_title({ title: game.title }, { locale })}</h2>
 	<div class="game-info-outer-container">
-		<img class="game-info-logo" src={game.logo.url} alt={`${game.title} Logo`} />
+		<img
+			class="game-info-logo"
+			src={formatImageUrl(game.logo.url, 400)}
+			alt={`${game.title} Logo`}
+			loading="lazy"
+			decoding="async"
+			width="400"
+			height="400"
+		/>
 		<div class="game-info-inner-container">
 			<ul class="game-info-top-list">
 				<li class="game-info">
@@ -59,15 +70,15 @@
 				</li>
 				<li class="game-info">
 					<span class="game-info-label">{m.game_bet_min({}, { locale })}: </span>
-					<span class="game-info-value">{formatCurrency(game.info.betMin)}</span>
+					<span class="game-info-value">{formatCurrency(game.info.betMin, locale)}</span>
 				</li>
 				<li class="game-info">
 					<span class="game-info-label">{m.game_bet_max({}, { locale })}: </span>
-					<span class="game-info-value">{formatCurrency(game.info.betMax)}</span>
+					<span class="game-info-value">{formatCurrency(game.info.betMax, locale)}</span>
 				</li>
 				<li class="game-info">
 					<span class="game-info-label">{m.game_win_max({}, { locale })}: </span>
-					<span class="game-info-value">{formatCurrency(game.info.winMax)}</span>
+					<span class="game-info-value">{formatCurrency(game.info.winMax, locale)}</span>
 				</li>
 			</ul>
 			<div class="game-bonus-list">

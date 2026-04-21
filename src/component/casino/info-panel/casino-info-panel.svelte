@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { Casino } from '$lib/types/casino';
 	import { m } from '../../../paraglide/messages';
 	import { casinosDataManager } from '../casinos-data-manager.svelte';
@@ -16,7 +17,9 @@
 	// this variables holds the global data for the given casino.
 	const casinoGlobalData = $derived(casinosDataManager.getCasinoById(casino.id));
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 	const imageAlt = $derived(
 		casinoGlobalData ? m.logo_description({ title: casinoGlobalData.title }, { locale }) : ''
 	);

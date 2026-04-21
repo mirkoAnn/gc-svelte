@@ -1,29 +1,8 @@
 import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte.js';
-import type { Author } from '$lib/types/author.js';
-import type { PageContent } from '$lib/types/content.js';
-import type { Slot } from '$lib/types/games.js';
 import { error, redirect } from '@sveltejs/kit';
-import type Faq from '../../../../component/faqs/faq.svelte';
-import { basicQuery } from '$lib/query/basic-query';
-
-export type ProviderPageData = {
-	seo: {
-		title: string;
-		description: string;
-	};
-	title: string;
-	slug: string;
-	logo: {
-		url: string;
-	};
-	slots: Slot[];
-	content: PageContent;
-	faqs: Faq[];
-	author: Author;
-	publishedAt: string;
-	updatedAt: string;
-};
+import { basicQuery, slotsQuery } from '$lib/query/basic-query';
+import type { Provider } from '$lib/types/provider.js';
 
 export async function load({ request, params }) {
 	const redirectPath = appManager.getCountryRedirectPath(request, CountryCodes.it);
@@ -41,18 +20,7 @@ export async function load({ request, params }) {
           url
         }
         slots(filters: { locale: { eq: "it" } }, pagination: { page: 1, pageSize: 20 }) {
-          id: documentId
-          title
-          slug
-          logo {
-            url
-          }
-          provider {
-            title
-          }
-          slotThemes {
-            slug
-          }
+           ${slotsQuery}
         }
       }
       slotThemes (filters: { locale: { eq: "it" } }, pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
@@ -71,7 +39,7 @@ export async function load({ request, params }) {
 		.then(
 			(response: {
 				data: {
-					page: ProviderPageData[];
+					page: Provider[];
 					slotThemes: { title: string; slug: string }[];
 					providers: { title: string; slug: string }[];
 				};

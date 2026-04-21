@@ -1,11 +1,14 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { fade } from 'svelte/transition';
 	import { ageBannerManager } from './age-banner-manager.svelte';
 	import { navManager } from '../nav/nav-manager.svelte';
 	import { m } from '../../../paraglide/messages';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 {#if !ageBannerManager.isAgeVerified()}

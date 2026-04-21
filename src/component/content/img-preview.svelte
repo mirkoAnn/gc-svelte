@@ -1,8 +1,9 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import gsap from 'gsap/dist/gsap';
 	import { onMount } from 'svelte';
 	import { m } from '../../paraglide/messages';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 
 	let {
 		imgId, // Unique identifier for the image element to target with GSAP animations
@@ -21,7 +22,9 @@
 	} = $props();
 
 	let isExpanded = $state(false);
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	const photoAlt = $derived(m.img_carousel_alt_text({ imgAlt }, { locale }));
 

@@ -2,15 +2,12 @@
 	import PageMetadata from '../../../component/metadata/page-metadata.svelte';
 	import Breadcrumbs from '../../../component/breadcrumbs/breadcrumbs.svelte';
 	import ProvidersGallery from '../../../component/providers/providers-gallery.svelte';
-	import type { Provider } from '$lib/types/provider';
 	import ContentContainer from '../../../component/content/content-container.svelte';
 	import FaqsList from '../../../component/faqs/faqs-list.svelte';
 	import AuthorBox from '../../../component/author/author-box.svelte';
 	import type { ProvidersPageData } from './+page.server';
-	import type { AppData } from '$lib/types/app-data';
 
-	let { data }: { data: { appData: AppData; page: ProvidersPageData; providers: Provider[] } } =
-		$props();
+	let { data }: { data: ProvidersPageData } = $props();
 </script>
 
 <PageMetadata title={data.page.seo.title} description={data.page.seo.description} />

@@ -8,4 +8,5 @@ export type Author = {
 	};
 	facebookProfile?: string;
 	linkedinProfile?: string;
+	email?: string;
 };

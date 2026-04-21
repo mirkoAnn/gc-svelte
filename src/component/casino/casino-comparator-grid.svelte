@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import { m } from '../../paraglide/messages';
 	import CasinoComparatorGridSection from './casino-comparator-grid-section.svelte';
 	import { casinosDataManager } from './casinos-data-manager.svelte';
 
 	let { currentId }: { currentId: string } = $props();
 
-	let locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	const casinos = $derived(
 		[

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import { m } from '../../paraglide/messages';
 
 	const socialLinks = [
@@ -30,7 +31,9 @@
 		}
 	];
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <ul class="social-bar-list">

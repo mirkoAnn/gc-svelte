@@ -1,12 +1,15 @@
 import gsap from 'gsap/dist/gsap';
 import NavSearch from './search/nav-search.svelte';
 import FavouritesList from '../../favourites/favourites-list.svelte';
+import { page } from '$app/state';
 import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { m } from '../../../paraglide/messages';
 
 let currentSection = $state('casino'); // Used to track the currently active section for styling purposes (e.g. casino or sport)
 
-const locale = $derived(appManager.getCountryCode());
+const locale = $derived.by(
+	() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+);
 
 // Array of menu items for the navbar, including submenus and links
 const menuItems = $derived([

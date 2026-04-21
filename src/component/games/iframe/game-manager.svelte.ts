@@ -2,6 +2,7 @@ import { workersManager } from '$lib/workers-manager.svelte';
 import gsap from 'gsap/dist/gsap';
 import { casinosDataManager } from '../../casino/casinos-data-manager.svelte';
 import type { Casino } from '$lib/types/casino';
+import type { CountryCodes } from '$lib/app-manager.svelte';
 
 let isVisible = $state(false),
 	isOnFullscreen = $state(false),
@@ -86,8 +87,8 @@ export const gameManager = {
 		return relatedCasinos;
 	},
 	// Toggle the game visibility and update the game sessions using the workers manager
-	toggleGame: (id: string, sessions: number, category: string) => {
-		workersManager.updateGameSessionAsync(id, sessions, category);
+	toggleGame: (id: string, sessions: number, category: string, countryCode: string) => {
+		workersManager.updateGameSessionAsync(id, sessions, category, countryCode);
 		animateGameToggling();
 	},
 	checkIfOnFullscreen: () => {

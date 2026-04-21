@@ -4,14 +4,11 @@
 	import CasinoTable from './../../../component/casino/casino-table.svelte';
 	import { casinosDataManager } from './../../../component/casino/casinos-data-manager.svelte';
 	import PageMetadata from './../../../component/metadata/page-metadata.svelte';
-	import { appManager } from '$lib/app-manager.svelte';
 	import ContentContainer from '../../../component/content/content-container.svelte';
 	import type { CasinoOnlinePageData } from './+page.server';
 	import AuthorBox from '../../../component/author/author-box.svelte';
 
 	let { data }: { data: { page: CasinoOnlinePageData } } = $props();
-
-	const locale = $derived(appManager.getCountryCode());
 </script>
 
 <PageMetadata title={data.page.seo.title} description={data.page.seo.description} />
@@ -19,7 +16,7 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: `/${locale}/casino-online` },
+			route: { id: `/it/casino-online` },
 			title: 'Gioca nei migliori Casino Online in Italia',
 			label: 'Casino Online'
 		}

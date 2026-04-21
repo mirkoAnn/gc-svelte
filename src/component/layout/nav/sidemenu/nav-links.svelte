@@ -1,10 +1,13 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import NavLinksSubmenu from './nav-links-submenu.svelte';
 	import { navManager } from '../nav-manager.svelte';
 	import { m } from '../../../../paraglide/messages';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	const initialSection = navManager.getCurrentSection();
 </script>

@@ -49,6 +49,7 @@ const buildSlotsQuery = (
         }
         slotThemes {
           slug
+          iconId
         }
       }
     `;
@@ -84,6 +85,7 @@ const buildSlotsQuery = (
         }
         slotThemes {
           slug
+          iconId
         }
       }
     `;
@@ -107,6 +109,7 @@ const buildSlotsQuery = (
         }
         slotThemes {
           slug
+          iconId
         }
       }
     `;

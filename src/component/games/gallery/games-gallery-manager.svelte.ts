@@ -1,13 +1,13 @@
 import type { Filter, FilterCategory, FilterList } from '$lib/types/filters';
-import type { Game } from '$lib/types/games';
+import type { Slot } from '$lib/types/games';
 import { workersManager } from '$lib/workers-manager.svelte';
 import gsap from 'gsap/dist/gsap';
 
 const gamesBatchSize = 20; // This is the number of games that we load in each batch when the user applies filters or when they click on the "Load More" button, you can adjust this number based on your needs and the performance of your server, but I recommend to keep it around 20 to 30 games per batch to avoid loading too many games at once and to improve the performance of the gallery
 
-let initialGames: Game[] = $state([]), // This is used to keep track of the initial games that are loaded in the gallery, so we can reset the gallery to its initial state when the user clears all filters, this will allow us to show the initial games immediately without having to wait for them to be fetched from the server again
-	games: Game[] = $state([]), // This is used to keep track of the games that are currently displayed in the gallery, so we can update the gallery when the user applies filters or when they navigate to a different page
-	preloadedGames: Game[] = $state([]), // This is used to keep track of the games that are preloaded in the background, so we can show them immediately when the user applies filters without having to wait for the games to be fetched from the server
+let initialGames: Slot[] = $state([]), // This is used to keep track of the initial games that are loaded in the gallery, so we can reset the gallery to its initial state when the user clears all filters, this will allow us to show the initial games immediately without having to wait for them to be fetched from the server again
+	games: Slot[] = $state([]), // This is used to keep track of the games that are currently displayed in the gallery, so we can update the gallery when the user applies filters or when they navigate to a different page
+	preloadedGames: Slot[] = $state([]), // This is used to keep track of the games that are preloaded in the background, so we can show them immediately when the user applies filters without having to wait for the games to be fetched from the server
 	isLoadingGames: boolean = $state(false); // This is used ONLY to keep track of whether the NEW games are currently being loaded from the server (not with a load more action), so we can show a loading indicator in the gallery when the games are being loaded and hide it when the games are loaded
 
 // This is a derived state that checks if there are more games available to load from the server based on the currently preloaded games, it will be used to determine whether to show the "Load More" button in the gallery and to prevent the user from trying to load more games when there are no more games to load
@@ -71,7 +71,7 @@ const toggleSubGalleriesCategories = async () => {
 
 export const gamesGalleryManager = {
 	initGalleryData: (
-		initialGamesData: Game[], // the initial games data that is loaded when the gallery is first rendered, it will be used to show the initial games immediately without having to wait for them to be fetched from the server again when filters cleared
+		initialGamesData: Slot[], // the initial games data that is loaded when the gallery is first rendered, it will be used to show the initial games immediately without having to wait for them to be fetched from the server again when filters cleared
 		categoryFilters: FilterList, // the filters of the current category that is being rendered, they'll be displayed int he filters panel
 		newInitialAppliedFilters: FilterList // the filters that were initially applied when the gallery was first rendered based on the current page, it will be used to also to reset the filter once filters are cleared
 	) => {
@@ -95,11 +95,11 @@ export const gamesGalleryManager = {
 	getGames: () => {
 		return games;
 	},
-	updatePreloadedGames: (newGames: Game[]) => {
+	updatePreloadedGames: (newGames: Slot[]) => {
 		preloadedGames = newGames; // we add the new loaded games from the server to the preloaded games variable, so we can show them immediately when the user applies filters without having to wait for them to be fetched from the server again
 		isLoadingGames = false; // we set the loading state to false because the new games have been loaded
 	},
-	updateGames: (newGames: Game[]) => {
+	updateGames: (newGames: Slot[]) => {
 		if (newGames.length > gamesBatchSize) {
 			games = newGames.slice(0, gamesBatchSize); // we show only the first gamesBatchSize games in the gallery, this will allow us to show the games immediately without having to wait for all the games to be loaded, and it will also improve the performance of the gallery by not rendering too many games at once
 			preloadedGames = newGames.slice(gamesBatchSize); // we keep the rest of the games in the preloaded games variable, so we can show them immediately when the user applies filters without having to wait for them to be fetched from the server again

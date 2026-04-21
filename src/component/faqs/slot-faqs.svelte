@@ -1,26 +1,25 @@
 <script lang="ts">
-	import { SITE_NAME } from './../metadata/sitedata-manager.svelte.ts';
+	import { SITE_NAME } from './../metadata/sitedata-manager.svelte';
 	import type { FAQ } from '$lib/types/faqs';
 	import type { TextContent } from '$lib/types/content';
 	import FaqsList from './faqs-list.svelte';
-	import { casinosDataManager } from '../casino/casinos-data-manager.svelte';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
 	import { m } from '../../paraglide/messages';
 	import type { Slot } from '$lib/types/games';
-	import { formatCurrency } from '$lib/utils.svelte.ts';
+	import { formatCurrency } from '$lib/utils.svelte';
 
 	let {
-		data
+		data,
+		locale
 	}: {
 		data: Slot;
+		locale: CountryCodes;
 	} = $props();
 	// Helper function to create content structure from plain text answers
 	// The content structure is an array of blocks, each block has a type and children, similar to content structure used by fetched rich text.
 	const createContentFromText = (text: string): TextContent[] => {
 		return [{ type: 'paragraph', children: [{ type: 'text', text }] }];
 	};
-
-	const locale = $derived(appManager.getCountryCode());
 
 	const volatility = $derived(() => {
 		switch (data.info.volatility.toLowerCase()) {
@@ -40,6 +39,8 @@
 	});
 
 	let faqs: FAQ[] = $derived.by(() => {
+		const providerCasinosList = data.provider?.title ?? '';
+
 		const formattedFaqs: { id: string; question: string; answer: string }[] = [
 			{
 				id: `${data.slug}-faq-0`,
@@ -48,10 +49,7 @@
 					{
 						gameTitle: data.title,
 						providerName: data.provider.title,
-						casinosList: casinosDataManager
-							.getCasinosByProviderTitle(data.provider.title)
-							.map((casino) => casino.title)
-							.join(', ')
+						casinosList: providerCasinosList
 					},
 					{ locale }
 				)}`
@@ -103,14 +101,14 @@
 				id: `${data.slug}-faq-8`,
 				question: `${m.slot_faqs_bet_min_question({ gameTitle: data.title }, { locale })}`,
 				answer: data.info.betMin
-					? `${m.slot_faqs_bet_min_answer({ gameTitle: data.title, betMin: formatCurrency(data.info.betMin) }, { locale })}`
+					? `${m.slot_faqs_bet_min_answer({ gameTitle: data.title, betMin: formatCurrency(data.info.betMin, locale) }, { locale })}`
 					: `${m.slot_faqs_bet_min_no_answer({ gameTitle: data.title }, { locale })}`
 			},
 			{
 				id: `${data.slug}-faq-9`,
 				question: `${m.slot_faqs_win_max_question({ gameTitle: data.title }, { locale })}`,
 				answer: data.info.winMax
-					? `${m.slot_faqs_win_max_answer({ gameTitle: data.title, winMax: formatCurrency(data.info.winMax) }, { locale })}`
+					? `${m.slot_faqs_win_max_answer({ gameTitle: data.title, winMax: formatCurrency(data.info.winMax, locale) }, { locale })}`
 					: `${m.slot_faqs_win_max_no_answer({ gameTitle: data.title }, { locale })}`
 			}
 		];

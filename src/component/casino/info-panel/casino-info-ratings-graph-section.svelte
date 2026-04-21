@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { Casino } from '$lib/types/casino';
 	import { m } from '../../../paraglide/messages';
 	import RadialChart from '../../graphics/charts/radial-chart.svelte';
 
 	let { casinoGlobalData }: { casinoGlobalData: Casino } = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <div class="casino-ratings-graph-container">

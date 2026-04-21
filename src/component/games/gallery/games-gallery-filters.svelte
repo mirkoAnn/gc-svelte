@@ -1,17 +1,20 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { gamesGalleryManager } from './games-gallery-manager.svelte';
 	import GamesGalleryFilter from './games-gallery-filter.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap/dist/gsap';
 	import { m } from '../../../paraglide/messages';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 
 	// We need to use a state variable to store the animation instance, otherwise it gets recreated on each toggle causing the animation to break
 	// We also need to check if the animation is active before toggling it, to prevent multiple toggles while the animation is still running
 	// This animation is used to toggle the filters panel, it changes the background color and width of the panel, and rotates the arrow icon
 	let toggleFiltersAnimation = $state<GSAPTimeline | null>();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	const toggleFiltersOptions = () => {
 		if (toggleFiltersAnimation && toggleFiltersAnimation.isActive()) return;

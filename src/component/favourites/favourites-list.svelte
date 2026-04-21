@@ -1,10 +1,13 @@
 <script>
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import { m } from '../../paraglide/messages';
 	import Gallery from '../games/gallery/games-gallery.svelte';
 	import { favouritesManager } from './favourites-manager.svelte';
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <div class="favourites">

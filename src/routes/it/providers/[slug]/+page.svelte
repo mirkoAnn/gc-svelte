@@ -7,15 +7,15 @@
 	import { gamesGalleryManager } from './../../../../component/games/gallery/games-gallery-manager.svelte';
 	import { afterNavigate } from '$app/navigation';
 	import AuthorBox from '../../../../component/author/author-box.svelte';
-	import type { ProviderPageData } from './+page.server';
 	import ContentContainer from '../../../../component/content/content-container.svelte';
 	import FaqsList from '../../../../component/faqs/faqs-list.svelte';
+	import type { Provider } from '$lib/types/provider';
 
 	let {
 		data
 	}: {
 		data: {
-			page: ProviderPageData;
+			page: Provider;
 			slotThemes: { title: string; slug: string }[];
 			providers: { title: string; slug: string }[];
 		};

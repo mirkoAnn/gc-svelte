@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { Slot } from '$lib/types/games';
 	import { SITE_URL } from './sitedata-manager.svelte';
 
 	let { data }: { data: Slot } = $props();
 
-	const locale = $derived(appManager.getCountryCode() ?? 'it');
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 	const localeTag = $derived(`${locale}_${locale.toUpperCase()}`);
 	const authorSameAs = $derived(
 		[data.author.facebookProfile, data.author.linkedinProfile].filter(

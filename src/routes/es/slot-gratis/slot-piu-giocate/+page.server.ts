@@ -5,7 +5,7 @@ import { error, redirect } from '@sveltejs/kit';
 import type Faq from '../../../../component/faqs/faq.svelte';
 import type { Slot } from '$lib/types/games';
 import type { Author } from '$lib/types/author';
-import { basicQuery } from '$lib/query/basic-query';
+import { basicQuery, slotsQuery } from '$lib/query/basic-query';
 
 export type BestSlotsPageData = {
 	id: string;
@@ -34,18 +34,7 @@ export async function load({ request }) {
         ${basicQuery}
       }
       slots(locale: "es", sort: "sessions:desc", pagination: { page: 1, pageSize: ${slotsCount} }) {
-        id:documentId
-        title
-        slug
-        logo {
-          url
-        }
-        provider {
-          title
-        }
-        slotThemes {
-          slug
-        }
+         ${slotsQuery}
       }
       slotThemes (locale: "es", pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
         title

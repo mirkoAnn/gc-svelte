@@ -1,13 +1,17 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import gsap from 'gsap/dist/gsap';
 	import { onMount } from 'svelte';
 	import { m } from '../../../paraglide/messages';
-	import { appManager } from '$lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { Game } from '$lib/types/games';
+	import { formatImageUrl } from '$lib/utils.svelte';
 
 	let { games }: { games: Game[] } = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	let currentSlide = 0; // Start with the last slide to create a seamless loop,
 	let slidingAnimation = $state<GSAPTimeline | null>(null); // Store the current sliding animation to prevent overlapping animations
@@ -73,12 +77,15 @@
 
 <div class="games-slider" style="--slide-width: {slideWidth}px">
 	{#each games as game, i (game.id)}
-		<div class="games-slider-item games-slider-item-{i}" style="--bg-image: url({game.logo.url})">
+		<div
+			class="games-slider-item games-slider-item-{i}"
+			style="--bg-image: url({formatImageUrl(game.logo.url, 1000)})"
+		>
 			<img
 				loading="eager"
 				decoding="async"
 				class="game-image"
-				src={game.logo.url}
+				src={formatImageUrl(game.logo.url, 1000)}
 				alt={m.logo_description({ title: game.title }, { locale })}
 				width="1000"
 				height="500"

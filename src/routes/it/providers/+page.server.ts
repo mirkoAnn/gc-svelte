@@ -8,15 +8,18 @@ import type { Author } from '$lib/types/author';
 import { basicQuery } from '$lib/query/basic-query';
 
 export type ProvidersPageData = {
-	seo: {
-		title: string;
-		description: string;
+	page: {
+		seo: {
+			title: string;
+			description: string;
+		};
+		content: PageContent;
+		faqs: Faq[];
+		author: Author;
+		publishedAt: string;
+		updatedAt: string;
 	};
-	content: PageContent;
-	faqs: Faq[];
-	author: Author;
-	publishedAt: string;
-	updatedAt: string;
+	providers: Provider[];
 };
 
 export async function load({ request }) {
@@ -44,7 +47,7 @@ export async function load({ request }) {
   `;
 	return await dbManager
 		.executeQuery(query)
-		.then((response: { data: { page: ProvidersPageData; providers: Provider[] } }) => {
+		.then((response: { data: ProvidersPageData }) => {
 			return response.data;
 		})
 		.catch(() => {

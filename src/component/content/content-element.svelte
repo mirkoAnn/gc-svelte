@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { appManager } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type {
 		ContentItem,
 		ContentSection,
@@ -16,7 +17,9 @@
 		// We use 'any' here because the content can have a complex structure with nested elements, and we will handle the typing more specifically within the functions that process the content based on their type and structure
 	} = $props();
 
-	const locale = $derived(appManager.getCountryCode());
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	// Function to handle headings based on their level
 	const handleHeading = (section: HeadingContent): { tag: string; text: string } => ({
