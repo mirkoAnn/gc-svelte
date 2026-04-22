@@ -1,9 +1,8 @@
-import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte.js';
 import { basicQuery, slotsQuery } from '$lib/query/basic-query.js';
 import type { PageContent } from '$lib/types/content.js';
 import type { Slot } from '$lib/types/games.js';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type Faq from '../../../../component/faqs/faq.svelte';
 import type { Author } from '$lib/types/author.js';
 
@@ -22,12 +21,7 @@ export type SlotMechanicPageData = {
 	updatedAt: string;
 };
 
-export async function load({ request, params }) {
-	const redirectPath = appManager.getCountryRedirectPath(request, CountryCodes.it);
-	if (redirectPath) {
-		throw redirect(307, redirectPath);
-	}
-
+export async function load({ params }) {
 	// Determine query based on slug parameter
 	// "nuove" and "piu-giocate" are special cases for new and most played slots respectively
 	// they're not actual slot themes in the database so we need to handle them differently

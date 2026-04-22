@@ -1,15 +1,9 @@
-import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte.js';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { basicQuery, slotsQuery } from '$lib/query/basic-query';
 import type { Provider } from '$lib/types/provider.js';
 
-export async function load({ request, params }) {
-	const redirectPath = appManager.getCountryRedirectPath(request, CountryCodes.it);
-	if (redirectPath) {
-		throw redirect(307, redirectPath);
-	}
-
+export async function load({ params }) {
 	const query = `
     query {
       page: providers(filters: { slug: { eq: "${params.slug}" }, locale: { eq: "it" } }) {

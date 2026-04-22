@@ -99,25 +99,6 @@ const extractPreferredCountryFromAcceptLanguage = (
 	return undefined;
 };
 
-const replaceCountryPrefix = (
-	pathname: string,
-	currentCountry: CountryCodes,
-	targetCountry: CountryCodes
-): string | undefined => {
-	const currentPrefix = `/${currentCountry}`;
-	if (!pathname.startsWith(currentPrefix)) {
-		return undefined;
-	}
-
-	const nextCharacter = pathname.charAt(currentPrefix.length);
-	if (nextCharacter && nextCharacter !== '/') {
-		return undefined;
-	}
-
-	const suffix = pathname.slice(currentPrefix.length);
-	return `/${targetCountry}${suffix}`;
-};
-
 const extractPathname = (requestUrl: string): string => {
 	const match = requestUrl.match(/^[a-z]+:\/\/[^/]+(\/.*)?$/i);
 	return match?.[1] ?? '/';
@@ -174,14 +155,6 @@ export const appManager = {
 	},
 	getCountryCodeFromPathname: (pathname: string) => {
 		return getCountryFromPathname(pathname);
-	},
-	getCountryRedirectPath: (request: Request, currentCountry: CountryCodes) => {
-		const targetCountry = appManager.fetchCountryCode(request);
-		if (targetCountry === currentCountry || !appManager.canRouteToCountry(targetCountry)) {
-			return undefined;
-		}
-
-		return replaceCountryPrefix(extractPathname(request.url), currentCountry, targetCountry);
 	},
 	getCountryCode: () => {
 		return countryCode;

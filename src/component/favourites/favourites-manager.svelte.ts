@@ -1,15 +1,16 @@
 import type { Favourite, FavouritesList } from '$lib/types/favourites';
-import type { Slot } from '$lib/types/games';
+import type { Roulette, Slot } from '$lib/types/games';
 
 export const FAVOURITES_LIST_COOKIE_NAME = 'gc_favourites_list';
 
 // Favourites list contains different categories; for now we only have "slots"
 let favouritesList: FavouritesList = $state({
-	slots: []
+	slots: [],
+	roulettes: []
 });
 
 export const favouritesManager = {
-	initialize: (newList: { slots: Slot[] }) => {
+	initialize: (newList: { slots: Slot[]; roulettes: Roulette[] }) => {
 		// Initialize favourites list from cookie data if available
 		// list is null when no cookie is present or cookie is invalid
 		// so we keep the default empty list in that case
@@ -22,6 +23,8 @@ export const favouritesManager = {
 		switch (category) {
 			case 'slot':
 				return favouritesList.slots;
+			case 'roulette':
+				return favouritesList.roulettes;
 			default:
 				return [];
 		}
@@ -34,7 +37,7 @@ export const favouritesManager = {
 					return slot.id === favourite.id;
 				});
 				if (index < 0) {
-					favouritesList.slots = [...favouritesList.slots, favourite];
+					favouritesList.slots = [...favouritesList.slots, favourite as Slot];
 				} else {
 					favouritesList.slots = [
 						...favouritesList.slots.slice(0, index),
@@ -44,6 +47,21 @@ export const favouritesManager = {
 				break;
 			}
 			default:
+			case 'roulette':
+				{
+					const index = favouritesList.roulettes.findIndex((roulette: Roulette) => {
+						return roulette.id === favourite.id;
+					});
+					if (index < 0) {
+						favouritesList.roulettes = [...favouritesList.roulettes, favourite as Roulette];
+					} else {
+						favouritesList.roulettes = [
+							...favouritesList.roulettes.slice(0, index),
+							...favouritesList.roulettes.slice(index + 1)
+						];
+					}
+					break;
+				}
 				break;
 		}
 
@@ -83,7 +101,8 @@ export const favouritesManager = {
 	},
 	clearAll: () => {
 		favouritesList = {
-			slots: []
+			slots: [],
+			roulettes: []
 		};
 		document.cookie =
 			FAVOURITES_LIST_COOKIE_NAME +

@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import { m } from '../../../paraglide/messages';
@@ -21,12 +22,18 @@
 		</div>
 		<div class="footer-column">
 			{#each navManager.getMenuItemByIndex(0).submenuItems as item (item.label)}
-				<a href={`/${locale}${item.href}`} class="footer-link">{item.label}</a>
+				<a
+					href={resolve(`/${locale}${item.href}` as Parameters<typeof resolve>[0])}
+					class="footer-link">{item.label}</a
+				>
 			{/each}
 		</div>
 		<div class="footer-column">
 			{#each navManager.getMenuItemByIndex(1).submenuItems as item (item.label)}
-				<a href={`/${locale}${item.href}`} class="footer-link">{item.label}</a>
+				<a
+					href={resolve(`/${locale}${item.href}` as Parameters<typeof resolve>[0])}
+					class="footer-link">{item.label}</a
+				>
 			{/each}
 		</div>
 		<div class="footer-column">

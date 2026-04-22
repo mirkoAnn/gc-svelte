@@ -90,5 +90,6 @@
 </script>
 
 {#each formattedContent as item, index ('text' + index)}
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html `<${item.tag}>${item.text}</${item.tag}>`}
 {/each}

@@ -1,14 +1,8 @@
-import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte.js';
 import type { Slot } from '$lib/types/games.js';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
-export async function load({ request, params }) {
-	const redirectPath = appManager.getCountryRedirectPath(request, CountryCodes.es);
-	if (redirectPath) {
-		throw redirect(307, redirectPath);
-	}
-
+export async function load({ params }) {
 	const query = `
     query {
       page: slots(locale: "es", filters: { slug: { eq: "${params.slug}" } }) {

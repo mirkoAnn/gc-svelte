@@ -1,10 +1,41 @@
 import { dbManager } from './db-manager.svelte';
-import { slotsQuery } from './query/basic-query';
+import { roulettesQuery, slotsQuery } from './query/basic-query';
+import type { Roulette, Slot } from './types/games';
+
+type FilterValue = {
+	value: string;
+};
+
+type FilterCategory = {
+	name: string;
+	filters: FilterValue[];
+};
+
+type GalleryFilters = {
+	type: 'slot' | 'roulette';
+	categories: FilterCategory[];
+};
+
+type SlotsWorkerResponse = {
+	data: {
+		slotsByProviders?: Slot[];
+		slotsByThemes?: Slot[];
+		slots?: Slot[];
+	};
+};
+
+type RouletteWorkerResponse = {
+	data: {
+		roulettesByProviders?: Roulette[];
+		roulettesByRules?: Roulette[];
+		roulettes?: Roulette[];
+	};
+};
 
 const gamesNumberPerPage = 40; // This is used to keep track of how many games we want to load for each page, it will be used for pagination when loading the games in the gallery
 
 // This function is used to build the query for loading the slots games based on the filters that are applied in the gallery, it will be called in the worker when we want to load the games for the gallery, it receives the filters as parameter and returns the query string that will be used to load the games from the database
-const buildSlotsQuery = (filters: any, page: number, newCountryCode: string) => {
+const buildSlotsQuery = (filters: GalleryFilters, page: number, countryCode: string) => {
 	let providersFilterQueryString = '';
 	let categoriesFilterQueryString = '';
 
@@ -12,23 +43,23 @@ const buildSlotsQuery = (filters: any, page: number, newCountryCode: string) => 
 	// this function is called only when filters are in use, so we don't need to build a defualt query with no filters applied
 	let query = `query {`;
 
-	const sortingOption = filters.categories.find((c: any) => c.name === 'orderBy')?.filters[0]
-		?.value; // We check if there is a sorting option applied in the filters, if there is we get the value of that sorting option to use it in the query string to sort the games based on the user's selection in the sorting dropdown
+	const sortingOption = filters.categories.find((c: FilterCategory) => c.name === 'orderBy')
+		?.filters[0]?.value; // We check if there is a sorting option applied in the filters, if there is we get the value of that sorting option to use it in the query string to sort the games based on the user's selection in the sorting dropdown
 
 	// We check if there are any providers filters applied, if there are we build the query string for filtering by providers,
 	// we do this by finding the providers category in the filters and then building the query string based on the selected providers in that category,
 	// we use the "or" operator to filter by multiple providers, so if the user has selected multiple providers we will return all games that match any of those providers,
 	// if the user has selected only one provider we will return all games that match that provider,
 	// if the user has not selected any providers we will not add any filters for providers to the query string
-	const providersCategory = filters.categories.find((c: any) => c.name === 'providers');
+	const providersCategory = filters.categories.find((c: FilterCategory) => c.name === 'providers');
 	if (providersCategory && providersCategory.filters.length > 0) {
 		providersFilterQueryString = `provider: { or: [${providersCategory.filters
-			.map((provider: any) => `{ slug: { eq: "${provider.value}" } }`)
+			.map((provider: FilterValue) => `{ slug: { eq: "${provider.value}" } }`)
 			.join(', ')}] }`;
 
 		query += `
       slotsByProviders: slots(
-        filters: { ${providersFilterQueryString} }
+        filters: { ${providersFilterQueryString}, locale: { eq: "${countryCode}" } }
         sort: "${sortingOption}"
         pagination: { page: ${page}, pageSize: ${gamesNumberPerPage} }
       ) {
@@ -42,15 +73,15 @@ const buildSlotsQuery = (filters: any, page: number, newCountryCode: string) => 
 	// we use the "or" operator to filter by multiple categories, so if the user has selected multiple categories we will return all games that match any of those categories,
 	// if the user has selected only one category we will return all games that match that category,
 	// if the user has not selected any categories we will not add any filters for categories to the query string
-	const themesCategory = filters.categories.find((c: any) => c.name === 'slotThemes');
+	const themesCategory = filters.categories.find((c: FilterCategory) => c.name === 'slotThemes');
 	if (themesCategory && themesCategory.filters.length > 0) {
 		categoriesFilterQueryString = `slotThemes: { or: [${themesCategory.filters
-			.map((category: any) => `{ slug: { eq: "${category.value}" } }`)
+			.map((category: FilterValue) => `{ slug: { eq: "${category.value}" } }`)
 			.join(', ')}] }`;
 
 		query += `
       slotsByThemes: slots(
-        filters: { ${categoriesFilterQueryString} }
+        filters: { ${categoriesFilterQueryString}, locale: { eq: "${countryCode}" } }
         sort: "${sortingOption}"
         pagination: { page: ${page}, pageSize: ${gamesNumberPerPage} }
       ) {
@@ -63,6 +94,7 @@ const buildSlotsQuery = (filters: any, page: number, newCountryCode: string) => 
 	if (providersFilterQueryString === '' && categoriesFilterQueryString === '') {
 		query += `
       slots(
+	  	locale: "${countryCode}" 
         sort: "${sortingOption}"
         pagination: { page: ${page}, pageSize: ${gamesNumberPerPage} }
       ) {
@@ -74,8 +106,8 @@ const buildSlotsQuery = (filters: any, page: number, newCountryCode: string) => 
 	query += `}`;
 
 	dbManager
-		.executeQuery(query, newCountryCode)
-		.then((response: any) => {
+		.executeQuery(query)
+		.then((response: SlotsWorkerResponse) => {
 			// We build the games array by combining the results from the providers and categories queries, if both filters are applied we will have two separate queries for providers and categories,
 			// so we need to combine the results of those two queries to get the final games array that we will return to the main thread,
 			let slots = response.data.slotsByProviders ? response.data.slotsByProviders : [];
@@ -89,7 +121,7 @@ const buildSlotsQuery = (filters: any, page: number, newCountryCode: string) => 
 };
 
 // This function is used to build the query for loading the roulette games based on the filters that are applied in the gallery, it will be called in the worker when we want to load the games for the gallery, it receives the filters as parameter and returns the query string that will be used to load the games from the database
-const buildRouletteQuery = (filters: any, page: number, newCountryCode: string) => {
+const buildRouletteQuery = (filters: GalleryFilters, page: number, countryCode: string) => {
 	let providersFilterQueryString = '';
 	let categoriesFilterQueryString = '';
 
@@ -97,35 +129,27 @@ const buildRouletteQuery = (filters: any, page: number, newCountryCode: string) 
 	// this function is called only when filters are in use, so we don't need to build a defualt query with no filters applied
 	let query = `query {`;
 
-	const sortingOption = filters.categories.find((c: any) => c.name === 'orderBy')?.filters[0]
-		?.value; // We check if there is a sorting option applied in the filters, if there is we get the value of that sorting option to use it in the query string to sort the games based on the user's selection in the sorting dropdown
+	const sortingOption = filters.categories.find((c: FilterCategory) => c.name === 'orderBy')
+		?.filters[0]?.value; // We check if there is a sorting option applied in the filters, if there is we get the value of that sorting option to use it in the query string to sort the games based on the user's selection in the sorting dropdown
 
 	// We check if there are any providers filters applied, if there are we build the query string for filtering by providers,
 	// we do this by finding the providers category in the filters and then building the query string based on the selected providers in that category,
 	// we use the "or" operator to filter by multiple providers, so if the user has selected multiple providers we will return all games that match any of those providers,
 	// if the user has selected only one provider we will return all games that match that provider,
 	// if the user has not selected any providers we will not add any filters for providers to the query string
-	const providersCategory = filters.categories.find((c: any) => c.name === 'providers');
+	const providersCategory = filters.categories.find((c: FilterCategory) => c.name === 'providers');
 	if (providersCategory && providersCategory.filters.length > 0) {
 		providersFilterQueryString = `provider: { or: [${providersCategory.filters
-			.map((provider: any) => `{ slug: { eq: "${provider.value}" } }`)
+			.map((provider: FilterValue) => `{ slug: { eq: "${provider.value}" } }`)
 			.join(', ')}] }`;
 
 		query += `
       roulettesByProviders: roulettes(
-        filters: { ${providersFilterQueryString} }
+        filters: { ${providersFilterQueryString}, locale: { eq: "${countryCode}" } }
         sort: "${sortingOption}"
         pagination: { page: ${page}, pageSize: ${gamesNumberPerPage} }
       ) {
-        id:documentId
-        title
-        slug
-        logo {
-          url
-        }
-        provider {
-          title
-        }
+        ${roulettesQuery}
       }
     `;
 	}
@@ -135,27 +159,21 @@ const buildRouletteQuery = (filters: any, page: number, newCountryCode: string) 
 	// we use the "or" operator to filter by multiple categories, so if the user has selected multiple categories we will return all games that match any of those categories,
 	// if the user has selected only one category we will return all games that match that category,
 	// if the user has not selected any categories we will not add any filters for categories to the query string
-	const themesCategory = filters.categories.find((c: any) => c.name === 'rouletteMechanics');
+	const themesCategory = filters.categories.find(
+		(c: FilterCategory) => c.name === 'rouletteMechanics'
+	);
 	if (themesCategory && themesCategory.filters.length > 0) {
 		categoriesFilterQueryString = `rouletteMechanics: { or: [${themesCategory.filters
-			.map((category: any) => `{ slug: { eq: "${category.value}" } }`)
+			.map((category: FilterValue) => `{ slug: { eq: "${category.value}" } }`)
 			.join(', ')}] }`;
 
 		query += `
       roulettesByRules: roulettes(
-        filters: { ${categoriesFilterQueryString} }
+        filters: { ${categoriesFilterQueryString}, locale: { eq: "${countryCode}" } }
         sort: "${sortingOption}"
         pagination: { page: ${page}, pageSize: ${gamesNumberPerPage} }
       ) {
-        id:documentId
-        title
-        slug
-        logo {
-          url
-        }
-        provider {
-          title
-        }
+        ${roulettesQuery}
       }
     `;
 	}
@@ -164,18 +182,11 @@ const buildRouletteQuery = (filters: any, page: number, newCountryCode: string) 
 	if (providersFilterQueryString === '' && categoriesFilterQueryString === '') {
 		query += `
       roulettes(
+		locale: "${countryCode}"
         sort: "${sortingOption}"
         pagination: { page: ${page}, pageSize: ${gamesNumberPerPage} }
       ) {
-        id:documentId
-        title
-        slug
-        logo {
-          url
-        }
-        provider {
-          title
-        }
+        ${roulettesQuery}
       }
     `;
 	}
@@ -183,8 +194,8 @@ const buildRouletteQuery = (filters: any, page: number, newCountryCode: string) 
 	query += `}`;
 
 	dbManager
-		.executeQuery(query, newCountryCode)
-		.then((response: any) => {
+		.executeQuery(query)
+		.then((response: RouletteWorkerResponse) => {
 			// We build the games array by combining the results from the providers and categories queries, if both filters are applied we will have two separate queries for providers and categories,
 			// so we need to combine the results of those two queries to get the final games array that we will return to the main thread,
 			let roulettes = response.data.roulettesByProviders ? response.data.roulettesByProviders : [];
@@ -206,17 +217,17 @@ const buildRouletteQuery = (filters: any, page: number, newCountryCode: string) 
 // if both are provided it will return all games of that provider and category
 // page is used for pagination, it indicates the page number of the results to return, each page contains 25 games
 onmessage = async ({
-	data: { filtersJson, page, newCountryCode }
+	data: { filtersJson, page, countryCode }
 }: {
-	data: { filtersJson: any; page: number; newCountryCode: string };
+	data: { filtersJson: string; page: number; countryCode: string };
 }) => {
-	const filters = JSON.parse(filtersJson);
+	const filters = JSON.parse(filtersJson) as GalleryFilters;
 	switch (filters.type) {
 		case 'slot':
-			buildSlotsQuery(filters, page, newCountryCode);
+			buildSlotsQuery(filters, page, countryCode);
 			break;
 		case 'roulette':
-			buildRouletteQuery(filters, page, newCountryCode);
+			buildRouletteQuery(filters, page, countryCode);
 			break;
 		default:
 			console.log('Unknown filters type: ', filters.type);

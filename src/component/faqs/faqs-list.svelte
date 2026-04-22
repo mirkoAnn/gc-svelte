@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { appManager } from '$lib/app-manager.svelte';
-	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { FAQ } from '$lib/types/faqs';
 	import { m } from '../../paraglide/messages';
 	import Faq from './faq.svelte';
@@ -12,6 +11,7 @@
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const jsonLd = $derived(
 		JSON.stringify({
 			'@context': 'https://schema.org',
@@ -34,9 +34,13 @@
 			}))
 		})
 	);
-
-	const jsonLdScript = $derived(`<script type="application/ld+json">${jsonLd}<\/script>`);
 </script>
+
+<svelte:head>
+	<script type="application/ld+json">
+{jsonLd}
+	</script>
+</svelte:head>
 
 <div class="content faqs-container">
 	<h2 class="faqs-title">{m.faqs({}, { locale })}</h2>
@@ -46,8 +50,6 @@
 		{/each}
 	</div>
 </div>
-
-{@html jsonLdScript}
 
 <style>
 	.faqs-container {

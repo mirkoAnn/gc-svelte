@@ -2,7 +2,6 @@ import { workersManager } from '$lib/workers-manager.svelte';
 import gsap from 'gsap/dist/gsap';
 import { casinosDataManager } from '../../casino/casinos-data-manager.svelte';
 import type { Casino } from '$lib/types/casino';
-import type { CountryCodes } from '$lib/app-manager.svelte';
 
 let isVisible = $state(false),
 	isOnFullscreen = $state(false),

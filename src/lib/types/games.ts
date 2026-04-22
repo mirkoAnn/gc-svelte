@@ -54,6 +54,13 @@ export type Slot = Game & {
 	}[];
 };
 
-export type Roulette = Game;
+export type Roulette = Game & {
+	info: {
+		releaseYear: string;
+		betMin: string;
+		betMax: string;
+		winMax: string;
+	};
+};
 
 export type GalleryFilter = { title: string; slug: string };

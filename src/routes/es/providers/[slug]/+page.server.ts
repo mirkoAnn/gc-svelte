@@ -1,9 +1,8 @@
-import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte.js';
 import type { Author } from '$lib/types/author.js';
 import type { PageContent } from '$lib/types/content.js';
 import type { Slot } from '$lib/types/games.js';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type Faq from '../../../../component/faqs/faq.svelte';
 import { basicQuery, slotsQuery } from '$lib/query/basic-query';
 
@@ -25,12 +24,7 @@ export type ProviderPageData = {
 	updatedAt: string;
 };
 
-export async function load({ request, params }) {
-	const redirectPath = appManager.getCountryRedirectPath(request, CountryCodes.es);
-	if (redirectPath) {
-		throw redirect(307, redirectPath);
-	}
-
+export async function load({ params }) {
 	const query = `
     query {
       page: providers(filters: { slug: { eq: "${params.slug}" }, locale: { eq: "es" } }) {

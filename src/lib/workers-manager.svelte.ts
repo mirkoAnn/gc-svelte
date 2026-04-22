@@ -1,6 +1,23 @@
 import { gamesGalleryManager } from '../component/games/gallery/games-gallery-manager.svelte';
 import { navSearchManager } from '../component/layout/nav/search/nav-search-manager.svelte';
-import { appManager } from './app-manager.svelte';
+import type { Roulette, Slot } from './types/games';
+import type { SearchResults } from './types/search';
+
+type LoadedGamesMessage = Slot[] | Roulette[];
+
+type WorkerErrorMessage = {
+	error: string;
+};
+
+type SearchWorkerMessage =
+	| {
+			type: 'searchError';
+			error: string;
+	  }
+	| {
+			type: 'searchResults';
+			data: SearchResults;
+	  };
 
 export const workersManager = {
 	updateGameSessionAsync: async (
@@ -29,32 +46,34 @@ export const workersManager = {
 		const syncWorker = new SyncWorker.default();
 		syncWorker.postMessage({ url });
 	},
-	fetchGamesAsync: async (filters: any, page: number) => {
+	fetchGamesAsync: async (filters: unknown, page: number, countryCode: string) => {
 		const SyncWorker = await import('$lib/games-loader.worker?worker');
 		const syncWorker = new SyncWorker.default();
 		syncWorker.postMessage({
 			filtersJson: JSON.stringify(filters),
 			page,
-			newCountryCode: appManager.getCountryCode() // Pass the country code to the worker so that it can fetch the games from the correct server based on the user's location, this is necessary to ensure that the worker fetches the games from the correct server and that it can properly apply any country-specific filters or restrictions when fetching the games, allowing for a more accurate and relevant selection of games to be loaded in the gallery based on the user's location and preferences.
+			countryCode // Pass the country code to the worker so that it can fetch the games from the correct server based on the user's location, this is necessary to ensure that the worker fetches the games from the correct server and that it can properly apply any country-specific filters or restrictions when fetching the games, allowing for a more accurate and relevant selection of games to be loaded in the gallery based on the user's location and preferences.
 		});
-		syncWorker.onmessage = (event: any) => {
-			if (event.data.error) {
+		syncWorker.onmessage = (event: MessageEvent<LoadedGamesMessage | WorkerErrorMessage>) => {
+			if (typeof event.data === 'object' && event.data !== null && 'error' in event.data) {
 				console.error(event.data.error); // Handle the error accordingly, for example by showing an error message to the user
 				return;
 			}
+
+			const loadedGames = event.data as LoadedGamesMessage;
 			// Depending on the page number, we either update the games in the gallery manager with the loaded games from the worker (if it's the first page of games) or we add the loaded games from the worker to the preloaded games in the gallery manager (if it's a subsequent page of games), this will allow us to show the games in the gallery immediately without having to wait for them to be fetched from the server again when the user applies filters or when they load more games by clicking on the "Load More" button or by scrolling down to the bottom of the gallery
 			if (page === 1) {
-				gamesGalleryManager.updateGames(event.data); // Update the games in the gallery manager with the loaded games from the worker, this will trigger the gallery to re-render with the new games
+				gamesGalleryManager.updateGames(loadedGames); // Update the games in the gallery manager with the loaded games from the worker, this will trigger the gallery to re-render with the new games
 			} else {
-				gamesGalleryManager.updatePreloadedGames(event.data); // Update the preloaded games in the gallery manager with the loaded games from the worker, this will allow us to show the next page of games immediately when the user clicks on the "Load More" button or when they scroll down to the bottom of the gallery without having to wait for them to be fetched from the server again
+				gamesGalleryManager.updatePreloadedGames(loadedGames); // Update the preloaded games in the gallery manager with the loaded games from the worker, this will allow us to show the next page of games immediately when the user clicks on the "Load More" button or when they scroll down to the bottom of the gallery without having to wait for them to be fetched from the server again
 			}
 		};
 	},
-	search: async (query: string) => {
+	search: async (query: string, countryCode: string) => {
 		const SyncWorker = await import('$lib/search.worker?worker');
 		const syncWorker = new SyncWorker.default();
-		syncWorker.postMessage({ searchValue: query });
-		syncWorker.onmessage = (event: any) => {
+		syncWorker.postMessage({ searchValue: query, countryCode }); // Pass the search query and country code to the worker so that it can perform the search with the correct filters based on the user's location, this is necessary to ensure that the worker performs the search with the correct filters and restrictions based on the user's location, allowing for more accurate and relevant search results to be returned from the worker based on the user's location and preferences.
+		syncWorker.onmessage = (event: MessageEvent<SearchWorkerMessage>) => {
 			if (event.data.type === 'searchError') {
 				console.error(event.data.error); // Handle the error accordingly, for example by showing an error message to the user
 				return;

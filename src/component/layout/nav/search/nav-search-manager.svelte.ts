@@ -120,7 +120,7 @@ const resetSearchData = () => {
 // };
 
 // Function to handle the search logic
-const search = () => {
+const search = (countryCode: string) => {
 	// If search is already in progress, do not initiate another search
 	if (isSearchInputLoading) {
 		return;
@@ -141,7 +141,7 @@ const search = () => {
 
 	// Initiate the search using the workers manager, this will offload the search processing to a web worker, keeping the UI responsive
 	// The search results will be handled in the onmessage callback of the worker taht will call the uploadSearchResults Function to update the search results in the UI
-	workersManager.search(searchValue);
+	workersManager.search(searchValue, countryCode);
 };
 
 export const navSearchManager = {
@@ -167,9 +167,9 @@ export const navSearchManager = {
 		return searchInput;
 	},
 	// This function is called when the user types in the search input, it updates the search input state and triggers the search function to fetch new results based on the updated input
-	handleInput: (value: string) => {
+	handleInput: (value: string, countryCode: string) => {
 		searchInput = value;
-		search();
+		search(countryCode);
 	},
 	// This function is called to update the search results in the UI after receiving the response from the search worker
 	updateSearchResults: (response: SearchResults) => {
@@ -191,10 +191,10 @@ export const navSearchManager = {
 		// Logic to handle blur on the search input
 		resetSearchData();
 	},
-	handleHints: (hint: string) => {
+	handleHints: (hint: string, countryCode: string) => {
 		// Logic to handle search hints
 		searchInput = hint;
-		search();
+		search(countryCode);
 		searchHints = [];
 	},
 	clearSearch: () => {

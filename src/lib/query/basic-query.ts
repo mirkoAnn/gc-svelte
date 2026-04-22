@@ -49,3 +49,15 @@ export const slotsQuery = `
         iconId
     }
 `;
+
+export const roulettesQuery = `
+    id:documentId
+    title
+    slug
+    logo {
+        url
+    }
+    provider {
+        title
+    }
+`;

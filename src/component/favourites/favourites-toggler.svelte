@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { favouritesManager } from './favourites-manager.svelte';
 	import type { Favourite } from '$lib/types/favourites';
+	import { favouritesManager } from './favourites-manager.svelte';
 
 	let { data, category }: { data: Favourite; category: string } = $props();
 </script>

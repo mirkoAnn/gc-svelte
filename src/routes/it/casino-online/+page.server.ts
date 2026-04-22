@@ -1,7 +1,6 @@
-import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte';
 import type { PageContent } from '$lib/types/content';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type Faq from '../../../component/faqs/faq.svelte';
 import type { Author } from '$lib/types/author';
 import { basicQuery } from '$lib/query/basic-query';
@@ -18,12 +17,7 @@ export type CasinoOnlinePageData = {
 	updatedAt: string;
 };
 
-export async function load({ request }) {
-	const redirectPath = appManager.getCountryRedirectPath(request, CountryCodes.it);
-	if (redirectPath) {
-		throw redirect(307, redirectPath);
-	}
-
+export async function load() {
 	const query = `
     query {
         page: casinosPage (locale: "it") {

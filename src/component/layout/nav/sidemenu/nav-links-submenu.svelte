@@ -38,7 +38,7 @@
 						<a
 							class="nav-links-submenu-item-link"
 							title={m.go_to_page({ page: subitem.label }, { locale })}
-							href={resolve(`/${locale}${subitem.href}` as any)}
+							href={resolve(`/${locale}${subitem.href}` as Parameters<typeof resolve>[0])}
 						>
 							{subitem.label}
 						</a>

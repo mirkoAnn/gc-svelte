@@ -1,7 +1,6 @@
-import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte.js';
 import { basicQuery, slotsQuery } from '$lib/query/basic-query.js';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type { Slot } from '$lib/types/games.js';
 import type Faq from '../../../../component/faqs/faq.svelte';
 import type { Author } from '$lib/types/author.js';
@@ -23,12 +22,7 @@ export type SlotThemePageData = {
 	updatedAt: string;
 };
 
-export async function load({ request, params }) {
-	const redirectPath = appManager.getCountryRedirectPath(request, CountryCodes.es);
-	if (redirectPath) {
-		throw redirect(307, redirectPath);
-	}
-
+export async function load({ params }) {
 	const slotsCount = 40; // Number of slots for the initial fetching
 
 	const query = `

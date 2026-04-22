@@ -3,10 +3,16 @@
 	import NavbarSearchHints from './nav-search-hints.svelte';
 	import { onMount } from 'svelte';
 	import { navSearchManager } from './nav-search-manager.svelte';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
+	import { page } from '$app/state';
 
 	onMount(() => {
 		navSearchManager.init();
 	});
+
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <div class="navbar-search-panel">
@@ -19,7 +25,7 @@
 				placeholder={navSearchManager.getPlaceholder()}
 				oninput={(e: Event) => {
 					// Handle input changes
-					navSearchManager.handleInput((e.target as HTMLInputElement).value);
+					navSearchManager.handleInput((e.target as HTMLInputElement).value, locale);
 				}}
 				value={navSearchManager.getSearchInput()}
 				onkeydown={(e: KeyboardEvent) => {

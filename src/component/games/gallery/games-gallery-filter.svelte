@@ -90,10 +90,13 @@
 					: ''}"
 				value={filterOption.value}
 				onclick={() =>
-					gamesGalleryManager.applyFilter({
-						category: filter.name,
-						value: filterOption.value
-					})}
+					gamesGalleryManager.applyFilter(
+						{
+							category: filter.name,
+							value: filterOption.value
+						},
+						locale
+					)}
 			>
 				<svg class="games-gallery-filter-option-icon">
 					<use href="/icons/icon-set.svg#check" />

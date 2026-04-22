@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { appManager } from '../../../lib/app-manager.svelte';
 	import { CountryCodes } from '$lib/app-manager.svelte';
@@ -160,7 +161,7 @@
 		<!-- Link to the category for carousel type -->
 		{#if categoryLink}
 			<a
-				href={`/${locale}${categoryLink}`}
+				href={resolve(`/${locale}${categoryLink}` as Parameters<typeof resolve>[0])}
 				class="game-card more-games-card"
 				aria-label={m.show_all_by_category({ category }, { locale })}
 				title={m.show_all_by_category({ category }, { locale })}
@@ -173,7 +174,7 @@
 		{:else if gamesGalleryManager.areMoreGamesAvailable()}
 			<button
 				class="game-card more-games-card load-more-button"
-				onclick={() => gamesGalleryManager.loadMoreGames()}
+				onclick={() => gamesGalleryManager.loadMoreGames(locale)}
 				disabled={!gamesGalleryManager.areMoreGamesAvailable()}
 				aria-label={m.load_more_games({}, { locale })}
 			>

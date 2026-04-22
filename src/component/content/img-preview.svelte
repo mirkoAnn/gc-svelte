@@ -35,13 +35,11 @@
 		}
 	};
 
-	let scrollingAnimation = $state<GSAPTimeline | null>(null);
-
 	onMount(async () => {
 		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
 		gsap.registerPlugin(scrollTrigger);
 
-		scrollingAnimation = gsap
+		gsap
 			.timeline({
 				scrollTrigger: {
 					scroller: '.main-inner',
