@@ -11,7 +11,7 @@
 		},
 		{
 			label: 'Instagram',
-			url: '',
+			url: 'https://www.instagram.com/gamlub1/',
 			icon: 'instagram'
 		},
 		{
