@@ -13,10 +13,16 @@ export const workersManager = {
 		const syncWorker = new SyncWorker.default();
 		syncWorker.postMessage({ id, sessions, category, countryCode });
 	},
-	updateRatingAsync: async (id: string, up: number, down: number, category: string) => {
+	updateRatingAsync: async (
+		id: string,
+		up: number,
+		down: number,
+		category: string,
+		countryCode: string
+	) => {
 		const SyncWorker = await import('$lib/entry-rating.worker?worker');
 		const syncWorker = new SyncWorker.default();
-		syncWorker.postMessage({ id, up, down, category });
+		syncWorker.postMessage({ id, up, down, category, countryCode });
 	},
 	sendGameErrorReport: async (url: string) => {
 		const SyncWorker = await import('$lib/game-error-report.worker?worker');

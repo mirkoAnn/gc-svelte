@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { RatingData } from '$lib/types/rating';
 	import { workersManager } from '$lib/workers-manager.svelte';
 
@@ -6,6 +8,10 @@
 
 	let chosenRating = $state(''),
 		newRating = $derived(entry);
+
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 
 	const submitRating = (rating: 'up' | 'down') => {
 		chosenRating = rating;
@@ -18,7 +24,8 @@
 			entry.id,
 			newRating.rating.up,
 			newRating.rating.down,
-			category
+			category,
+			locale
 		);
 	};
 </script>

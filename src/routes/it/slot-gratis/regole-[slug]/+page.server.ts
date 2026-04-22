@@ -38,7 +38,7 @@ export async function load({ request, params }) {
         title
         slug
       }
-      slots(filters: {locale: "it", slotMechanic: { slug: { eq: "${params.slug}" } }}, pagination: { page: 1, pageSize: 20 }) {
+      slots(filters: {locale: {eq: "it"}, slotMechanic: { slug: { eq: "${params.slug}" } }}, pagination: { page: 1, pageSize: 20 }) {
          ${slotsQuery}
       }
       slotThemes (locale:"it", pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {

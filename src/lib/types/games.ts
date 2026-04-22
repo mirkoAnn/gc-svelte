@@ -55,3 +55,5 @@ export type Slot = Game & {
 };
 
 export type Roulette = Game;
+
+export type GalleryFilter = { title: string; slug: string };
