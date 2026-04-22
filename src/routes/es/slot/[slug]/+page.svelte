@@ -35,7 +35,7 @@
 	description={data.page.seo.description}
 	imageAddress={data.page.logo.url}
 	ogType="article"
-	authorName={data.page.author.name}
+	authorName={data.page.author?.name || ''}
 	section="Slot"
 	tags={[
 		'Tragaperras Gratis',

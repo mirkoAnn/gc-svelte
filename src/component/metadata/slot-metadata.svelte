@@ -11,7 +11,7 @@
 	);
 	const localeTag = $derived(`${locale}_${locale.toUpperCase()}`);
 	const authorSameAs = $derived(
-		[data.author.facebookProfile, data.author.linkedinProfile].filter(
+		[data.author?.facebookProfile, data.author?.linkedinProfile].filter(
 			(profile): profile is string => Boolean(profile)
 		)
 	);
@@ -85,11 +85,11 @@
 				dateModified: data.updatedAt,
 				author: {
 					'@type': 'Person',
-					name: data.author.name,
+					name: data.author?.name || '',
 					...(authorSameAs.length > 0 ? { sameAs: authorSameAs } : {}),
 					image: {
 						'@type': 'ImageObject',
-						url: data.author.image.url
+						url: data.author?.image?.url || ''
 					}
 				}
 			}
