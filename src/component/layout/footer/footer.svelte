@@ -10,6 +10,8 @@
 	const locale = $derived.by(
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
+
+	const policyPrivacyCodes = [{ it: '46494097' }, { es: '24631089' }];
 </script>
 
 <SiteMetadata />
@@ -38,13 +40,13 @@
 		</div>
 		<div class="footer-column">
 			<a
-				href="https://www.iubenda.com/privacy-policy/46494097"
+				href={`https://www.iubenda.com/privacy-policy/${policyPrivacyCodes.find((code) => code[locale])?.[locale] ?? '#'}`}
 				class="footer-link"
 				target="_blank"
 				rel="external noopener noreferrer">Policy Privacy</a
 			>
 			<a
-				href="https://www.iubenda.com/privacy-policy/46494097/cookie-policy"
+				href={`https://www.iubenda.com/privacy-policy/${policyPrivacyCodes.find((code) => code[locale])?.[locale] ?? '#'}/cookie-policy`}
 				class="footer-link"
 				target="_blank"
 				rel="external noopener noreferrer">Cookie Policy</a
