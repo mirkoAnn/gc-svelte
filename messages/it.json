@@ -54,6 +54,7 @@
 	"age_restriction_subtext": "Confermi di avere almeno 18 anni?",
 	"age_restriction_button": "Si, confermo",
 	"age_restriction_error": "No, vado via",
+	"cookies_message": "Confermando la tua età, accetti anche l'utilizzo dei cookie per migliorare la tua esperienza di navigazione.",
 	"casino_legal_message": "  Il gioco è vietato ai minori e può causare dipendenza patologica - probabilità di vincita",
 	"casino_legal_message_link": "https://www.adm.gov.it/portale/giochi",
 	"casino_legal_message_link_text": "Sito web ADM",

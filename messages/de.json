@@ -54,6 +54,7 @@
 	"age_restriction_subtext": "Bestätigen Sie, dass Sie mindestens 18 Jahre alt sind?",
 	"age_restriction_button": "Ja, ich bestätige.",
 	"age_restriction_error": "Nein, ich gehe weg.",
+	"cookies_message": "Durch die Bestätigung Ihres Alters stimmen Sie auch der Verwendung von Cookies zur Verbesserung Ihres Browsererlebnisses zu.",
 	"casino_legal_message": "  Glücksspiel ist für Minderjährige verboten und kann zu pathologischer Sucht führen – Gewinnwahrscheinlichkeit",
 	"casino_legal_message_link": "https://www.adm.gov.it/portale/giochi",
 	"casino_legal_message_link_text": "ADM-Website",

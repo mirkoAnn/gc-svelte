@@ -54,6 +54,7 @@
 	"age_restriction_subtext": "Confirmez-vous avoir au moins 18 ans ?",
 	"age_restriction_button": "Oui, je confirme",
 	"age_restriction_error": "Non, je m'en vais",
+	"cookies_message": "En confirmant votre âge, vous acceptez également l'utilisation de cookies pour améliorer votre expérience de navigation.",
 	"casino_legal_message": "  Les jeux d'argent sont interdits aux mineurs et peuvent entraîner une dépendance pathologique - probabilité de gagner",
 	"casino_legal_message_link": "https://www.adm.gov.it/portale/giochi",
 	"casino_legal_message_link_text": "Site web ADM",

@@ -54,6 +54,7 @@
 	"age_restriction_subtext": "Do you confirm that you are at least 18 years old?",
 	"age_restriction_button": "Yes, I confirm",
 	"age_restriction_error": "No, I'm going away",
+	"cookies_message": "By confirming your age, you also accept the use of cookies to improve your browsing experience.",
 	"casino_legal_message": "  Gambling is prohibited for minors and can cause pathological addiction - probability of winning",
 	"casino_legal_message_link": "https://www.adm.gov.it/portale/giochi",
 	"casino_legal_message_link_text": "ADM website",
