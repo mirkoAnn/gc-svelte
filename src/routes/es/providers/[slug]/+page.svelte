@@ -62,12 +62,12 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/es/proveedores' },
+			route: { id: '/es/providers' },
 			title: 'Descubre los mejores Proveedores de juegos online en España',
 			label: 'Proveedores'
 		},
 		{
-			route: { id: `/es/proveedores/[slug]`, params: { slug: data.page.slug } },
+			route: { id: `/es/providers/[slug]`, params: { slug: data.page.slug } },
 			title: 'Información, juegos y opiniones sobre el proveedor ' + data.page.title,
 			label: data.page.title
 		}

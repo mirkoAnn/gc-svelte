@@ -15,7 +15,7 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: `/es/proveedores` },
+			route: { id: `/es/providers` },
 			title: `Los proveedores de juegos de casino online en España ${new Date().getFullYear()}`,
 			label: 'Proveedores'
 		}
