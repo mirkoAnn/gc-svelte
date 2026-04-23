@@ -1,11 +1,12 @@
 <script lang="ts">
-	import FaqsList from './../../../component/faqs/faqs-list.svelte';
-	import PageMetadata from './../../../component/metadata/page-metadata.svelte';
-	import Breadcrumbs from './../../../component/breadcrumbs/breadcrumbs.svelte';
-	import { gamesGalleryManager } from './../../../component/games/gallery/games-gallery-manager.svelte';
-	import GamesGallery from './../../../component/games/gallery/games-gallery.svelte';
+	import FaqsList from '../../../component/faqs/faqs-list.svelte';
+	import PageMetadata from '../../../component/metadata/page-metadata.svelte';
+	import Breadcrumbs from '../../../component/breadcrumbs/breadcrumbs.svelte';
+	import { gamesGalleryManager } from '../../../component/games/gallery/games-gallery-manager.svelte';
+	import GamesGallery from '../../../component/games/gallery/games-gallery.svelte';
 	import type { RouletteGratisPageData } from './+page.server';
 	import type { Roulette } from '$lib/types/games';
+	import { m } from '../../../paraglide/messages';
 	import ContentContainer from '../../../component/content/content-container.svelte';
 	import AuthorBox from '../../../component/author/author-box.svelte';
 
@@ -27,47 +28,15 @@
 	// so we need to update the games in the gallery when navigating to a new slot category page to avoid having the gallery showing the wrong games.
 
 	const refreshGallery = () => {
-		gamesGalleryManager.initGalleryData(
-			[],
-			{
-				type: 'roulette',
-				categories: [
-					{
-						name: 'rouletteMechanics',
-						label: 'Regole',
-						filters: data.rouletteMechanics.map(
-							(rouletteMechanic: { title: string; slug: string }) => ({
-								title: rouletteMechanic.title,
-								value: rouletteMechanic.slug
-							})
-						) // we set the categories of the currently applied filters to the slugs of the roulette mechanics of the current roulette category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					},
-					{
-						name: 'providers',
-						label: 'Provider',
-						filters: data.providers.map((provider: { title: string; slug: string }) => ({
-							title: provider.title,
-							value: provider.slug
-						})) // we set the categories of the currently applied filters to an empty array because when we navigate to a new roulette category page we want to reset the applied provider filters, this will allow us to show all the providers in the filters options and let the user choose which provider filters they want to apply without having some of them already applied by default based on the previously visited roulette category page
-					}
-				]
-			},
-			{
-				type: 'roulette',
-				categories: [
-					{
-						name: 'rouletteMechanics',
-						label: 'Reglas',
-						filters: [] // we set the categories of the currently applied filters to the slugs of the roulette mechanics of the current roulette category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					},
-					{
-						name: 'providers',
-						label: 'Proveedores',
-						filters: [] // we set the categories of the currently applied filters to an empty array because when we navigate to a new roulette category page we want to reset the applied provider filters, this will allow us to show all the providers in the filters options and let the user choose which provider filters they want to apply without having some of them already applied by default based on the previously visited roulette category page
-					}
-				]
-			}
-		);
+		gamesGalleryManager.initTypedGalleryData({
+			initialGamesData: [],
+			rouletteMechanics: data.rouletteMechanics,
+			providers: data.providers,
+			rouletteMechanicsLabel: m.game_filter_rules({}, { locale: 'es' }),
+			providerLabel: m.providers({}, { locale: 'es' }),
+			initialRouletteMechanicsLabel: m.game_filter_rules({}, { locale: 'es' }),
+			initialProviderLabel: m.providers({}, { locale: 'es' })
+		});
 	};
 
 	refreshGallery();
@@ -78,7 +47,7 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/es/roulette-gratis' },
+			route: { id: '/es/ruletas-gratis' },
 			title: 'Juega gratis a la Ruleta Online',
 			label: 'Ruleta Gratis'
 		}
@@ -95,30 +64,30 @@
 		<GamesGallery
 			games={data.newRoulette}
 			category="roulette"
-			title="Nuove Roulette"
+			title="Nuevas Ruletas"
 			type="carousel"
-			categoryLink="/roulette-gratis/roulette-nuove"
+			categoryLink="/ruletas-gratis/ruletas-nuevas"
 		/>
 		<GamesGallery
 			games={data.rouletteEuropea}
 			category="roulette"
-			title="Roulette Europea"
+			title="Ruletas Europea"
 			type="carousel"
-			categoryLink="/roulette-gratis/roulette-europea"
+			categoryLink="/ruletas-gratis/ruletas-europea"
 		/>
 		<GamesGallery
 			games={data.rouletteAmericana}
 			category="roulette"
-			title="Roulette Americana"
+			title="Ruletas Americana"
 			type="carousel"
-			categoryLink="/roulette-gratis/roulette-americana"
+			categoryLink="/ruletas-gratis/ruletas-americana"
 		/>
 		<GamesGallery
 			games={data.rouletteFrancese}
 			category="roulette"
-			title="Roulette Francese"
+			title="Ruletas Francesa"
 			type="carousel"
-			categoryLink="/roulette-gratis/roulette-francese"
+			categoryLink="/ruletas-gratis/ruletas-francesa"
 		/>
 	</div>
 </div>

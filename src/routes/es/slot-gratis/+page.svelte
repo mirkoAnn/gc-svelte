@@ -6,6 +6,8 @@
 	import { gamesGalleryManager } from '../../../component/games/gallery/games-gallery-manager.svelte';
 	import GamesGallery from '../../../component/games/gallery/games-gallery.svelte';
 	import PageMetadata from '../../../component/metadata/page-metadata.svelte';
+	import { m } from '../../../paraglide/messages';
+	import { getSlotOrderByOptions } from '../../../component/games/gallery/game-gallery-filters-helper';
 	import type { SlotsPageData } from './+page.server';
 	import type { Slot } from '$lib/types/games';
 
@@ -23,62 +25,16 @@
 	} = $props();
 
 	const refreshGallery = () => {
-		// Update the games in the gallery with the games of the current slot category, this is needed because the games gallery is shared between all the slot category pages,
-		// so we need to update the games in the gallery when navigating to a new slot category page to avoid having the gallery showing the wrong games.
-		gamesGalleryManager.initGalleryData(
-			[],
-			{
-				type: 'slot',
-				categories: [
-					{
-						name: 'slotThemes',
-						label: 'Tema',
-						filters: data.slotThemes.map((slotTheme: { title: string; slug: string }) => ({
-							title: slotTheme.title,
-							value: slotTheme.slug
-						})) // we set the categories of the currently applied filters to the slugs of the slot themes of the current slot category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					},
-					{
-						name: 'providers',
-						label: 'Proveedores',
-						filters: data.providers.map((provider: { title: string; slug: string }) => ({
-							title: provider.title,
-							value: provider.slug
-						})) // we set the categories of the currently applied filters to an empty array because when we navigate to a new slot category page we want to reset the applied provider filters, this will allow us to show all the providers in the filters options and let the user choose which provider filters they want to apply without having some of them already applied by default based on the previously visited slot category page
-					},
-					{
-						name: 'orderBy',
-						label: 'Ordenar por',
-						filters: [
-							{ title: 'Nombre (A-Z)', value: 'title:asc' },
-							{ title: 'Nombre (Z-A)', value: 'title:desc' },
-							{ title: 'Recientes', value: 'createdAt:desc' },
-							{ title: 'Más Jugadas', value: 'sessions:desc' }
-						] // we set the categories of the currently applied filters to the slugs of the features of the current slot category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					}
-				]
-			},
-			{
-				type: 'slot',
-				categories: [
-					{
-						name: 'slotThemes',
-						label: 'Tema',
-						filters: [] // we set the categories of the currently applied filters to the slugs of the slot themes of the current slot category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					},
-					{
-						name: 'providers',
-						label: 'Proveedores',
-						filters: [] // we set the categories of the currently applied filters to an empty array because when we navigate to a new slot category page we want to reset the applied provider filters, this will allow us to show all the providers in the filters options and let the user choose which provider filters they want to apply without having some of them already applied by default based on the previously visited slot category page
-					},
-					{
-						name: 'orderBy',
-						label: 'Ordenar por',
-						filters: [{ title: 'Recientes', value: 'createdAt:desc' }] // we set the categories of the currently applied filters to the slugs of the features of the current slot category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					}
-				]
-			}
-		);
+		gamesGalleryManager.initTypedGalleryData({
+			initialGamesData: [],
+			slotThemes: data.slotThemes,
+			providers: data.providers,
+			providerLabel: m.providers({}, { locale: 'es' }),
+			orderByLabel: m.gallery_filter_order_title({}, { locale: 'es' }),
+			orderByOptions: getSlotOrderByOptions('es'),
+			defaultOrderByValue: 'createdAt:desc',
+			defaultOrderByTitle: m.game_filter_release_date_new_old({}, { locale: 'es' })
+		});
 	};
 
 	refreshGallery();

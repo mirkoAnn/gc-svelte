@@ -15,15 +15,15 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: `/es/providers` },
-			title: `Los providers de juegos de casino online en España ${new Date().getFullYear()}`,
-			label: 'Providers'
+			route: { id: `/es/proveedores` },
+			title: `Los proveedores de juegos de casino online en España ${new Date().getFullYear()}`,
+			label: 'Proveedores'
 		}
 	]}
 />
 
 <h1 class="page-title">
-	Los providers de juegos de casino online en España {new Date().getFullYear()}
+	Los proveedores de juegos de casino online en España {new Date().getFullYear()}
 </h1>
 
 <ProvidersGallery providers={data.providers} />

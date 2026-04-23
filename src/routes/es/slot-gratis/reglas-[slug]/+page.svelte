@@ -1,21 +1,22 @@
 <script lang="ts">
-	import PageMetadata from './../../../../component/metadata/page-metadata.svelte';
-	import Breadcrumbs from './../../../../component/breadcrumbs/breadcrumbs.svelte';
-	import Gallery from './../../../../component/games/gallery/games-gallery.svelte';
-	import { gamesGalleryManager } from './../../../../component/games/gallery/games-gallery-manager.svelte';
-	import { m } from './../../../../paraglide/messages';
-	import { getSlotOrderByOptions } from '../../../../component/games/gallery/game-gallery-filters-helper';
-	import FaqsList from './../../../../component/faqs/faqs-list.svelte';
-	import AuthorBox from '../../../../component/author/author-box.svelte';
-	import ContentContainer from '../../../../component/content/content-container.svelte';
-	import type { NewSlotsPageData } from './+page.server';
+	import { afterNavigate } from '$app/navigation';
 	import type { Slot } from '$lib/types/games';
+	import AuthorBox from '../../../../component/author/author-box.svelte';
+	import Breadcrumbs from '../../../../component/breadcrumbs/breadcrumbs.svelte';
+	import ContentContainer from '../../../../component/content/content-container.svelte';
+	import { gamesGalleryManager } from '../../../../component/games/gallery/games-gallery-manager.svelte';
+	import { m } from './../../../../paraglide/messages';
+	import GamesGallery from '../../../../component/games/gallery/games-gallery.svelte';
+	import PageMetadata from '../../../../component/metadata/page-metadata.svelte';
+	import type { SlotMechanicPageData } from './+page.server';
+	import FaqsList from './../../../../component/faqs/faqs-list.svelte';
+	import { getSlotOrderByOptions } from '../../../../component/games/gallery/game-gallery-filters-helper';
 
 	let {
 		data
 	}: {
 		data: {
-			page: NewSlotsPageData;
+			page: SlotMechanicPageData;
 			slots: Slot[];
 			slotThemes: { title: string; slug: string }[];
 			providers: { title: string; slug: string }[];
@@ -30,10 +31,13 @@
 			providerLabel: m.providers({}, { locale: 'es' }),
 			orderByLabel: m.gallery_filter_order_title({}, { locale: 'es' }),
 			orderByOptions: getSlotOrderByOptions('es'),
-			defaultOrderByValue: 'createdAt:desc',
-			defaultOrderByTitle: m.game_filter_release_date_new_old({}, { locale: 'es' })
+			defaultOrderByValue: data.page.slug
 		});
 	};
+
+	afterNavigate(() => {
+		refreshGallery();
+	});
 
 	refreshGallery();
 </script>
@@ -48,16 +52,18 @@
 			label: 'Tragaperras Gratis'
 		},
 		{
-			route: { id: '/es/slot-gratis/slot-nuevas' },
-			title: `Juega Gratis a las Nuevas Tragaperras Online`,
-			label: 'Nuevas Tragaperras'
+			route: { id: `/es/slot-gratis/reglas-[slug]`, params: { slug: data.page.slug } },
+			title: `Juega Gratis a las Tragaperras ${data.page.title}`,
+			label: data.page.title
 		}
 	]}
 />
 
-<h1 class="page-title">Nuevas Tragaperras Online</h1>
+<h1 class="page-title">
+	Tragaperras {data.page.title}
+</h1>
 <div class="slot-category">
-	<Gallery category="slot" type="grid" hasFilters={true} />
+	<GamesGallery category="slot" type="grid" hasFilters={true} />
 </div>
 
 {#if data.page.content.firstContent}
@@ -94,7 +100,6 @@
 {#if data.page.faqs.length > 0}
 	<FaqsList faqs={data.page.faqs} />
 {/if}
-
 {#if data.page.author}
 	<AuthorBox author={data.page.author} />
 {/if}

@@ -159,5 +159,17 @@
 	"nav_roulettes_french": "Roulette francesi",
 	"nav_roulettes_french_title": "Gioca gratis e senza registrarti alle roulette francesi online",
 	"nav_roulettes_american": "Roulette americane",
-	"nav_roulettes_american_title": "Gioca gratis e senza registrarti alle roulette americane online"
+	"nav_roulettes_american_title": "Gioca gratis e senza registrarti alle roulette americane online",
+	"gallery_filter_order_title": "Ordina per",
+	"game_filter_name_az": "Nome (A-Z)",
+	"game_filter_name_za": "Nome (Z-A)",
+	"game_filter_release_date_new_old": "Data di rilascio (Nuove-Vecchie)",
+	"game_filter_release_date_old_new": "Data di rilascio (Vecchie-Nuove)",
+	"game_filter_rtp_high_low": "RTP (Alto-Basso)",
+	"game_filter_rtp_low_high": "RTP (Basso-Alto)",
+	"game_filter_volatility_low_high": "Volatilità (Bassa-Alta)",
+	"game_filter_volatility_high_low": "Volatilità (Alta-Bassa)",
+	"game_filter_most_played": "Più Giocate",
+	"game_filter_rules": "Regole",
+	"game_filter_theme": "Tema"
 }

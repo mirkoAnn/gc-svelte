@@ -9,7 +9,6 @@
 	import { browser } from '$app/environment';
 	import { appManager } from '../lib/app-manager.svelte';
 	import { favouritesManager } from '../component/favourites/favourites-manager.svelte';
-	import { ageBannerManager } from '../component/layout/age-banner/age-banner-manager.svelte';
 	import { casinosDataManager } from '../component/casino/casinos-data-manager.svelte';
 	import { SITE_URL } from '../component/metadata/sitedata-manager.svelte.js';
 
@@ -20,7 +19,6 @@
 		if (!browser) {
 			return;
 		}
-		ageBannerManager.initialize(data.isAgeVerified);
 		favouritesManager.initialize(data.favouritesList);
 		casinosDataManager.initialize(data.casinos);
 		appManager.setCountryCode(data.countryCode);

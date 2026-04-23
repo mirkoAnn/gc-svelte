@@ -1,22 +1,23 @@
 <script lang="ts">
-	import PageMetadata from './../../../../component/metadata/page-metadata.svelte';
+	import CasinoCards from './../../../../component/casino/casino-cards.svelte';
 	import Breadcrumbs from './../../../../component/breadcrumbs/breadcrumbs.svelte';
+	import PageMetadata from './../../../../component/metadata/page-metadata.svelte';
 	import Gallery from './../../../../component/games/gallery/games-gallery.svelte';
+	import { casinosDataManager } from './../../../../component/casino/casinos-data-manager.svelte';
 	import { gamesGalleryManager } from './../../../../component/games/gallery/games-gallery-manager.svelte';
 	import { m } from './../../../../paraglide/messages';
 	import { getSlotOrderByOptions } from '../../../../component/games/gallery/game-gallery-filters-helper';
-	import FaqsList from './../../../../component/faqs/faqs-list.svelte';
+	import { afterNavigate } from '$app/navigation';
 	import AuthorBox from '../../../../component/author/author-box.svelte';
+	import type { ProviderPageData } from './+page.server';
 	import ContentContainer from '../../../../component/content/content-container.svelte';
-	import type { NewSlotsPageData } from './+page.server';
-	import type { Slot } from '$lib/types/games';
+	import FaqsList from '../../../../component/faqs/faqs-list.svelte';
 
 	let {
 		data
 	}: {
 		data: {
-			page: NewSlotsPageData;
-			slots: Slot[];
+			page: ProviderPageData;
 			slotThemes: { title: string; slug: string }[];
 			providers: { title: string; slug: string }[];
 		};
@@ -24,40 +25,62 @@
 
 	const refreshGallery = () => {
 		gamesGalleryManager.initTypedGalleryData({
-			initialGamesData: data.slots,
+			initialGamesData: data.page.slots,
 			slotThemes: data.slotThemes,
 			providers: data.providers,
 			providerLabel: m.providers({}, { locale: 'es' }),
 			orderByLabel: m.gallery_filter_order_title({}, { locale: 'es' }),
 			orderByOptions: getSlotOrderByOptions('es'),
-			defaultOrderByValue: 'createdAt:desc',
-			defaultOrderByTitle: m.game_filter_release_date_new_old({}, { locale: 'es' })
+			defaultOrderByValue: data.page.slug
 		});
 	};
+
+	afterNavigate(() => {
+		refreshGallery();
+	});
 
 	refreshGallery();
 </script>
 
-<PageMetadata title={data.page.seo.title} description={data.page.seo.description} />
+<PageMetadata
+	title={data.page.seo.title}
+	description={data.page.seo.description}
+	imageAddress={data.page.logo.url}
+	ogType="article"
+	authorName={data.page.author.name}
+	section="Providers"
+	tags={[
+		'Proveedores slot online',
+		'Proveedores juegos de casino online',
+		'Proveedores España',
+		data.page.title
+	]}
+	publishedAt={data.page.publishedAt}
+	updatedAt={data.page.updatedAt}
+/>
 
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/es/slot-gratis' },
-			title: 'Juega gratis a las Tragaperras Online',
-			label: 'Tragaperras Gratis'
+			route: { id: '/es/proveedores' },
+			title: 'Descubre los mejores Proveedores de juegos online en España',
+			label: 'Proveedores'
 		},
 		{
-			route: { id: '/es/slot-gratis/slot-nuevas' },
-			title: `Juega Gratis a las Nuevas Tragaperras Online`,
-			label: 'Nuevas Tragaperras'
+			route: { id: `/es/proveedores/[slug]`, params: { slug: data.page.slug } },
+			title: 'Información, juegos y opiniones sobre el proveedor ' + data.page.title,
+			label: data.page.title
 		}
 	]}
 />
 
-<h1 class="page-title">Nuevas Tragaperras Online</h1>
-<div class="slot-category">
-	<Gallery category="slot" type="grid" hasFilters={true} />
+<h1 class="page-title">{data.page.title}</h1>
+
+<Gallery category="slot" type="grid" hasFilters={true} />
+
+<div class="content">
+	<h2>Los mejores casinos online con juegos de {data.page.title}</h2>
+	<CasinoCards casinos={casinosDataManager.getCasinosByProviderTitle(data.page.title)} />
 </div>
 
 {#if data.page.content.firstContent}
@@ -94,7 +117,6 @@
 {#if data.page.faqs.length > 0}
 	<FaqsList faqs={data.page.faqs} />
 {/if}
-
 {#if data.page.author}
 	<AuthorBox author={data.page.author} />
 {/if}

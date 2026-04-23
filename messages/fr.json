@@ -159,5 +159,17 @@
 	"nav_roulettes_french_title": "Jouez à la roulette française en ligne gratuitement et sans inscription.",
 	"nav_roulettes_american": "Roulette américaine",
 	"nav_roulettes_american_title": "Jouez à la roulette américaine en ligne gratuitement et sans inscription.",
-	"game_release_year": "Année de sortie"
+	"gallery_filter_order_title": "Trier par",
+	"game_release_year": "Année de sortie",
+	"game_filter_name_az": "Nom (AZ)",
+	"game_filter_name_za": "Nom (ZA)",
+	"game_filter_release_date_new_old": "Date de sortie (Nouveau-Ancien)",
+	"game_filter_release_date_old_new": "Date de sortie (ancienne-nouvelle)",
+	"game_filter_rtp_high_low": "RTP (Haut-Bas)",
+	"game_filter_rtp_low_high": "RTP (Faible-Élevé)",
+	"game_filter_volatility_low_high": "Volatilité (Faible-Élevée)",
+	"game_filter_volatility_high_low": "Volatilité (Haut-Bas)",
+	"game_filter_most_played": "Les plus joués",
+	"game_filter_rules": "Règles",
+	"game_filter_theme": "Thème"
 }

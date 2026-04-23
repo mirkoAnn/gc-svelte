@@ -6,6 +6,7 @@
 	import GamesGallery from './../../../component/games/gallery/games-gallery.svelte';
 	import type { RouletteGratisPageData } from './+page.server';
 	import type { Roulette } from '$lib/types/games';
+	import { m } from './../../../paraglide/messages';
 	import ContentContainer from '../../../component/content/content-container.svelte';
 	import AuthorBox from '../../../component/author/author-box.svelte';
 
@@ -26,47 +27,15 @@
 	// Update the games in the gallery with the games of the current slot category, this is needed because the games gallery is shared between all the slot category pages,
 	// so we need to update the games in the gallery when navigating to a new slot category page to avoid having the gallery showing the wrong games.
 	const refreshGallery = () => {
-		gamesGalleryManager.initGalleryData(
-			[],
-			{
-				type: 'roulette',
-				categories: [
-					{
-						name: 'rouletteMechanics',
-						label: 'Regole',
-						filters: data.rouletteMechanics.map(
-							(rouletteMechanic: { title: string; slug: string }) => ({
-								title: rouletteMechanic.title,
-								value: rouletteMechanic.slug
-							})
-						) // we set the categories of the currently applied filters to the slugs of the roulette mechanics of the current roulette category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					},
-					{
-						name: 'providers',
-						label: 'Provider',
-						filters: data.providers.map((provider: { title: string; slug: string }) => ({
-							title: provider.title,
-							value: provider.slug
-						})) // we set the categories of the currently applied filters to an empty array because when we navigate to a new roulette category page we want to reset the applied provider filters, this will allow us to show all the providers in the filters options and let the user choose which provider filters they want to apply without having some of them already applied by default based on the previously visited roulette category page
-					}
-				]
-			},
-			{
-				type: 'roulette',
-				categories: [
-					{
-						name: 'rouletteMechanics',
-						label: 'Regole',
-						filters: [] // we set the categories of the currently applied filters to the slugs of the roulette mechanics of the current roulette category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					},
-					{
-						name: 'providers',
-						label: 'Provider',
-						filters: [] // we set the categories of the currently applied filters to an empty array because when we navigate to a new roulette category page we want to reset the applied provider filters, this will allow us to show all the providers in the filters options and let the user choose which provider filters they want to apply without having some of them already applied by default based on the previously visited roulette category page
-					}
-				]
-			}
-		);
+		gamesGalleryManager.initTypedGalleryData({
+			initialGamesData: [],
+			rouletteMechanics: data.rouletteMechanics,
+			providers: data.providers,
+			rouletteMechanicsLabel: m.game_filter_rules({}, { locale: 'it' }),
+			providerLabel: m.providers({}, { locale: 'it' }),
+			initialRouletteMechanicsLabel: m.game_filter_rules({}, { locale: 'it' }),
+			initialProviderLabel: m.providers({}, { locale: 'it' })
+		});
 	};
 
 	refreshGallery();

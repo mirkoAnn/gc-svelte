@@ -159,5 +159,17 @@
 	"nav_roulettes_french_title": "Play French roulette online for free and without registering.",
 	"nav_roulettes_american": "American Roulette",
 	"nav_roulettes_american_title": "Play American roulette online for free and without registering.",
-	"game_release_year": "Release year"
+	"gallery_filter_order_title": "Order by",
+	"game_release_year": "Release year",
+	"game_filter_name_az": "Name (AZ)",
+	"game_filter_name_za": "Name (ZA)",
+	"game_filter_release_date_new_old": "Release Date (New-Old)",
+	"game_filter_release_date_old_new": "Release Date (Old-New)",
+	"game_filter_rtp_high_low": "RTP (High-Low)",
+	"game_filter_rtp_low_high": "RTP (Low-High)",
+	"game_filter_volatility_low_high": "Volatility (Low-High)",
+	"game_filter_volatility_high_low": "Volatility (High-Low)",
+	"game_filter_most_played": "Most Played",
+	"game_filter_rules": "Rules",
+	"game_filter_theme": "Theme"
 }

@@ -159,5 +159,17 @@
 	"nav_roulettes_french_title": "Spielen Sie kostenlos und ohne Registrierung online französisches Roulette.",
 	"nav_roulettes_american": "Amerikanisches Roulette",
 	"nav_roulettes_american_title": "Spielen Sie amerikanisches Roulette online kostenlos und ohne Registrierung.",
-	"game_release_year": "Erscheinungsjahr"
+	"gallery_filter_order_title": "Sortieren nach",
+	"game_release_year": "Erscheinungsjahr",
+	"game_filter_name_az": "Name (AZ)",
+	"game_filter_name_za": "Name (ZA)",
+	"game_filter_release_date_new_old": "Veröffentlichungsdatum (Neu-Alt)",
+	"game_filter_release_date_old_new": "Veröffentlichungsdatum (Alt-Neu)",
+	"game_filter_rtp_high_low": "RTP (Hoch-Tief)",
+	"game_filter_rtp_low_high": "RTP (Niedrig-Hoch)",
+	"game_filter_volatility_low_high": "Volatilität (Niedrig-Hoch)",
+	"game_filter_volatility_high_low": "Volatilität (Hoch-Tief)",
+	"game_filter_most_played": "Meistgespielt",
+	"game_filter_rules": "Regeln",
+	"game_filter_theme": "Thema"
 }

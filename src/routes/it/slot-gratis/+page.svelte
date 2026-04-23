@@ -8,6 +8,8 @@
 	import PageMetadata from '../../../component/metadata/page-metadata.svelte';
 	import type { SlotsPageData } from './+page.server';
 	import type { GalleryFilter, Slot } from '$lib/types/games';
+	import { m } from '../../../paraglide/messages';
+	import { getSlotOrderByOptions } from '../../../component/games/gallery/game-gallery-filters-helper';
 
 	let {
 		data
@@ -23,62 +25,16 @@
 	} = $props();
 
 	const refreshGallery = () => {
-		// Update the games in the gallery with the games of the current slot category, this is needed because the games gallery is shared between all the slot category pages,
-		// so we need to update the games in the gallery when navigating to a new slot category page to avoid having the gallery showing the wrong games.
-		gamesGalleryManager.initGalleryData(
-			[],
-			{
-				type: 'slot',
-				categories: [
-					{
-						name: 'slotThemes',
-						label: 'Tema',
-						filters: data.slotThemes.map((slotTheme: GalleryFilter) => ({
-							title: slotTheme.title,
-							value: slotTheme.slug
-						})) // we set the categories of the currently applied filters to the slugs of the slot themes of the current slot category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					},
-					{
-						name: 'providers',
-						label: 'Provider',
-						filters: data.providers.map((provider: GalleryFilter) => ({
-							title: provider.title,
-							value: provider.slug
-						})) // we set the categories of the currently applied filters to an empty array because when we navigate to a new slot category page we want to reset the applied provider filters, this will allow us to show all the providers in the filters options and let the user choose which provider filters they want to apply without having some of them already applied by default based on the previously visited slot category page
-					},
-					{
-						name: 'orderBy',
-						label: 'Ordina per',
-						filters: [
-							{ title: 'Nome (A-Z)', value: 'title:asc' },
-							{ title: 'Nome (Z-A)', value: 'title:desc' },
-							{ title: 'Recenti', value: 'createdAt:desc' },
-							{ title: 'Più Giocate', value: 'sessions:desc' }
-						] // we set the categories of the currently applied filters to the slugs of the features of the current slot category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					}
-				]
-			},
-			{
-				type: 'slot',
-				categories: [
-					{
-						name: 'slotThemes',
-						label: 'Tema',
-						filters: [] // we set the categories of the currently applied filters to the slugs of the slot themes of the current slot category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					},
-					{
-						name: 'providers',
-						label: 'Provider',
-						filters: [] // we set the categories of the currently applied filters to an empty array because when we navigate to a new slot category page we want to reset the applied provider filters, this will allow us to show all the providers in the filters options and let the user choose which provider filters they want to apply without having some of them already applied by default based on the previously visited slot category page
-					},
-					{
-						name: 'orderBy',
-						label: 'Ordina per',
-						filters: [{ title: 'Recenti', value: 'createdAt:desc' }] // we set the categories of the currently applied filters to the slugs of the features of the current slot category, this will allow us to keep track of which categories of filters are currently applied and to update the currently applied filters accordingly when the user applies or removes filters
-					}
-				]
-			}
-		);
+		gamesGalleryManager.initTypedGalleryData({
+			initialGamesData: [],
+			slotThemes: data.slotThemes,
+			providers: data.providers,
+			providerLabel: m.providers({}, { locale: 'it' }),
+			orderByLabel: m.gallery_filter_order_title({}, { locale: 'it' }),
+			orderByOptions: getSlotOrderByOptions('it'),
+			defaultOrderByValue: 'createdAt:desc',
+			defaultOrderByTitle: m.game_filter_release_date_new_old({}, { locale: 'it' })
+		});
 	};
 
 	refreshGallery();

@@ -11,7 +11,7 @@
 	);
 </script>
 
-{#if !ageBannerManager.isAgeVerified()}
+{#if !page.data.isAgeVerified && !ageBannerManager.isAgeVerified()}
 	<div class="age-banner-container" transition:fade>
 		<div
 			class="age-banner-content"

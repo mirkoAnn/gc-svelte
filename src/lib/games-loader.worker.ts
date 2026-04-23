@@ -32,6 +32,15 @@ type RouletteWorkerResponse = {
 	};
 };
 
+const dedupeGamesById = <T extends { id: string }>(games: T[]) => {
+	const seenIds: Record<string, true> = {};
+	return games.filter((game: T) => {
+		if (seenIds[game.id]) return false;
+		seenIds[game.id] = true;
+		return true;
+	});
+};
+
 const gamesNumberPerPage = 40; // This is used to keep track of how many games we want to load for each page, it will be used for pagination when loading the games in the gallery
 
 // This function is used to build the query for loading the slots games based on the filters that are applied in the gallery, it will be called in the worker when we want to load the games for the gallery, it receives the filters as parameter and returns the query string that will be used to load the games from the database
@@ -113,7 +122,7 @@ const buildSlotsQuery = (filters: GalleryFilters, page: number, countryCode: str
 			let slots = response.data.slotsByProviders ? response.data.slotsByProviders : [];
 			slots = response.data.slotsByThemes ? [...slots, ...response.data.slotsByThemes] : slots;
 			slots = response.data.slots ? [...slots, ...response.data.slots] : slots;
-			postMessage(slots); // We use postMessage to send the loaded games back to the main thread, where the gallery is rendered, so we can update the games in the gallery with the loaded games from the worker
+			postMessage(dedupeGamesById(slots)); // We use postMessage to send the loaded games back to the main thread, where the gallery is rendered, so we can update the games in the gallery with the loaded games from the worker
 		})
 		.catch((error) => {
 			postMessage({ error: 'Error loading games: ' + error.message }); // In case of error we send an error message back to the main thread, so we can show an error message to the user or handle the error accordingly
@@ -203,7 +212,7 @@ const buildRouletteQuery = (filters: GalleryFilters, page: number, countryCode: 
 				? [...roulettes, ...response.data.roulettesByRules]
 				: roulettes;
 			roulettes = response.data.roulettes ? [...roulettes, ...response.data.roulettes] : roulettes;
-			postMessage(roulettes); // We use postMessage to send the loaded games back to the main thread, where the gallery is rendered, so we can update the games in the gallery with the loaded games from the worker
+			postMessage(dedupeGamesById(roulettes)); // We use postMessage to send the loaded games back to the main thread, where the gallery is rendered, so we can update the games in the gallery with the loaded games from the worker
 		})
 		.catch((error) => {
 			postMessage({ error: 'Error loading games: ' + error.message }); // In case of error we send an error message back to the main thread, so we can show an error message to the user or handle the error accordingly

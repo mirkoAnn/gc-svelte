@@ -159,5 +159,17 @@
 	"nav_roulettes_french_title": "Juega a la ruleta francesa online gratis y sin registrarte.",
 	"nav_roulettes_american": "Ruleta americana",
 	"nav_roulettes_american_title": "Juega a la ruleta americana online gratis y sin registrarte.",
-	"game_release_year": "Año de lanzamiento"
+	"gallery_filter_order_title": "Ordenar por",
+	"game_filter_name_az": "Nombre (A-Z)",
+	"game_filter_name_za": "Nombre (Z-A)",
+	"game_filter_release_date_new_old": "Recientes",
+	"game_filter_release_date_old_new": "Más antiguas",
+	"game_filter_rtp_high_low": "RTP (Alto-Bajo)",
+	"game_filter_rtp_low_high": "RTP (Bajo-Alto)",
+	"game_filter_volatility_low_high": "Volatilidad (Baja-Alta)",
+	"game_filter_volatility_high_low": "Volatilidad (Alta-Baja)",
+	"game_filter_most_played": "Más Jugadas",
+	"game_release_year": "Año de lanzamiento",
+	"game_filter_rules": "Normas",
+	"game_filter_theme": "Tema"
 }
