@@ -20,7 +20,7 @@
 			onclick={gameManager.toggleErrorPopup}
 			aria-label={m.game_error_button_text({}, { locale })}
 		>
-			<svg class="action-icon help-icon">
+			<svg class="action-icon help-icon" aria-hidden="true">
 				<use href="/icons/icon-set.svg#error" />
 			</svg>
 		</button>
@@ -44,7 +44,7 @@
 			onclick={gameManager.toggleFullscreen}
 			aria-label={m.fullscreen_button_text({}, { locale })}
 		>
-			<svg class="action-icon fullscreen-icon">
+			<svg class="action-icon fullscreen-icon" aria-hidden="true">
 				<use href="/icons/icon-set.svg#fullscreen" />
 			</svg>
 		</button>

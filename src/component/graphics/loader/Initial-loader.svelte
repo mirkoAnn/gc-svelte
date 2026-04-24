@@ -49,7 +49,7 @@
 	});
 </script>
 
-<div class="initial-loader">
+<div class="initial-loader" role="status" aria-label="Loading">
 	<div class="top"></div>
 	<div class="bottom"></div>
 	<div class="icons-container">

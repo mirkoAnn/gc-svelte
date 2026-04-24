@@ -36,7 +36,13 @@
 					paragraphText += child.text;
 					break;
 				case 'link':
-					paragraphText += `<a href="/${locale}${child.url}" ${child.rel ? `rel="${child.rel}"` : ''} ${child.target ? `target="${child.target}"` : ''}>${child.children ? child.children[0].text : ''}</a>`;
+					if (child.url && child.url.includes('http')) {
+						paragraphText += `<a href="${child.url}" ${child.rel ? `rel="external noopener noreferrer"` : ''} ${
+							child.target ? `target="${child.target}"` : ''
+						}>${child.children ? child.children[0].text : ''}</a>`;
+					} else {
+						paragraphText += `<a href="/${locale}${child.url}" ${child.rel ? `rel="${child.rel}"` : ''} ${child.target ? `target="${child.target}"` : ''}>${child.children ? child.children[0].text : ''}</a>`;
+					}
 					break;
 				default:
 					paragraphText += child.text;

@@ -130,11 +130,23 @@
 						}}
 						class="casino-card-info-button"
 						aria-label={`Info su ${casino.title}`}
+						aria-expanded={areBonusInfosVisible}
+						aria-controls={`bonus-info-${casino.id}`}
 					>
-						<svg class="casino-card-info-icon casino-card-info-icon-open" width="20" height="20">
+						<svg
+							class="casino-card-info-icon casino-card-info-icon-open"
+							width="20"
+							height="20"
+							aria-hidden="true"
+						>
 							<use href="/icons/icon-set.svg#info" />
 						</svg>
-						<svg class="casino-card-info-icon casino-card-info-icon-close" width="20" height="20">
+						<svg
+							class="casino-card-info-icon casino-card-info-icon-close"
+							width="20"
+							height="20"
+							aria-hidden="true"
+						>
 							<use href="/icons/icon-set.svg#close" />
 						</svg>
 					</button>

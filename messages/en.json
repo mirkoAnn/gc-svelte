@@ -172,5 +172,7 @@
 	"game_filter_volatility_high_low": "Volatility (High-Low)",
 	"game_filter_most_played": "Most Played",
 	"game_filter_rules": "Rules",
-	"game_filter_theme": "Theme"
+	"game_filter_theme": "Theme",
+	"yes": "Yes",
+	"no": "No"
 }

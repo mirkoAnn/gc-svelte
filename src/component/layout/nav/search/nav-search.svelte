@@ -22,6 +22,7 @@
 				id="navmenu-search-input"
 				name="navmenu-search"
 				class="navbar-menu-search"
+				aria-label={navSearchManager.getPlaceholder()}
 				placeholder={navSearchManager.getPlaceholder()}
 				oninput={(e: Event) => {
 					// Handle input changes

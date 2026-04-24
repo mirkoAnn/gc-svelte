@@ -172,5 +172,7 @@
 	"game_filter_most_played": "Más Jugadas",
 	"game_release_year": "Año de lanzamiento",
 	"game_filter_rules": "Normas",
-	"game_filter_theme": "Tema"
+	"game_filter_theme": "Tema",
+	"yes": "Sí",
+	"no": "No"
 }

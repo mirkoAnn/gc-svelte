@@ -17,12 +17,15 @@
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
 
+	const collapsedDisclaimerHeight = 10;
+
 	onMount(async () => {
 		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
 		gsap.registerPlugin(scrollTrigger);
 
 		const scrollerEl = document.querySelector('.main-inner');
 		const scrollerRect = scrollerEl?.getBoundingClientRect();
+		const isMobileViewport = window.matchMedia('(max-width: 767px)').matches;
 
 		// Animate table rows on scroll into view from bottom
 		const tableRows = document.querySelectorAll(
@@ -30,28 +33,67 @@
 		);
 		tableRows.forEach((row) => {
 			const rect = row.getBoundingClientRect();
+			const rowAnimation = isMobileViewport
+				? {
+						start: 'top 92%',
+						end: 'top 82%',
+						y: 18,
+						duration: 0.45,
+						ease: 'power2.out'
+					}
+				: {
+						start: 'top 70%',
+						end: 'top 40%',
+						y: 50,
+						duration: 1,
+						ease: 'back.inOut(1.7)'
+					};
+
 			// If already visible in the scroller viewport, show immediately
 			if (scrollerRect && rect.top < scrollerRect.bottom) {
 				gsap.set(row, { y: 0, autoAlpha: 1 });
 				return;
 			}
+
+			if (isMobileViewport) {
+				gsap.fromTo(
+					row,
+					{ y: rowAnimation.y, autoAlpha: 0 },
+					{
+						y: 0,
+						autoAlpha: 1,
+						duration: rowAnimation.duration,
+						ease: rowAnimation.ease,
+						overwrite: 'auto',
+						scrollTrigger: {
+							scroller: '.main-inner',
+							trigger: row,
+							start: rowAnimation.start,
+							toggleActions: 'play none none none',
+							onLeaveBack: () => gsap.set(row, { y: 0, autoAlpha: 1 })
+						}
+					}
+				);
+				return;
+			}
+
 			gsap
 				.timeline({
 					defaults: {
 						scrollTrigger: {
 							scroller: '.main-inner',
 							trigger: row,
-							start: 'top 70%',
-							end: 'top 40%',
+							start: rowAnimation.start,
+							end: rowAnimation.end,
 							scrub: true
 						}
 					}
 				})
 				.from(row, {
-					y: 50,
+					y: rowAnimation.y,
 					autoAlpha: 0,
-					duration: 1,
-					ease: 'back.inOut(1.7)'
+					duration: rowAnimation.duration,
+					ease: rowAnimation.ease
 				});
 		});
 	});
@@ -60,21 +102,47 @@
 	const toggleBonusRequirements = (id: string) => {
 		const disclaimerContainer = document.getElementById(id);
 		if (disclaimerContainer) {
+			const disclaimerButton =
+				disclaimerContainer.querySelector<HTMLButtonElement>('.disclaimer-button');
+			const disclaimerText = disclaimerContainer.querySelector<HTMLElement>('.disclaimer-text');
+			const disclaimerIcon =
+				disclaimerContainer.querySelector<HTMLElement>('.disclaimer-button-icon');
+
+			if (!disclaimerButton || !disclaimerText || !disclaimerIcon) {
+				return;
+			}
+
+			const isCollapsed = disclaimerContainer.dataset.expanded !== 'true';
+			disclaimerContainer.dataset.expanded = isCollapsed ? 'true' : 'false';
+			disclaimerButton.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
+
 			gsap
 				.timeline()
-				.to(disclaimerContainer.querySelector('.disclaimer-button-icon'), {
-					rotate: disclaimerContainer.clientHeight === 10 ? 270 : 90,
-					duration: 0.5,
+				.to(disclaimerIcon, {
+					rotate: isCollapsed ? 270 : 90,
+					duration: 0.35,
 					ease: 'power2.out'
 				})
 				.to(
 					disclaimerContainer,
 					{
-						height: disclaimerContainer.clientHeight === 10 ? 'auto' : '10px',
-						duration: 0.5,
+						height: isCollapsed
+							? disclaimerButton.offsetHeight + disclaimerText.offsetHeight + 8
+							: collapsedDisclaimerHeight,
+						duration: 0.35,
 						ease: 'power2.out'
 					},
 					'<'
+				)
+				.to(
+					disclaimerText,
+					{
+						autoAlpha: isCollapsed ? 1 : 0,
+						y: isCollapsed ? 0 : -4,
+						duration: 0.25,
+						ease: 'power2.out'
+					},
+					0
 				);
 		}
 	};
@@ -121,10 +189,11 @@
 					</div>
 					<div id="disclaimer-no-deposit-{casino.id}" class="disclaimer-container">
 						<button
-							onclick={() => {
-								toggleBonusRequirements(`disclaimer-no-deposit-${casino.id}`);
-							}}
+							onclick={() => toggleBonusRequirements(`disclaimer-no-deposit-${casino.id}`)}
+							type="button"
 							class="disclaimer-button"
+							aria-expanded="false"
+							aria-controls={`disclaimer-no-deposit-text-${casino.id}`}
 							title={m.bonus_no_deposit_requirements_title(
 								{ casinoTitle: casino.title },
 								{ locale }
@@ -133,7 +202,7 @@
 							{m.bonus_no_deposit_requirements_title({ casinoTitle: casino.title }, { locale })}
 							<svg class="disclaimer-button-icon"><use href="/icons/icon-set.svg#arrow" /></svg>
 						</button>
-						<p class="disclaimer-text">
+						<p id="disclaimer-no-deposit-text-{casino.id}" class="disclaimer-text">
 							{casino.welcomeBonus.noDepositRequirements}
 						</p>
 					</div>
@@ -153,10 +222,11 @@
 					</div>
 					<div id="disclaimer-with-deposit-{casino.id}" class="disclaimer-container">
 						<button
-							onclick={() => {
-								toggleBonusRequirements(`disclaimer-with-deposit-${casino.id}`);
-							}}
+							onclick={() => toggleBonusRequirements(`disclaimer-with-deposit-${casino.id}`)}
+							type="button"
 							class="disclaimer-button"
+							aria-expanded="false"
+							aria-controls={`disclaimer-with-deposit-text-${casino.id}`}
 							title={m.bonus_with_deposit_requirements_title(
 								{ casinoTitle: casino.title },
 								{ locale }
@@ -165,30 +235,32 @@
 							{m.bonus_with_deposit_requirements_title({ casinoTitle: casino.title }, { locale })}
 							<svg class="disclaimer-button-icon"><use href="/icons/icon-set.svg#arrow" /></svg>
 						</button>
-						<p class="disclaimer-text">
+						<p id="disclaimer-with-deposit-text-{casino.id}" class="disclaimer-text">
 							{casino.welcomeBonus.withDepositRequirements}
 						</p>
 					</div>
 				</td>
 				<td class="casino-table-td casino-table-cta-td">
-					<a
-						class="casino-table-button casino-table-review-button"
-						title={m.casino_review_link_title({ casinoTitle: casino.title }, { locale })}
-						href={resolve(`/${locale}/casino-online/[slug]`, {
-							slug: casino.slug
-						})}
-						>{m.casino_review_link_text({}, { locale })}
-						<svg class="casino-table-icon"><use href="/icons/icon-set.svg#arrow" /></svg></a
-					>
-					<a
-						class="casino-table-button casino-table-cta-button"
-						title={m.casino_cta_title({ casinoTitle: casino.title }, { locale })}
-						target="_blank"
-						rel="noopener noreferrer external"
-						href={casino.affiliationUrl}
-						>{m.casino_cta_text({}, { locale })}
-						<svg class="casino-table-icon"><use href="/icons/icon-set.svg#arrow" /></svg></a
-					>
+					<div class="casino-table-actions">
+						<a
+							class="casino-table-button casino-table-review-button"
+							title={m.casino_review_link_title({ casinoTitle: casino.title }, { locale })}
+							href={resolve(`/${locale}/casino-online/[slug]`, {
+								slug: casino.slug
+							})}
+							>{m.casino_review_link_text({}, { locale })}
+							<svg class="casino-table-icon"><use href="/icons/icon-set.svg#arrow" /></svg></a
+						>
+						<a
+							class="casino-table-button casino-table-cta-button"
+							title={m.casino_cta_title({ casinoTitle: casino.title }, { locale })}
+							target="_blank"
+							rel="noopener noreferrer external"
+							href={casino.affiliationUrl}
+							>{m.casino_cta_text({}, { locale })}
+							<svg class="casino-table-icon"><use href="/icons/icon-set.svg#arrow" /></svg></a
+						>
+					</div>
 				</td>
 			</tr>
 		{/each}
@@ -203,27 +275,33 @@
 		font-size: 0.6rem;
 		text-align: right;
 		margin: 8px auto;
+		opacity: 0.7;
+		letter-spacing: 0.02em;
 	}
 	.casino-table {
 		width: 100%;
 		max-width: 1200px;
 		border-collapse: collapse;
-		border-radius: 8px;
+		border-radius: 10px;
 		overflow: hidden;
 		margin: 0 auto 100px auto;
+		box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.1);
 		.casino-table-header {
 			background-color: var(--blu-700);
 			color: var(--light-brown-900);
 		}
 		.casino-table-th {
-			padding: 8px;
+			padding: 12px 10px;
 			text-align: center;
 			font-size: 0.8rem;
+			font-family: 'Funnel Display', sans-serif;
+			letter-spacing: 0.04em;
+			font-weight: 600;
 		}
 		.casino-table-td {
 			vertical-align: middle;
 			text-align: center;
-			padding: 8px;
+			padding: 10px 8px;
 			font-size: 0.9rem;
 		}
 		.casino-table-row:nth-child(even) {
@@ -244,7 +322,8 @@
 				display: none;
 			}
 			.mobile-bonus-value {
-				font-weight: bold;
+				font-weight: 700;
+				letter-spacing: 0.01em;
 			}
 			.disclaimer-container {
 				display: flex;
@@ -256,6 +335,11 @@
 				margin-top: 4px;
 				.disclaimer-button {
 					font-size: 0.5rem;
+					opacity: 0.65;
+					transition: opacity 0.15s ease;
+					&:hover {
+						opacity: 1;
+					}
 					.disclaimer-button-icon {
 						width: 6px;
 						height: 6px;
@@ -265,9 +349,10 @@
 				}
 				.disclaimer-text {
 					font-size: 0.75rem;
-					padding: 8px;
-					border-radius: 4px;
+					padding: 8px 10px;
+					border-radius: 6px;
 					background-color: white;
+					line-height: 1.5;
 				}
 			}
 		}
@@ -277,22 +362,35 @@
 			gap: 8px;
 			align-items: center;
 			justify-content: center;
+			.casino-table-actions {
+				display: flex;
+				gap: 8px;
+			}
 		}
 		.casino-table-button {
 			width: fit-content;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			gap: 4px;
+			gap: 5px;
 			padding: 8px 16px;
 			text-decoration: none;
-			border-radius: 4px;
-			font-weight: bold;
-			transition: background-color 0.3s ease;
+			border-radius: 6px;
+			font-weight: 700;
+			font-size: 0.82rem;
+			letter-spacing: 0.03em;
+			transition:
+				background-color 0.2s ease,
+				box-shadow 0.2s ease,
+				transform 0.15s ease;
 			.casino-table-icon {
 				width: 8px;
 				height: 8px;
 				stroke-width: 75px;
+			}
+			&:focus-visible {
+				outline: 2px solid var(--orange-900);
+				outline-offset: 2px;
 			}
 		}
 		.casino-table-review-button {
@@ -300,6 +398,8 @@
 			color: var(--light-brown-900);
 			&:hover {
 				background-color: var(--green-400);
+				box-shadow: 0 2px 8px rgba(90, 196, 142, 0.35);
+				transform: translateY(-1px);
 			}
 		}
 		.casino-table-cta-button {
@@ -307,10 +407,13 @@
 			color: var(--light-brown-900);
 			&:hover {
 				background-color: var(--orange-800);
+				box-shadow: 0 2px 10px rgba(255, 111, 0, 0.35);
+				transform: translateY(-1px);
 			}
 		}
 		@media (max-width: 767px) {
 			width: calc(100% - 64px);
+			box-shadow: none;
 			.casino-table-header {
 				display: none;
 			}
@@ -321,8 +424,14 @@
 				text-align: center;
 				margin-bottom: 16px;
 				border: 1px solid var(--light-brown-700);
-				border-radius: 8px;
+				border-radius: 10px;
 				padding: 16px;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+				transition: box-shadow 0.2s ease;
+				&:hover {
+					box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+					background-color: unset;
+				}
 			}
 			.casino-table-td {
 				width: 100%;
@@ -334,12 +443,16 @@
 				align-items: center;
 				.mobile-bonus-label {
 					display: block;
-					font-weight: bold;
+					font-weight: 700;
 					margin-bottom: 4px;
+					font-size: 0.75rem;
+					letter-spacing: 0.04em;
+					opacity: 0.7;
 				}
 			}
 			.casino-table-button {
 				width: 100%;
+				justify-content: center;
 			}
 		}
 	}

@@ -65,6 +65,8 @@
 	class="img-button {imgSize}-img-button"
 	onclick={togglePreview}
 	class:expanded={isExpanded}
+	aria-label={isExpanded ? 'Collapse image' : 'Expand image'}
+	aria-expanded={isExpanded}
 >
 	<img
 		class="img-preview"

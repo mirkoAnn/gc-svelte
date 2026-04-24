@@ -26,6 +26,7 @@
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 24 24"
 				fill="currentColor"
+				aria-hidden="true"
 			>
 				<use href="/icons/{section.toLowerCase()}-set.svg#{section.toLowerCase()}"></use>
 			</svg>

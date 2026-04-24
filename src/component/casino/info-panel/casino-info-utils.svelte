@@ -20,7 +20,7 @@
 		<ul class="casino-info-utils-list">
 			<li class="casino-info-utils-item">
 				<span class="casino-info-utils-item-label">
-					<svg class="casino-info-utils-item-icon" width="16" height="16"
+					<svg class="casino-info-utils-item-icon" width="16" height="16" aria-hidden="true"
 						><use href="/icons/casino-set.svg#web"></use></svg
 					>
 					{m.web_site({}, { locale })}:</span
@@ -34,7 +34,7 @@
 			</li>
 			<li class="casino-info-utils-item">
 				<span class="casino-info-utils-item-label">
-					<svg class="casino-info-utils-item-icon" width="16" height="16"
+					<svg class="casino-info-utils-item-icon" width="16" height="16" aria-hidden="true"
 						><use href="/icons/casino-set.svg#email"></use></svg
 					>
 					{m.email({}, { locale })}:</span
@@ -46,7 +46,7 @@
 			</li>
 			<li class="casino-info-utils-item">
 				<span class="casino-info-utils-item-label">
-					<svg class="casino-info-utils-item-icon" width="16" height="16"
+					<svg class="casino-info-utils-item-icon" width="16" height="16" aria-hidden="true"
 						><use href="/icons/casino-set.svg#phone"></use></svg
 					>
 					{m.telephone({}, { locale })}:</span
@@ -61,7 +61,7 @@
 		<ul class="casino-info-utils-list">
 			<li class="casino-info-utils-item">
 				<span class="casino-info-utils-item-label">
-					<svg class="casino-info-utils-item-icon" width="16" height="16"
+					<svg class="casino-info-utils-item-icon" width="16" height="16" aria-hidden="true"
 						><use href="/icons/casino-set.svg#money"></use></svg
 					>
 					{m.casino_deposit_min({}, { locale })}:</span
@@ -72,7 +72,7 @@
 			</li>
 			<li class="casino-info-utils-item">
 				<span class="casino-info-utils-item-label">
-					<svg class="casino-info-utils-item-icon" width="16" height="16"
+					<svg class="casino-info-utils-item-icon" width="16" height="16" aria-hidden="true"
 						><use href="/icons/casino-set.svg#money"></use></svg
 					>
 					{m.casino_withdrawal_min({}, { locale })}:</span
@@ -83,7 +83,7 @@
 			</li>
 			<li class="casino-info-utils-item">
 				<span class="casino-info-utils-item-label">
-					<svg class="casino-info-utils-item-icon" width="16" height="16"
+					<svg class="casino-info-utils-item-icon" width="16" height="16" aria-hidden="true"
 						><use href="/icons/casino-set.svg#clock"></use></svg
 					>
 					{m.casino_withdrawal_time({}, { locale })}:</span

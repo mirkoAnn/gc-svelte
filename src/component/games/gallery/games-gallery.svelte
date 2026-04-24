@@ -35,6 +35,28 @@
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
 
+	// Above-the-fold threshold: cards whose images should load eagerly
+	// Card dimensions (must match CSS): 200px wide, ~240px total height (image + text), 20px gap
+	const CARD_WIDTH = 200;
+	const CARD_TOTAL_HEIGHT = 240;
+	const CARD_GAP = 20;
+
+	let aboveTheFoldThreshold = $state(10);
+
+	function computeThreshold(): number {
+		const cols = Math.max(2, Math.floor((window.innerWidth + CARD_GAP) / (CARD_WIDTH + CARD_GAP)));
+		if (type === 'carousel') return cols; // only 1 row visible in carousel
+		const rows = Math.max(1, Math.ceil(window.innerHeight / (CARD_TOTAL_HEIGHT + CARD_GAP)));
+		return cols * rows;
+	}
+
+	$effect(() => {
+		aboveTheFoldThreshold = computeThreshold();
+		const onResize = () => (aboveTheFoldThreshold = computeThreshold());
+		window.addEventListener('resize', onResize);
+		return () => window.removeEventListener('resize', onResize);
+	});
+
 	// Generate a unique ID for the carousel instance to avoid conflicts when multiple carousels are present on the same page
 	const carouselID = `carousel-${Math.floor(Math.random() * 90000) + 10000}`;
 
@@ -90,7 +112,7 @@
 		<div class="games-gallery-title-container">
 			{#if title}
 				<h2 class="games-gallery-title">
-					<svg class="games-gallery-title-icon">
+					<svg class="games-gallery-title-icon" aria-hidden="true">
 						<use href="/icons/{category}-set.svg#{carouselIconName}" />
 					</svg>{title}
 				</h2>
@@ -128,12 +150,12 @@
 			<SquaresLoader />
 		</div>
 	{/if}
-	<div id={carouselID} class="games-gallery-inner">
+	<div id={carouselID} class="games-gallery-inner" role="list">
 		<!-- If provided use the games prop, otherwise use the games from the gamesGalleryManager -->
 		{#each games ? games : gamesGalleryManager.getGames() as game, i (game.id)}
 			<!-- Remove some ids to avoid duplicates in the similar games gallery -->
 			{#if !excludeId || game.id !== excludeId}
-				<GameCard {game} {category} index={i} />
+				<GameCard {game} {category} index={i} eager={i < aboveTheFoldThreshold} />
 			{/if}
 		{/each}
 		<!-- Link to the category for carousel type -->
@@ -141,11 +163,10 @@
 			<a
 				href={resolve(`/${locale}${categoryLink}` as Parameters<typeof resolve>[0])}
 				class="game-card more-games-card"
-				aria-label={m.show_all_by_category({ category }, { locale })}
 				title={m.show_all_by_category({ category }, { locale })}
 			>
 				<span>{m.show_all_by_category({ category }, { locale })}</span>
-				<svg class="more-games-card-icon">
+				<svg class="more-games-card-icon" aria-hidden="true">
 					<use href="/icons/icon-set.svg#fill-arrow" />
 				</svg>
 			</a>
@@ -156,7 +177,14 @@
 				disabled={!gamesGalleryManager.areMoreGamesAvailable()}
 				aria-label={m.load_more_games({}, { locale })}
 			>
-				<svg class="more-games-card-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+				<svg
+					class="more-games-card-icon"
+					width="16"
+					height="16"
+					viewBox="0 0 24 24"
+					fill="none"
+					aria-hidden="true"
+				>
 					<path
 						d="M12 5V19M5 12H19"
 						stroke="currentColor"

@@ -12,10 +12,14 @@
 <a
 	class="desktop-nav-branding-link"
 	href={resolve('/')}
-	title={m.site_description({ year: new Date().getFullYear() }, { locale })}
 	aria-label={m.site_description({ year: new Date().getFullYear() }, { locale })}
 >
-	<svg class="site-logo" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+	<svg
+		class="site-logo"
+		viewBox="0 0 600 300"
+		xmlns="http://www.w3.org/2000/svg"
+		aria-hidden="true"
+	>
 		<use href="/icons/logo.svg#{locale}" />
 	</svg></a
 >

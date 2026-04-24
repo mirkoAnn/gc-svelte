@@ -10,23 +10,14 @@
 	let {
 		game,
 		category,
-		index = 0
-	}: { game: Slot | Roulette; category: 'slot' | 'roulette'; index?: number } = $props();
-
-	// Responsive above-the-fold threshold:
-	// Mobile (<768px): 2 cols × ~2 visible rows = 4
-	// Desktop (≥768px): ~5 cols × 2 visible rows = 10
-	let isMobile = $state(false);
-
-	$effect(() => {
-		const mq = window.matchMedia('(max-width: 767px)');
-		isMobile = mq.matches;
-		const handler = (e: MediaQueryListEvent) => (isMobile = e.matches);
-		mq.addEventListener('change', handler);
-		return () => mq.removeEventListener('change', handler);
-	});
-
-	const aboveTheFold = $derived(index < (isMobile ? 4 : 10));
+		index = 0,
+		eager = false
+	}: {
+		game: Slot | Roulette;
+		category: 'slot' | 'roulette';
+		index?: number;
+		eager?: boolean;
+	} = $props();
 
 	let imageLoaded = $state(false);
 
@@ -35,11 +26,11 @@
 	);
 </script>
 
-<div class="game-card">
+<div class="game-card" role="listitem">
 	<div class="game-card-inner">
 		<div class="game-img-container">
 			{#if !imageLoaded}
-				<div class="game-image-skeleton"></div>
+				<div class="game-image-skeleton" aria-hidden="true"></div>
 			{/if}
 			<a href={resolve(`/${locale}/${category}/[slug]`, { slug: game.slug })} class="game-link">
 				<img
@@ -48,8 +39,8 @@
 					title={m.play_game_free({ gameTitle: game.title }, { locale })}
 					class="game-image"
 					class:loaded={imageLoaded}
-					fetchpriority={aboveTheFold ? 'high' : 'low'}
-					loading={aboveTheFold ? 'eager' : 'lazy'}
+					fetchpriority={eager ? 'high' : 'low'}
+					loading={eager ? 'eager' : 'lazy'}
 					width="300"
 					height="300"
 					decoding={index === 0 ? 'sync' : 'async'}
@@ -67,7 +58,7 @@
 			<div class="game-themes-container">
 				<div class="game-themes-inner">
 					{#each (game as Slot).slotThemes as theme (theme.slug)}
-						<svg class="game-theme-icon">
+						<svg class="game-theme-icon" aria-label={theme.slug} role="img">
 							<use href="/icons/slot-set.svg#{theme.iconId}"></use>
 						</svg>
 					{/each}

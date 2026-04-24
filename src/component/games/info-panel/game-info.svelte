@@ -85,37 +85,56 @@
 			<div class="game-bonus-list">
 				<h3 class="game-info-subtitle">{m.game_bonus_section_title({}, { locale })}</h3>
 				<div class="game-bonus-list-icons">
-					<div class="game-bonus">
-						<svg class="bonus-icon">
+					<div
+						class="game-bonus"
+						aria-label="{m.game_has_bonus_game({}, { locale })}: {game.info.hasBonusGame
+							? m.yes({}, { locale })
+							: m.no({}, { locale })}"
+					>
+						<svg class="bonus-icon" aria-hidden="true">
 							<use href="/icons/icon-set.svg#bonus"></use>
 						</svg>
-						<svg class={game.info.hasBonusGame ? 'check-icon' : 'no-check-icon'}
+						<svg class={game.info.hasBonusGame ? 'check-icon' : 'no-check-icon'} aria-hidden="true"
 							><use
 								href={game.info.hasBonusGame
 									? '/icons/icon-set.svg#check'
 									: '/icons/icon-set.svg#no-check'}
 							></use></svg
 						>
-						<span class="bonus-text">{m.game_has_bonus_game({}, { locale })}</span>
+						<span class="bonus-text" aria-hidden="true"
+							>{m.game_has_bonus_game({}, { locale })}</span
+						>
 					</div>
-					<div class="game-bonus">
-						<svg class="bonus-icon" viewBox="0 0 64 64">
+					<div
+						class="game-bonus"
+						aria-label="{m.game_has_free_spins({}, { locale })}: {game.info.hasFreeSpins
+							? m.yes({}, { locale })
+							: m.no({}, { locale })}"
+					>
+						<svg class="bonus-icon" viewBox="0 0 64 64" aria-hidden="true">
 							<use href="/icons/icon-set.svg#freespins"></use>
 						</svg>
-						<svg class={game.info.hasFreeSpins ? 'check-icon' : 'no-check-icon'}
+						<svg class={game.info.hasFreeSpins ? 'check-icon' : 'no-check-icon'} aria-hidden="true"
 							><use
 								href={game.info.hasFreeSpins
 									? '/icons/icon-set.svg#check'
 									: '/icons/icon-set.svg#no-check'}
 							></use></svg
 						>
-						<span class="bonus-text">{m.game_has_free_spins({}, { locale })}</span>
+						<span class="bonus-text" aria-hidden="true"
+							>{m.game_has_free_spins({}, { locale })}</span
+						>
 					</div>
-					<div class="game-bonus">
-						<svg class="bonus-icon">
+					<div
+						class="game-bonus"
+						aria-label="{m.game_has_jackpot({}, { locale })}: {game.info.hasJackpot
+							? m.yes({}, { locale })
+							: m.no({}, { locale })}"
+					>
+						<svg class="bonus-icon" aria-hidden="true">
 							<use href="/icons/icon-set.svg#jackpot"></use>
 						</svg>
-						<svg class={game.info.hasJackpot ? 'check-icon' : 'no-check-icon'}
+						<svg class={game.info.hasJackpot ? 'check-icon' : 'no-check-icon'} aria-hidden="true"
 							><use
 								href={game.info.hasJackpot
 									? '/icons/icon-set.svg#check'

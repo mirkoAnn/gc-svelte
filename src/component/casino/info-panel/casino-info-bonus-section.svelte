@@ -18,7 +18,7 @@
 <ul class="casino-info-bonus-list">
 	<li class="casino-info-bonus-item">
 		<h2 class="casino-info-subtitle casino-info-bonus-item-title">
-			<svg class="casino-info-bonus-item-icon">
+			<svg class="casino-info-bonus-item-icon" aria-hidden="true">
 				<use href="/icons/icon-set.svg#gift" />
 			</svg>{m.bonus_no_deposit_title({}, { locale })}
 		</h2>
@@ -34,14 +34,14 @@
 			>
 		</h3>
 		<p class="casino-info-bonus-item-requirements">
-			<svg class="casino-info-requirements-icon">
+			<svg class="casino-info-requirements-icon" aria-hidden="true">
 				<use href="/icons/icon-set.svg#info" />
 			</svg>{casinoGlobalData.welcomeBonus.noDepositRequirements}
 		</p>
 	</li>
 	<li class="casino-info-bonus-item">
 		<h2 class="casino-info-subtitle casino-info-bonus-item-title">
-			<svg class="casino-info-bonus-item-icon">
+			<svg class="casino-info-bonus-item-icon" aria-hidden="true">
 				<use href="/icons/icon-set.svg#gift" />
 			</svg>{m.bonus_with_deposit_title({}, { locale })}
 		</h2>
@@ -57,7 +57,7 @@
 			</a>
 		</h3>
 		<p class="casino-info-bonus-item-requirements">
-			<svg class="casino-info-requirements-icon">
+			<svg class="casino-info-requirements-icon" aria-hidden="true">
 				<use href="/icons/icon-set.svg#info" />
 			</svg>{casinoGlobalData.welcomeBonus.withDepositRequirements}
 		</p>

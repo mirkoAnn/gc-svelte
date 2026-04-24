@@ -37,7 +37,7 @@
 			href={resolve(`/${countryCode}`)}
 			title={`GamblingClub ${appManager.getCountryName()} - Homepage`}
 		>
-			<svg class="home-icon">
+			<svg class="home-icon" aria-hidden="true">
 				<use href="/icons/icon-set.svg#home" />
 			</svg>
 		</a>
@@ -52,7 +52,7 @@
 			itemtype="http://schema.org/ListItem"
 		>
 			<a class="breadcrumbs-link" itemprop="item" href={resolve(route.id, route.params)} {title}>
-				<svg class="next-arrow">
+				<svg class="next-arrow" aria-hidden="true">
 					<use href="/icons/icon-set.svg#arrow" />
 				</svg>
 				<span itemprop="name">{label}</span></a

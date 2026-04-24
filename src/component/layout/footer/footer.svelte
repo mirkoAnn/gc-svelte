@@ -55,7 +55,7 @@
 	</div>
 	<div class="subfooter">
 		{m.casino_legal_message({}, { locale })}
-		<svg class="subfooter-small-icon">
+		<svg class="subfooter-small-icon" aria-hidden="true">
 			<use href="/icons/icon-set.svg#+18"></use>
 		</svg>
 		<a
@@ -65,7 +65,7 @@
 			rel="external noopener noreferrer"
 			aria-label={m.casino_legal_message_link_text({}, { locale })}
 		>
-			<svg class="subfooter-big-icon">
+			<svg class="subfooter-big-icon" aria-hidden="true">
 				<use href="/icons/icon-set.svg#adm"></use>
 			</svg>
 		</a>

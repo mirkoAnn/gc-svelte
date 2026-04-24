@@ -5,10 +5,11 @@
 {#each navManager.getMenuActions() as action, i (action.category)}
 	{#if action.category !== 'menu'}
 		<div
-			id="nav-panel-{i}"
+			id="nav-action-tabpanel-{i}"
 			class="nav-panel"
 			role="tabpanel"
 			tabindex="0"
+			aria-labelledby="nav-action-tab-{i}"
 			aria-hidden={navManager.getActiveActionIndex() === -1}
 			inert={!(navManager.getActiveActionIndex() === i)}
 		>

@@ -93,7 +93,7 @@
 				onclick={() => (currentIndex = Math.max(currentIndex - 1, 1))}
 				disabled={currentIndex === 1}
 			>
-				<svg class="arrow-icon">
+				<svg class="arrow-icon" aria-hidden="true">
 					<use href="/icons/icon-set.svg#fill-arrow" />
 				</svg>
 			</button>
@@ -103,7 +103,7 @@
 				onclick={() => (currentIndex = Math.min(currentIndex + 1, casinos.length - 1))}
 				disabled={currentIndex === casinos.length - 1}
 			>
-				<svg class="arrow-icon">
+				<svg class="arrow-icon" aria-hidden="true">
 					<use href="/icons/icon-set.svg#fill-arrow" />
 				</svg>
 			</button>
