@@ -1,5 +1,6 @@
 import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { redirect, type Handle } from '@sveltejs/kit';
+import appCss from '../static/styles/app.css?raw';
 
 const ROUTABLE_COUNTRIES = Object.values(CountryCodes).filter((code) =>
 	appManager.canRouteToCountry(code)
@@ -127,18 +128,24 @@ const redirectToCountryPath = (
 export const handle: Handle = async ({ event, resolve }) => {
 	const { pathname, search } = event.url;
 
+	const inlineCss = (html: string) =>
+		html.replace('<link rel="stylesheet" href="/styles/app.css" />', `<style>${appCss}</style>`);
+
 	if (isBypassedPath(pathname)) {
 		return resolve(event);
 	}
 
+	const resolveWithCss = () =>
+		resolve(event, { transformPageChunk: ({ html }) => inlineCss(html) });
+
 	const geoCountry = getGeoCountryCode(event.request);
 	if (!geoCountry) {
-		return resolve(event);
+		return resolveWithCss();
 	}
 
 	const localeInPath = pathname.match(LOCALE_PREFIX_PATTERN)?.[1] as CountryCodes | undefined;
 	if (localeInPath === geoCountry) {
-		return resolve(event);
+		return resolveWithCss();
 	}
 
 	const redirectPath = redirectToCountryPath(pathname, search, geoCountry);
@@ -146,5 +153,5 @@ export const handle: Handle = async ({ event, resolve }) => {
 		throw redirect(307, redirectPath);
 	}
 
-	return resolve(event);
+	return resolveWithCss();
 };
