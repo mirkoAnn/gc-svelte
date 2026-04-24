@@ -11,7 +11,7 @@ const LOCALE_PREFIX_PATTERN = new RegExp(`^/(${ROUTABLE_COUNTRIES.join('|')})(?=
 const STATIC_FILE_PATTERN = /\.[a-z0-9]+$/i;
 
 const BYPASS_PREFIXES = ['/_app/', '/api/'];
-const BYPASS_PATHS = ['/robots.txt', '/manifest.json'];
+const BYPASS_PATHS = ['/robots.txt'];
 
 const parseCookieValue = (cookieHeader: string | null, cookieName: string): string | undefined => {
 	if (!cookieHeader) {
