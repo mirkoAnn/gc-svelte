@@ -9,6 +9,8 @@
 
 	let { game, category }: { game: Slot | Roulette; category: 'slot' | 'roulette' } = $props();
 
+	let imageLoaded = $state(false);
+
 	const locale = $derived.by(
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
@@ -17,16 +19,21 @@
 <div class="game-card">
 	<div class="game-card-inner">
 		<div class="game-img-container">
+			{#if !imageLoaded}
+				<div class="game-image-skeleton"></div>
+			{/if}
 			<a href={resolve(`/${locale}/${category}/[slug]`, { slug: game.slug })} class="game-link">
 				<img
-					src={formatImageUrl(game.logo.url, 300)}
+					src={formatImageUrl(game.logo.url, 200)}
 					alt={m.play_game_free({ gameTitle: game.title }, { locale })}
 					title={m.play_game_free({ gameTitle: game.title }, { locale })}
 					class="game-image"
+					class:loaded={imageLoaded}
 					loading="lazy"
 					width="300"
 					height="300"
 					decoding="async"
+					onload={() => (imageLoaded = true)}
 				/>
 			</a>
 			<div class="game-actions-container">
@@ -108,7 +115,25 @@
 				.game-image {
 					width: 100%;
 					height: auto;
+					opacity: 0;
+					transition: opacity 0.3s ease;
+					&.loaded {
+						opacity: 1;
+					}
 				}
+			}
+			.game-image-skeleton {
+				position: absolute;
+				inset: 0;
+				border-radius: 10%;
+				background: linear-gradient(
+					90deg,
+					var(--light-brown-800) 25%,
+					var(--light-brown-700) 50%,
+					var(--light-brown-800) 75%
+				);
+				background-size: 200% 100%;
+				animation: shimmer 1.4s infinite linear;
 			}
 			.game-themes-container {
 				position: absolute;
@@ -157,6 +182,15 @@
 		}
 		.game-provider {
 			font-size: 0.6rem;
+		}
+	}
+
+	@keyframes shimmer {
+		from {
+			background-position: 200% 0;
+		}
+		to {
+			background-position: -200% 0;
 		}
 	}
 </style>
