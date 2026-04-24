@@ -85,14 +85,17 @@
 <GameInfo game={data.page} />
 
 <div id="introContent" class="content content-columns">
-	<img
-		class="img medium-img"
-		src={data.page.images[0]?.image.url.replace('/upload/', '/upload/w_1000,f_avif,q_auto/')}
-		alt={data.page.images[0]?.description}
-		title={data.page.images[0]?.description}
-		width="600"
-		height="400"
-	/>
+	<figure class="content-figure">
+		<img
+			class="img"
+			src={data.page.images[0]?.image.url.replace('/upload/', '/upload/w_1000,f_avif,q_auto/')}
+			alt={data.page.images[0]?.description}
+			title={data.page.images[0]?.description}
+			width="600"
+			height="400"
+		/>
+		<figcaption>{data.page.images[0]?.description}</figcaption>
+	</figure>
 	<div class="content-text">
 		<h2 class="content-title">{data.page.title} Slot Machine</h2>
 		<Content content={data.page.introContent} />
@@ -103,26 +106,32 @@
 		<h2 class="content-title">Come provare {data.page.title} gratuitamente e da dove iniziare</h2>
 		<Content content={data.page.rulesContent} />
 	</div>
-	<img
-		class="img medium-img"
-		src={data.page.images[1]?.image.url.replace('/upload/', '/upload/w_1000,f_avif,q_auto/')}
-		alt={data.page.images[1]?.description}
-		title={data.page.images[1]?.description}
-		width="600"
-		height="400"
-	/>
+	<figure class="content-figure">
+		<img
+			class="img"
+			src={data.page.images[1]?.image.url.replace('/upload/', '/upload/w_1000,f_avif,q_auto/')}
+			alt={data.page.images[1]?.description}
+			title={data.page.images[1]?.description}
+			width="600"
+			height="400"
+		/>
+		<figcaption>{data.page.images[1]?.description}</figcaption>
+	</figure>
 </div>
 <div id="bonusContent" class="content">
 	<h2 class="content-title">Funzioni Bonus della Slot {data.page.title}</h2>
 	<Content content={data.page.bonusContent} />
-	<img
-		class="img full-width"
-		src={data.page.images[2]?.image.url.replace('/upload/', '/upload/w_1000,f_avif,q_auto/')}
-		alt={data.page.images[2]?.description}
-		title={data.page.images[2]?.description}
-		width="600"
-		height="400"
-	/>
+	<figure class="content-figure">
+		<img
+			class="img"
+			src={data.page.images[2]?.image.url.replace('/upload/', '/upload/w_1000,f_avif,q_auto/')}
+			alt={data.page.images[2]?.description}
+			title={data.page.images[2]?.description}
+			width="600"
+			height="400"
+		/>
+		<figcaption>{data.page.images[2]?.description}</figcaption>
+	</figure>
 </div>
 <div id="opinionContent" class="content">
 	<h2 class="content-title">Opinioni {data.page.title}</h2>

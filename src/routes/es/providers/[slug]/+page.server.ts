@@ -59,7 +59,6 @@ export async function load({ params }) {
 					providers: { title: string; slug: string }[];
 				};
 			}) => {
-				console.log('Provider page data:', response);
 				return {
 					page: response.data.page[0], // since the query returns an array of providers that match the slug filter but we know that there will be only one provider that matches the slug filter because slugs are unique, we can safely take the first element of the array to get the provider data
 					slotThemes: response.data.slotThemes,
