@@ -1,5 +1,3 @@
-import gsap from 'gsap/dist/gsap';
-
 export enum CountryCodes {
 	it = 'it',
 	es = 'es'
@@ -172,13 +170,26 @@ export const appManager = {
 	},
 	// Add content animation on scroll using GSAP and ScrollTrigger plugin in all pages
 	addContentAnimation: async () => {
-		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
-		gsap.registerPlugin(scrollTrigger);
+		const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+			import('gsap/dist/gsap'),
+			import('gsap/dist/ScrollTrigger')
+		]);
+		gsap.registerPlugin(ScrollTrigger);
+		// Kill stale triggers from previous navigation to prevent memory leaks
+		ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+		const scroller = document.querySelector('.main-inner');
 		document.querySelectorAll('.content').forEach((section) => {
+			// If already in the viewport, show immediately without animation
+			const rect = section.getBoundingClientRect();
+			const viewportHeight = window.innerHeight;
+			if (rect.top < viewportHeight) {
+				gsap.set(section, { opacity: 1, y: 0 });
+				return;
+			}
 			gsap
 				.timeline({
 					scrollTrigger: {
-						scroller: '.main-inner',
+						scroller,
 						trigger: section,
 						start: 'top 80%',
 						end: 'top 30%',

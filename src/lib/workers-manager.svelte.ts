@@ -29,6 +29,8 @@ export const workersManager = {
 		const SyncWorker = await import('$lib/game-sessions.worker?worker');
 		const syncWorker = new SyncWorker.default();
 		syncWorker.postMessage({ id, sessions, category, countryCode });
+		syncWorker.onmessage = () => syncWorker.terminate();
+		syncWorker.onerror = () => syncWorker.terminate();
 	},
 	updateRatingAsync: async (
 		id: string,
@@ -40,11 +42,15 @@ export const workersManager = {
 		const SyncWorker = await import('$lib/entry-rating.worker?worker');
 		const syncWorker = new SyncWorker.default();
 		syncWorker.postMessage({ id, up, down, category, countryCode });
+		syncWorker.onmessage = () => syncWorker.terminate();
+		syncWorker.onerror = () => syncWorker.terminate();
 	},
 	sendGameErrorReport: async (url: string) => {
 		const SyncWorker = await import('$lib/game-error-report.worker?worker');
 		const syncWorker = new SyncWorker.default();
 		syncWorker.postMessage({ url });
+		syncWorker.onmessage = () => syncWorker.terminate();
+		syncWorker.onerror = () => syncWorker.terminate();
 	},
 	fetchGamesAsync: async (filters: unknown, page: number, countryCode: string) => {
 		const SyncWorker = await import('$lib/games-loader.worker?worker');
@@ -57,6 +63,7 @@ export const workersManager = {
 		syncWorker.onmessage = (event: MessageEvent<LoadedGamesMessage | WorkerErrorMessage>) => {
 			if (typeof event.data === 'object' && event.data !== null && 'error' in event.data) {
 				console.error(event.data.error); // Handle the error accordingly, for example by showing an error message to the user
+				syncWorker.terminate();
 				return;
 			}
 
@@ -67,6 +74,7 @@ export const workersManager = {
 			} else {
 				gamesGalleryManager.updatePreloadedGames(loadedGames); // Update the preloaded games in the gallery manager with the loaded games from the worker, this will allow us to show the next page of games immediately when the user clicks on the "Load More" button or when they scroll down to the bottom of the gallery without having to wait for them to be fetched from the server again
 			}
+			syncWorker.terminate();
 		};
 	},
 	search: async (query: string, countryCode: string) => {
@@ -76,9 +84,11 @@ export const workersManager = {
 		syncWorker.onmessage = (event: MessageEvent<SearchWorkerMessage>) => {
 			if (event.data.type === 'searchError') {
 				console.error(event.data.error); // Handle the error accordingly, for example by showing an error message to the user
+				syncWorker.terminate();
 				return;
 			}
 			navSearchManager.updateSearchResults(event.data.data); // Update the search results in the nav search manager with the results from the worker, this will trigger the search results to re-render with the new data
+			syncWorker.terminate();
 		};
 	}
 };

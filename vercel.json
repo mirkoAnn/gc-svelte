@@ -1,8 +1,28 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron",
-      "schedule": "1 0 1 * *"
-    }
-  ]
+	"crons": [
+		{
+			"path": "/api/cron",
+			"schedule": "1 0 1 * *"
+		}
+	],
+	"headers": [
+		{
+			"source": "/_app/immutable/(.*)",
+			"headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+		},
+		{
+			"source": "/fonts/(.*)",
+			"headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+		},
+		{
+			"source": "/icons/(.*)",
+			"headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+		},
+		{
+			"source": "/images/(.*)",
+			"headers": [
+				{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=3600" }
+			]
+		}
+	]
 }

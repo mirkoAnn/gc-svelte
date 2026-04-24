@@ -31,7 +31,11 @@ const parseFavouritesList = (cookieValue: string | undefined): FavouritesList =>
 	}
 };
 
-export const load = async ({ request, cookies }: LoadInput) => {
+export const load = async ({
+	request,
+	cookies,
+	setHeaders
+}: LoadInput & { setHeaders: (headers: Record<string, string>) => void }) => {
 	const requestPath = new URL(request.url).pathname;
 	const isAgeVerified = cookies.get(AGE_VERIFICATION_COOKIE_NAME) === 'true';
 
@@ -101,6 +105,8 @@ export const load = async ({ request, cookies }: LoadInput) => {
 	try {
 		const response = (await dbManager.executeQuery(query)) as { data?: { casinos?: Casino[] } };
 		casinos = response.data?.casinos ?? [];
+		// Cache the layout data at the CDN edge: fresh for 60s, serve stale for up to 5min while revalidating
+		setHeaders({ 'Cache-Control': 's-maxage=60, stale-while-revalidate=300' });
 	} catch {
 		casinos = [];
 	}

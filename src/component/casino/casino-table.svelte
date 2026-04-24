@@ -21,11 +21,20 @@
 		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
 		gsap.registerPlugin(scrollTrigger);
 
+		const scrollerEl = document.querySelector('.main-inner');
+		const scrollerRect = scrollerEl?.getBoundingClientRect();
+
 		// Animate table rows on scroll into view from bottom
 		const tableRows = document.querySelectorAll(
 			'.casino-table-header, .casino-table-body .casino-table-row'
 		);
 		tableRows.forEach((row) => {
+			const rect = row.getBoundingClientRect();
+			// If already visible in the scroller viewport, show immediately
+			if (scrollerRect && rect.top < scrollerRect.bottom) {
+				gsap.set(row, { y: 0, autoAlpha: 1 });
+				return;
+			}
 			gsap
 				.timeline({
 					defaults: {

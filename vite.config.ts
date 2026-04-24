@@ -9,5 +9,11 @@ export default defineConfig({
 	],
 	worker: {
 		format: 'es'
+	},
+	optimizeDeps: {
+		include: ['gsap/dist/gsap', 'gsap/dist/ScrollTrigger', 'chart.js']
+	},
+	build: {
+		target: 'esnext'
 	}
 });
