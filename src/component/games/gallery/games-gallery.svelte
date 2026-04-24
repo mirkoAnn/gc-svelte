@@ -8,7 +8,6 @@
 	import GameCard from './games-gallery-card.svelte';
 	import { gamesGalleryManager } from './games-gallery-manager.svelte';
 	import GamesGalleryFilters from './games-gallery-filters.svelte';
-	import { capitalizeFirstLetter } from '$lib/utils.svelte';
 	import { m } from '../../../paraglide/messages';
 	import type { Roulette, Slot } from '$lib/types/games';
 
@@ -17,6 +16,7 @@
 		excludeId, // Optional: ID of a game to exclude from the games-gallery used in the similar games section of the game page
 		category, // Required: category of the games to show (slot, live, casino, etc..), used for tracking and to apply category-specific logic if needed in the future
 		title, // Optional: if provided, it will render the title of the games-gallery with the provided text and icon, if the title contains "slot" it will use the slot icon, if it contains "live" it will use the live casino icon, etc.. if no known category is found in the title, no icon will be rendered
+		carouselIconName, // Optional: if provided, it will use the specified icon from the sprite instead of trying to infer it from the title, this allows to have more control over the icon used in the gallery, especially for cases where the title doesn't contain a known category or when we want to use a specific icon that doesn't match the category
 		type = 'carousel', // Type of the games-gallery, it can be "carousel" or "grid", the default is "carousel". The carousel type will render the sliding buttons and the games in a single row with horizontal scroll, while the grid type will render the games in a responsive grid without sliding buttons
 		categoryLink, // Optional: if provided a last card will be rendered linking to the category page with the provided URL and label "Vedi tutte le [category]"
 		hasFilters = false // Optional: if true, it will show a button to toggle the filters and the games will be filtered based on the selected filters in the gamesGalleryManager, used in the main games-gallery page to allow filtering the games by type, provider, etc..
@@ -25,6 +25,7 @@
 		excludeId?: string;
 		category: 'slot' | 'roulette';
 		title?: string;
+		carouselIconName?: string;
 		categoryLink?: string;
 		type: 'carousel' | 'grid';
 		hasFilters?: boolean;
@@ -36,29 +37,6 @@
 
 	// Generate a unique ID for the carousel instance to avoid conflicts when multiple carousels are present on the same page
 	const carouselID = `carousel-${Math.floor(Math.random() * 90000) + 10000}`;
-
-	const knownCategories = ['slot', 'roulette'];
-
-	const carouselIconName = $derived.by(() => {
-		const currentTitle = title ?? '';
-		const hasKnownCategory = knownCategories.some((cat) =>
-			currentTitle.toLowerCase().includes(cat)
-		);
-
-		if (!hasKnownCategory) return '';
-
-		const cleanedTitle = currentTitle
-			.normalize('NFD')
-			.replace(capitalizeFirstLetter(category), '')
-			.replace(' ', '')
-			.replace(/[\u0300-\u036f]/g, '')
-			.replace(' ', '-')
-			.toLowerCase();
-
-		// keep previous behavior: default to category unless cleaned title is meaningful
-		if (cleanedTitle && cleanedTitle !== 'online') return cleanedTitle;
-		return category;
-	});
 
 	// Scroll management variables and function
 	let scrollOffset = 0;

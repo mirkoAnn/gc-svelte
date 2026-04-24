@@ -58,12 +58,19 @@
 
 <!-- Main gallery used to show filtered games -->
 <div class="game-galleries-outer">
-	<GamesGallery category="slot" type="grid" title="Slot Online" hasFilters={true} />
+	<GamesGallery
+		category="slot"
+		type="grid"
+		title="Slot Online"
+		carouselIconName="slot"
+		hasFilters={true}
+	/>
 	<div class="game-categories">
 		<GamesGallery
 			games={data.newSlots}
 			category="slot"
 			title="Nuove Slot"
+			carouselIconName="new"
 			type="carousel"
 			categoryLink="/slot-gratis/slot-nuove"
 		/>
@@ -71,6 +78,7 @@
 			games={data.bestSlots}
 			category="slot"
 			title="Slot Più Giocate"
+			carouselIconName="hot"
 			type="carousel"
 			categoryLink="/slot-gratis/slot-piu-giocate"
 		/>
@@ -78,6 +86,7 @@
 			games={data.barSlots}
 			category="slot"
 			title="Slot Bar"
+			carouselIconName="bar"
 			type="carousel"
 			categoryLink="/slot-gratis/slot-bar"
 		/>

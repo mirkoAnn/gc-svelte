@@ -19,6 +19,7 @@
 		games={data.slots}
 		category="slot"
 		title="Nuevas Tragaperras"
+		carouselIconName="new"
 		type="carousel"
 		categoryLink="/slot-gratis"
 	/>
@@ -26,6 +27,7 @@
 		games={data.roulettes}
 		category="roulette"
 		title="Nuevas Ruletas"
+		carouselIconName="new"
 		type="carousel"
 		categoryLink="/roulette-gratis"
 	/>
