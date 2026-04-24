@@ -43,6 +43,7 @@
 			decoding="async"
 			width="400"
 			height="400"
+			crossorigin="anonymous"
 		/>
 		<div class="game-info-inner-container">
 			<ul class="game-info-top-list">

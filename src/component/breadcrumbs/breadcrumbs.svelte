@@ -79,7 +79,7 @@
 		display: flex;
 		align-items: center;
 		font-size: 12px;
-		padding: 16px var(--mobile-padding);
+		padding: 0 var(--mobile-padding);
 		margin: 0;
 		.element {
 			.breadcrumbs-link {
@@ -88,6 +88,8 @@
 				align-items: center;
 				position: relative;
 				color: inherit;
+				min-height: 44px;
+				padding: 0 4px;
 				.home-icon {
 					width: 12px;
 					height: 12px;

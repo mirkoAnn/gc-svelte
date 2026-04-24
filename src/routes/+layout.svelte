@@ -85,7 +85,16 @@
 		}
 		gtag('js', new Date());
 
-		gtag('config', 'G-D3VHMJRPSQ');
+		gtag('config', 'G-D3VHMJRPSQ', {
+			// Mark cookies as SameSite=None;Secure so they survive cross-site contexts
+			cookie_flags: 'SameSite=None;Secure',
+			// Restrict the GA cookie to first-party (this domain only), preventing
+			// it from being treated as a third-party cookie in embedded contexts
+			cookie_domain: 'auto',
+			// Allow measurement to continue when cookies are blocked (uses a
+			// session-scoped identifier instead of a persistent cross-site cookie)
+			cookie_expires: 0
+		});
 	</script>
 </svelte:head>
 

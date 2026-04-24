@@ -23,18 +23,31 @@
 	};
 </script>
 
-<div id={'faq-item-' + faq.id} class="faq-item" aria-expanded={isVisible}>
-	<button onclick={toggleFaq} class="faq-item-toggler" aria-controls="faq-answer-{faq.id}">
+<div id={'faq-item-' + faq.id} class="faq-item">
+	<button
+		onclick={toggleFaq}
+		class="faq-item-toggler"
+		aria-expanded={isVisible}
+		aria-controls="faq-answer-{faq.id}"
+		id="faq-button-{faq.id}"
+	>
 		<h3 class="faq-question">
 			<span class="faq-question-text">
 				{faq.question}
 			</span>
-			<svg class="faq-icon">
+			<svg class="faq-icon" aria-hidden="true">
 				<use href="/icons/icon-set.svg#fill-arrow" />
 			</svg>
 		</h3>
 	</button>
-	<div class="faq-answer"><Content content={faq.answer} /></div>
+	<div
+		id="faq-answer-{faq.id}"
+		class="faq-answer"
+		role="region"
+		aria-labelledby="faq-button-{faq.id}"
+	>
+		<Content content={faq.answer} />
+	</div>
 </div>
 
 <style>

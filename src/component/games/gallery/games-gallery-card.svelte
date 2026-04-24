@@ -53,6 +53,7 @@
 					width="300"
 					height="300"
 					decoding={index === 0 ? 'sync' : 'async'}
+					crossorigin="anonymous"
 					onload={() => (imageLoaded = true)}
 				/>
 			</a>

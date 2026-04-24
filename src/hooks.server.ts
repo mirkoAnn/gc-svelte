@@ -128,22 +128,27 @@ const redirectToCountryPath = (
 export const handle: Handle = async ({ event, resolve }) => {
 	const { pathname, search } = event.url;
 
-	const inlineCss = (html: string) =>
-		html.replace('<link rel="stylesheet" href="/styles/app.css" />', `<style>${appCss}</style>`);
+	const inlineCss = (html: string, locale: string) =>
+		html
+			.replace('%lang%', locale)
+			.replace('%dir%', 'ltr')
+			.replace('<link rel="stylesheet" href="/styles/app.css" />', `<style>${appCss}</style>`);
 
 	if (isBypassedPath(pathname)) {
 		return resolve(event);
 	}
 
+	const localeInPath = pathname.match(LOCALE_PREFIX_PATTERN)?.[1] as CountryCodes | undefined;
+	const locale = localeInPath ?? CountryCodes.it;
+
 	const resolveWithCss = () =>
-		resolve(event, { transformPageChunk: ({ html }) => inlineCss(html) });
+		resolve(event, { transformPageChunk: ({ html }) => inlineCss(html, locale) });
 
 	const geoCountry = getGeoCountryCode(event.request);
 	if (!geoCountry) {
 		return resolveWithCss();
 	}
 
-	const localeInPath = pathname.match(LOCALE_PREFIX_PATTERN)?.[1] as CountryCodes | undefined;
 	if (localeInPath === geoCountry) {
 		return resolveWithCss();
 	}

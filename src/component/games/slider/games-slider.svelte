@@ -89,6 +89,7 @@
 				alt={m.logo_description({ title: game.title }, { locale })}
 				width="1000"
 				height="500"
+				crossorigin="anonymous"
 			/>
 			<h3 class="game-title">{game.title}</h3>
 		</div>
