@@ -7,7 +7,26 @@
 	import FavouritesToggler from '../../favourites/favourites-toggler.svelte';
 	import { formatImageUrl } from '$lib/utils.svelte';
 
-	let { game, category }: { game: Slot | Roulette; category: 'slot' | 'roulette' } = $props();
+	let {
+		game,
+		category,
+		index = 0
+	}: { game: Slot | Roulette; category: 'slot' | 'roulette'; index?: number } = $props();
+
+	// Responsive above-the-fold threshold:
+	// Mobile (<768px): 2 cols × ~2 visible rows = 4
+	// Desktop (≥768px): ~5 cols × 2 visible rows = 10
+	let isMobile = $state(false);
+
+	$effect(() => {
+		const mq = window.matchMedia('(max-width: 767px)');
+		isMobile = mq.matches;
+		const handler = (e: MediaQueryListEvent) => (isMobile = e.matches);
+		mq.addEventListener('change', handler);
+		return () => mq.removeEventListener('change', handler);
+	});
+
+	const aboveTheFold = $derived(index < (isMobile ? 4 : 10));
 
 	let imageLoaded = $state(false);
 
@@ -29,10 +48,11 @@
 					title={m.play_game_free({ gameTitle: game.title }, { locale })}
 					class="game-image"
 					class:loaded={imageLoaded}
-					loading="lazy"
+					fetchpriority={aboveTheFold ? 'high' : 'low'}
+					loading={aboveTheFold ? 'eager' : 'lazy'}
 					width="300"
 					height="300"
-					decoding="async"
+					decoding={index === 0 ? 'sync' : 'async'}
 					onload={() => (imageLoaded = true)}
 				/>
 			</a>

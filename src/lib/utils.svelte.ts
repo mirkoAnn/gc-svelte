@@ -14,5 +14,5 @@ export const formatCurrency = (value: string, locale: CountryCodes) => {
 };
 
 export const formatImageUrl = (url: string, width: number) => {
-	return url.replace('/upload/', `/upload/w_${width},f_auto,q_auto/`);
+	return url.replace('/upload/', `/upload/w_${width},f_avif,q_auto/`);
 };

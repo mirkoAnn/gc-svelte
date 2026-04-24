@@ -130,10 +130,10 @@
 	{/if}
 	<div id={carouselID} class="games-gallery-inner">
 		<!-- If provided use the games prop, otherwise use the games from the gamesGalleryManager -->
-		{#each games ? games : gamesGalleryManager.getGames() as game (game.id)}
+		{#each games ? games : gamesGalleryManager.getGames() as game, i (game.id)}
 			<!-- Remove some ids to avoid duplicates in the similar games gallery -->
 			{#if !excludeId || game.id !== excludeId}
-				<GameCard {game} {category} />
+				<GameCard {game} {category} index={i} />
 			{/if}
 		{/each}
 		<!-- Link to the category for carousel type -->
