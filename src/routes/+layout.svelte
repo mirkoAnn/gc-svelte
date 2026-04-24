@@ -75,10 +75,9 @@
 		<link rel="alternate" hreflang={locale} href={`${SITE_URL}${buildLocalePath(locale)}`} />
 	{/each}
 	<link rel="canonical" href={`${SITE_URL}${canonicalPath}`} />
-	<!-- Preconnect with Render Hosting Service -->
-	<link rel="preconnect" href="https://gc-strapi.onrender.com" crossorigin="anonymous" />
+	<!-- Preconnect with Render Hosting Service removed — moved to app.html -->
 	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3VHMJRPSQ"></script>
+	<!-- GTM async loader moved to app.html; only the inline dataLayer init stays here -->
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag() {
