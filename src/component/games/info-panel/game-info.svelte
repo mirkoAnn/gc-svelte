@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
+	import { onMount, tick } from 'svelte';
 	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import type { Slot } from '$lib/types/games';
 	import gsap from 'gsap/dist/gsap';
@@ -13,22 +14,67 @@
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
 
-	afterNavigate(async () => {
-		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
-		gsap.registerPlugin(scrollTrigger);
+	let hasAnimatedRtp = false;
 
-		gsap.to('.game-rtp-value', {
+	const setupRtpAnimation = async () => {
+		await tick();
+
+		const { default: ScrollTrigger } = await import('gsap/dist/ScrollTrigger');
+		gsap.registerPlugin(ScrollTrigger);
+
+		const rtpEl = document.querySelector<HTMLElement>('.game-rtp-value');
+		const triggerEl = document.querySelector<HTMLElement>('.game-info-rtp');
+		if (!rtpEl || !triggerEl) return;
+
+		gsap.killTweensOf(rtpEl);
+		ScrollTrigger.getAll().forEach((trigger) => {
+			if (trigger.vars.trigger === triggerEl) trigger.kill();
+		});
+
+		rtpEl.textContent = '0%';
+		const counter = { value: 0 };
+		const target = Number(game.info.rtp) || 0;
+
+		const rtpTween = gsap.to(counter, {
+			value: target,
+			duration: 1,
+			ease: 'power2.out',
+			paused: true,
 			scrollTrigger: {
 				scroller: '.main-inner',
-				trigger: '.game-info-rtp',
-				start: 'top 80%'
+				trigger: triggerEl,
+				start: 'top 80%',
+				toggleActions: 'play none none none',
+				onEnter: () => {
+					hasAnimatedRtp = true;
+					rtpTween.play();
+				}
 			},
-			innerText: game.info.rtp + '%' || 0,
-			duration: 1,
-			snap: {
-				innerText: 0.01
+			onUpdate: () => {
+				rtpEl.textContent = `${counter.value.toFixed(2)}%`;
+			},
+			onComplete: () => {
+				rtpEl.textContent = `${target}%`;
 			}
 		});
+
+		if (!hasAnimatedRtp) {
+			const scroller = document.querySelector('.main-inner');
+			const scrollerBottom = scroller?.getBoundingClientRect().bottom ?? window.innerHeight;
+			if (triggerEl.getBoundingClientRect().top < scrollerBottom * 0.8) {
+				hasAnimatedRtp = true;
+				rtpTween.play();
+			}
+		}
+	};
+
+	onMount(() => {
+		setupRtpAnimation();
+	});
+
+	afterNavigate(() => {
+		hasAnimatedRtp = false;
+		setupRtpAnimation();
 	});
 </script>
 
@@ -151,51 +197,62 @@
 <style>
 	.game-info-panel {
 		width: 100%;
-		margin-top: 200px;
+		max-width: 1100px;
+		margin: 120px auto 0;
 		color: var(--blu-800);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 24px;
+		gap: 40px;
 		.game-info-title {
 			font-size: 2rem;
 			text-align: center;
+			line-height: 1.2;
 		}
 		.game-info-outer-container {
-			width: 80%;
+			width: 100%;
 			display: flex;
 			align-items: center;
-			gap: 100px;
+			gap: 56px;
 			.game-info-logo {
-				max-width: 400px;
+				width: 320px;
+				flex-shrink: 0;
 				object-fit: contain;
 				border-radius: 16px;
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 			}
 			.game-info-inner-container {
 				flex: 1;
-				max-width: 500px;
+				min-width: 0;
 				display: flex;
 				flex-direction: column;
-				align-items: center;
-				gap: 24px;
+				gap: 28px;
 				.game-info-top-list {
 					width: 100%;
 					display: flex;
-					justify-content: space-between;
+					gap: 16px;
 					.game-info {
+						flex: 1;
 						display: flex;
 						flex-direction: column;
 						align-items: center;
+						padding: 16px;
+						background-color: var(--light-brown-800);
+						border-radius: 12px;
 						.game-info-label {
 							color: var(--blu-800);
-							font-weight: bold;
-							font-size: 0.9rem;
+							font-weight: 700;
+							font-size: 0.8rem;
+							letter-spacing: 0.05em;
+							text-transform: uppercase;
+							opacity: 0.7;
 						}
 						.game-info-value {
 							font-family: 'Funnel Display', sans-serif;
-							font-size: 2rem;
-							font-weight: bold;
+							font-size: 2.2rem;
+							font-weight: 700;
 							color: var(--blu-600);
+							line-height: 1.1;
 						}
 					}
 				}
@@ -206,16 +263,29 @@
 					margin: 0;
 					display: flex;
 					flex-direction: column;
-					gap: 8px;
+					border: 1px solid var(--light-brown-700);
+					border-radius: 10px;
+					overflow: hidden;
 					.game-info {
 						display: flex;
 						align-items: center;
+						padding: 10px 16px;
+						border-bottom: 1px solid var(--light-brown-700);
+						&:last-child {
+							border-bottom: none;
+						}
+						&:nth-child(even) {
+							background-color: var(--light-brown-800);
+						}
 						.game-info-label {
 							color: var(--blu-800);
+							font-size: 0.875rem;
+							opacity: 0.8;
 						}
 						.game-info-value {
 							font-family: 'Funnel Display', sans-serif;
-							font-weight: bold;
+							font-weight: 700;
+							font-size: 0.95rem;
 							color: var(--blu-600);
 							margin-left: auto;
 						}
@@ -227,39 +297,42 @@
 				text-align: center;
 				display: flex;
 				flex-direction: column;
-				align-items: center;
-				gap: 8px;
+				gap: 12px;
 				.game-bonus-list-icons {
 					width: 100%;
 					display: flex;
 					justify-content: space-between;
-					gap: 24px;
-					margin-top: 12px;
+					gap: 16px;
 					.game-bonus {
+						flex: 1;
 						position: relative;
 						display: flex;
 						flex-direction: column;
 						align-items: center;
 						gap: 8px;
+						padding: 16px 8px;
+						background-color: var(--light-brown-800);
+						border-radius: 12px;
 						.bonus-text {
-							font-size: 1rem;
-							font-weight: 500;
+							font-size: 0.8rem;
+							font-weight: 600;
+							letter-spacing: 0.02em;
 						}
 					}
 					.bonus-icon {
-						width: 100px;
-						height: 100px;
+						width: 80px;
+						height: 80px;
 						fill: var(--blu-500);
 					}
 					.check-icon,
 					.no-check-icon {
-						width: 24px;
-						height: 24px;
+						width: 22px;
+						height: 22px;
 						position: absolute;
-						bottom: 32px;
-						right: 8px;
+						top: 10px;
+						right: 10px;
 						border-radius: 50%;
-						padding: 4px;
+						padding: 3px;
 						fill: var(--light-brown-900);
 					}
 					.check-icon {
@@ -271,9 +344,23 @@
 				}
 			}
 		}
+		@media (max-width: 900px) {
+			padding: 0 24px;
+		}
 		@media (max-width: 767px) {
+			margin-top: 60px;
+			gap: 28px;
 			.game-info-outer-container {
 				flex-direction: column;
+				align-items: center;
+				gap: 32px;
+				.game-info-logo {
+					width: 100%;
+					max-width: 320px;
+				}
+				.game-info-inner-container {
+					width: 100%;
+				}
 			}
 		}
 	}
