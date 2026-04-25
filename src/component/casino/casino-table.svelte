@@ -17,134 +17,87 @@
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
 
-	const collapsedDisclaimerHeight = 10;
-
 	onMount(async () => {
-		const scrollTrigger = await import('gsap/dist/ScrollTrigger');
-		gsap.registerPlugin(scrollTrigger);
+		const { default: ScrollTrigger } = await import('gsap/dist/ScrollTrigger');
+		gsap.registerPlugin(ScrollTrigger);
 
-		const scrollerEl = document.querySelector('.main-inner');
-		const scrollerRect = scrollerEl?.getBoundingClientRect();
+		const scrollerEl = document.querySelector<HTMLElement>('.main-inner');
 		const isMobileViewport = window.matchMedia('(max-width: 767px)').matches;
 
-		// Animate table rows on scroll into view from bottom
-		const tableRows = document.querySelectorAll(
+		ScrollTrigger.defaults({ scroller: scrollerEl ?? undefined });
+
+		const tableRows = document.querySelectorAll<Element>(
 			'.casino-table-header, .casino-table-body .casino-table-row'
 		);
-		tableRows.forEach((row) => {
-			const rect = row.getBoundingClientRect();
-			const rowAnimation = isMobileViewport
-				? {
-						start: 'top 92%',
-						end: 'top 82%',
-						y: 18,
-						duration: 0.45,
-						ease: 'power2.out'
-					}
-				: {
-						start: 'top 70%',
-						end: 'top 40%',
-						y: 50,
-						duration: 1,
-						ease: 'back.inOut(1.7)'
-					};
 
-			// If already visible in the scroller viewport, show immediately
-			if (scrollerRect && rect.top < scrollerRect.bottom) {
+		tableRows.forEach((row) => {
+			const scrollerBottom = scrollerEl?.getBoundingClientRect().bottom ?? window.innerHeight;
+
+			// Already visible — show immediately without animation
+			if (row.getBoundingClientRect().top < scrollerBottom) {
 				gsap.set(row, { y: 0, autoAlpha: 1 });
 				return;
 			}
 
 			if (isMobileViewport) {
+				// Mobile: simple fade+slide, plays once on enter
 				gsap.fromTo(
 					row,
-					{ y: rowAnimation.y, autoAlpha: 0 },
+					{ y: 18, autoAlpha: 0 },
 					{
 						y: 0,
 						autoAlpha: 1,
-						duration: rowAnimation.duration,
-						ease: rowAnimation.ease,
+						duration: 0.45,
+						ease: 'power2.out',
 						overwrite: 'auto',
 						scrollTrigger: {
-							scroller: '.main-inner',
 							trigger: row,
-							start: rowAnimation.start,
-							toggleActions: 'play none none none',
-							onLeaveBack: () => gsap.set(row, { y: 0, autoAlpha: 1 })
+							start: 'top 92%',
+							toggleActions: 'play none none none'
 						}
 					}
 				);
-				return;
-			}
-
-			gsap
-				.timeline({
-					defaults: {
-						scrollTrigger: {
-							scroller: '.main-inner',
-							trigger: row,
-							start: rowAnimation.start,
-							end: rowAnimation.end,
-							scrub: true
+			} else {
+				// Desktop: scrub-based parallax
+				gsap
+					.timeline({
+						defaults: {
+							scrollTrigger: {
+								trigger: row,
+								start: 'top 70%',
+								end: 'top 40%',
+								scrub: true
+							}
 						}
-					}
-				})
-				.from(row, {
-					y: rowAnimation.y,
-					autoAlpha: 0,
-					duration: rowAnimation.duration,
-					ease: rowAnimation.ease
-				});
+					})
+					.from(row, { y: 50, autoAlpha: 0, duration: 1, ease: 'back.inOut(1.7)' });
+			}
 		});
+
+		requestAnimationFrame(() => ScrollTrigger.refresh());
+		if (isMobileViewport) setTimeout(() => ScrollTrigger.refresh(), 400);
 	});
 
-	// Function to toggle bonus requirements
 	const toggleBonusRequirements = (id: string) => {
 		const disclaimerContainer = document.getElementById(id);
-		if (disclaimerContainer) {
-			const disclaimerButton =
-				disclaimerContainer.querySelector<HTMLButtonElement>('.disclaimer-button');
-			const disclaimerText = disclaimerContainer.querySelector<HTMLElement>('.disclaimer-text');
-			const disclaimerIcon =
-				disclaimerContainer.querySelector<HTMLElement>('.disclaimer-button-icon');
-
-			if (!disclaimerButton || !disclaimerText || !disclaimerIcon) {
-				return;
-			}
-
-			const isCollapsed = disclaimerContainer.dataset.expanded !== 'true';
-			disclaimerContainer.dataset.expanded = isCollapsed ? 'true' : 'false';
-			disclaimerButton.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
-
-			gsap
-				.timeline()
-				.to(disclaimerIcon, {
-					rotate: isCollapsed ? 270 : 90,
+		if (!disclaimerContainer) return;
+		const isCollapsed = disclaimerContainer.clientHeight === 10;
+		gsap
+			.timeline()
+			.to(disclaimerContainer.querySelector('.disclaimer-button-icon'), {
+				rotate: isCollapsed ? 270 : 90,
+				duration: 0.35,
+				ease: 'power2.out'
+			})
+			.to(
+				disclaimerContainer,
+				{
+					height: isCollapsed ? 'auto' : '10px',
 					duration: 0.35,
 					ease: 'power2.out'
-				})
-				.to(
-					disclaimerContainer,
-					{
-						height: isCollapsed
-							? disclaimerButton.offsetHeight + disclaimerText.offsetHeight + 8
-							: collapsedDisclaimerHeight,
-						duration: 0.35,
-						ease: 'power2.out'
-					},
-					'<'
-				)
-				.to(
-					disclaimerText,
-					{
-						autoAlpha: isCollapsed ? 1 : 0,
-						y: isCollapsed ? 0 : -4,
-						duration: 0.25,
-						ease: 'power2.out'
-					},
-					0
-				);
-		}
+				},
+				'<'
+			);
 	};
 </script>
 

@@ -17,7 +17,7 @@
 	let hasAnimatedRtp = false;
 
 	const setupRtpAnimation = async () => {
-		await tick();
+		await tick(); // Ensure DOM is updated before querying elements
 
 		const { default: ScrollTrigger } = await import('gsap/dist/ScrollTrigger');
 		gsap.registerPlugin(ScrollTrigger);
@@ -35,13 +35,16 @@
 		const counter = { value: 0 };
 		const target = Number(game.info.rtp) || 0;
 
+		const scrollerEl = document.querySelector<HTMLElement>('.main-inner');
+		const scrollerBottom = scrollerEl?.getBoundingClientRect().bottom ?? window.innerHeight;
+
 		const rtpTween = gsap.to(counter, {
 			value: target,
 			duration: 1,
 			ease: 'power2.out',
 			paused: true,
 			scrollTrigger: {
-				scroller: '.main-inner',
+				scroller: scrollerEl ?? undefined,
 				trigger: triggerEl,
 				start: 'top 80%',
 				toggleActions: 'play none none none',
@@ -59,8 +62,6 @@
 		});
 
 		if (!hasAnimatedRtp) {
-			const scroller = document.querySelector('.main-inner');
-			const scrollerBottom = scroller?.getBoundingClientRect().bottom ?? window.innerHeight;
 			if (triggerEl.getBoundingClientRect().top < scrollerBottom * 0.8) {
 				hasAnimatedRtp = true;
 				rtpTween.play();
