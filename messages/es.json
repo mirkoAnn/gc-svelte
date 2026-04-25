@@ -174,5 +174,19 @@
 	"game_filter_rules": "Normas",
 	"game_filter_theme": "Tema",
 	"yes": "Sí",
-	"no": "No"
+	"no": "No",
+	"nav_casinos_all_link": "/casinos-online",
+	"nav_casinos_top_link": "/casinos-online/casinos-mejores",
+	"nav_casinos_new_link": "/casinos-online/casinos-nuevos",
+	"nav_slots_all_link": "/slot-gratis",
+	"nav_slots_top_link": "/slot-gratis/slot-mas-jugadas",
+	"nav_slots_new_link": "/slot-gratis/slot-nuevas",
+	"nav_slots_classic_link": "/slot-gratis/slot-clasicas",
+	"nav_slots_vlt_link": "/slot-gratis/slot-vlt",
+	"nav_roulettes_all_link": "/ruleta-gratis",
+	"nav_roulettes_top_link": "/ruleta-gratis/ruleta-mas-jugada",
+	"nav_roulettes_new_link": "/ruleta-gratis/ruleta-nueva",
+	"nav_roulettes_european_link": "/ruleta-gratis/ruleta-europea",
+	"nav_roulettes_french_link": "/ruleta-gratis/ruleta-francesa",
+	"nav_roulettes_american_link": "/ruleta-gratis/ruleta-americana"
 }

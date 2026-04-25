@@ -1,3 +1,5 @@
+import { parseCookieValue } from './locale-utils';
+
 export enum CountryCodes {
 	it = 'it',
 	es = 'es'
@@ -30,28 +32,6 @@ const COUNTRY_CONFIG: Record<CountryCodes, CountryConfig> = {
 const ALL_COUNTRY_CODES = Object.values(CountryCodes);
 
 const ROUTABLE_COUNTRIES = ALL_COUNTRY_CODES.filter((code) => COUNTRY_CONFIG[code].routeEnabled);
-
-const parseCookieValue = (cookieHeader: string | null, cookieName: string): string | undefined => {
-	if (!cookieHeader) {
-		return undefined;
-	}
-
-	for (const cookie of cookieHeader.split(';')) {
-		const [rawKey, ...rawValueParts] = cookie.trim().split('=');
-		if (rawKey !== cookieName || rawValueParts.length === 0) {
-			continue;
-		}
-
-		const rawValue = rawValueParts.join('=');
-		try {
-			return decodeURIComponent(rawValue).toLowerCase();
-		} catch {
-			return rawValue.toLowerCase();
-		}
-	}
-
-	return undefined;
-};
 
 const toCountryCode = (value: string | undefined): CountryCodes | undefined => {
 	if (!value) {
@@ -102,8 +82,8 @@ const extractPathname = (requestUrl: string): string => {
 	return match?.[1] ?? '/';
 };
 
-let isMobile: boolean = $state(false),
-	countryCode: CountryCodes | undefined = $state(undefined);
+let isMobile: boolean = false,
+	countryCode: CountryCodes | undefined = undefined;
 
 export const appManager = {
 	setDeviceType: () => {

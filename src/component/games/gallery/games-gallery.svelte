@@ -300,7 +300,7 @@
 			.games-gallery-inner {
 				overflow-x: auto;
 				:global(.game-card) {
-					flex: 0 0 calc(50% - 10px);
+					flex: 0 0 calc(50% - 20px);
 				}
 			}
 			&.carousel {

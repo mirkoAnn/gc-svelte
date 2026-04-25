@@ -25,7 +25,7 @@ const menuItems = $derived([
 				// Submenu items
 				submenuItems: [
 					{
-						href: `/casino-online`,
+						href: m.nav_casinos_all_link({}, { locale }),
 						title: m.nav_casinos_all_title({ year: new Date().getFullYear() }, { locale }),
 						label: m.nav_casinos_all({}, { locale }),
 						category: 'casino'
@@ -38,32 +38,32 @@ const menuItems = $derived([
 				// Submenu items
 				submenuItems: [
 					{
-						href: `/slot-gratis`,
+						href: m.nav_slots_all_link({}, { locale }),
 						title: m.nav_slots_all_title({ year: new Date().getFullYear() }, { locale }),
 						label: m.nav_slots_all({}, { locale }),
 						category: 'slot'
 					},
 					{
-						href: `/slot-gratis/slot-bar`,
+						href: m.nav_slots_classic_link({}, { locale }),
 						title: m.nav_slots_classic_title({ year: new Date().getFullYear() }, { locale }),
 						label: m.nav_slots_classic({}, { locale }),
 						category: 'bar'
 					},
 					{
-						href: `/slot-gratis/slot-vlt`,
+						href: m.nav_slots_vlt_link({}, { locale }),
 						title: m.nav_slots_vlt_title({ year: new Date().getFullYear() }, { locale }),
 						label: m.nav_slots_vlt({}, { locale }),
 						category: 'vlt',
 						onlyForCountries: [CountryCodes.it]
 					},
 					{
-						href: `/slot-gratis/slot-piu-giocate`,
+						href: m.nav_slots_top_link({}, { locale }),
 						title: m.nav_slots_top_title({ year: new Date().getFullYear() }, { locale }),
 						label: m.nav_slots_top({}, { locale }),
 						category: 'hot'
 					},
 					{
-						href: `/slot-gratis/slot-nuove`,
+						href: m.nav_slots_new_link({}, { locale }),
 						title: m.nav_slots_new_title({ year: new Date().getFullYear() }, { locale }),
 						label: m.nav_slots_new({}, { locale }),
 						category: 'new'
@@ -76,25 +76,25 @@ const menuItems = $derived([
 				// Submenu items
 				submenuItems: [
 					{
-						href: `/roulette-gratis`,
+						href: m.nav_roulettes_all_link({}, { locale }),
 						title: m.nav_roulettes_all_title({ year: new Date().getFullYear() }, { locale }),
 						label: m.nav_roulettes_all({}, { locale }),
 						category: 'roulette'
 					}
 					// {
-					// 	href: `/roulette-gratis/roulette-francese`,
+					// 	href: m.nav_roulettes_french_link({}, { locale }),
 					// 	title: m.nav_roulettes_french_title({ year: new Date().getFullYear() }, { locale }),
 					// 	label: m.nav_roulettes_french({}, { locale }),
 					// 	category: 'french'
 					// },
 					// {
-					// 	href: `/roulette-gratis/roulette-europea`,
+					// 	href: m.nav_roulettes_european_link({}, { locale }),
 					// 	title: m.nav_roulettes_european_title({ year: new Date().getFullYear() }, { locale }),
 					// 	label: m.nav_roulettes_european({}, { locale }),
 					// 	category: 'european'
 					// },
 					// {
-					// 	href: `/roulette-gratis/roulette-americana`,
+					// 	href: m.nav_roulettes_american_link({}, { locale }),
 					// 	title: m.nav_roulettes_american_title({ year: new Date().getFullYear() }, { locale }),
 					// 	label: m.nav_roulettes_american({}, { locale }),
 					// 	category: 'american'

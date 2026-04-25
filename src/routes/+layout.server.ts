@@ -4,13 +4,7 @@ import { appManager } from '../lib/app-manager.svelte';
 import { dbManager } from '../lib/db-manager.svelte';
 import type { Slot } from '$lib/types/games';
 import type { Casino } from '$lib/types/casino';
-
-type LoadInput = {
-	request: Request;
-	cookies: {
-		get: (name: string) => string | undefined;
-	};
-};
+import type { LayoutServerLoad } from './$types';
 
 type FavouritesList = {
 	slots: Slot[];
@@ -31,11 +25,7 @@ const parseFavouritesList = (cookieValue: string | undefined): FavouritesList =>
 	}
 };
 
-export const load = async ({
-	request,
-	cookies,
-	setHeaders
-}: LoadInput & { setHeaders: (headers: Record<string, string>) => void }) => {
+export const load: LayoutServerLoad = async ({ request, cookies, setHeaders }) => {
 	const requestPath = new URL(request.url).pathname;
 	const isAgeVerified = cookies.get(AGE_VERIFICATION_COOKIE_NAME) === 'true';
 

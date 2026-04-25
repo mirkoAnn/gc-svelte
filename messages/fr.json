@@ -174,5 +174,19 @@
 	"game_filter_rules": "Règles",
 	"game_filter_theme": "Thème",
 	"yes": "Oui",
-	"no": "Non"
+	"no": "Non",
+	"nav_casinos_all_link": "/casino en ligne",
+	"nav_casinos_top_link": "/casinos-en-ligne/meilleurs-casinos",
+	"nav_casinos_new_link": "/casinos-en-ligne/nouveaux-casinos",
+	"nav_slots_all_link": "/emplacements-libres",
+	"nav_slots_top_link": "/machines à sous gratuites/machines à sous les plus jouées",
+	"nav_slots_new_link": "/emplacements-libres/nouveaux-emplacements",
+	"nav_slots_classic_link": "/free-slots/slot-bar",
+	"nav_slots_vlt_link": "/emplacements-libres/emplacements-vlt",
+	"nav_roulettes_all_link": "/roulette gratuite",
+	"nav_roulettes_top_link": "/roulette gratuite/roulette la plus jouée",
+	"nav_roulettes_new_link": "/roulette-gratuite/nouvelle-roulette",
+	"nav_roulettes_european_link": "/roulette-gratuite/roulette-européenne",
+	"nav_roulettes_french_link": "/roulette-gratuite/roulette-française",
+	"nav_roulettes_american_link": "/roulette-gratuite/roulette-américaine"
 }

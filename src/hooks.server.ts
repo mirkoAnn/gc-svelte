@@ -1,4 +1,5 @@
 import { appManager, CountryCodes } from '$lib/app-manager.svelte';
+import { parseCookieValue } from '$lib/locale-utils';
 import { redirect, type Handle } from '@sveltejs/kit';
 import appCss from '../static/styles/app.css?raw';
 
@@ -12,28 +13,6 @@ const STATIC_FILE_PATTERN = /\.[a-z0-9]+$/i;
 
 const BYPASS_PREFIXES = ['/_app/', '/api/'];
 const BYPASS_PATHS = ['/robots.txt'];
-
-const parseCookieValue = (cookieHeader: string | null, cookieName: string): string | undefined => {
-	if (!cookieHeader) {
-		return undefined;
-	}
-
-	for (const cookie of cookieHeader.split(';')) {
-		const [rawKey, ...rawValueParts] = cookie.trim().split('=');
-		if (rawKey !== cookieName || rawValueParts.length === 0) {
-			continue;
-		}
-
-		const rawValue = rawValueParts.join('=');
-		try {
-			return decodeURIComponent(rawValue).toLowerCase();
-		} catch {
-			return rawValue.toLowerCase();
-		}
-	}
-
-	return undefined;
-};
 
 const toCountryCode = (value: string | undefined): CountryCodes | undefined => {
 	if (!value) {
