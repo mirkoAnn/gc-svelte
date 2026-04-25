@@ -49,6 +49,9 @@
 	"casino": "Casino",
 	"img_carousel_alt_text": "{imgAlt} - Muestra la imagen en una vista previa más grande o más pequeña.",
 	"favourites_slots_title": "Tus tragamonedas favoritas",
+	"favourites_roulettes_title": "Tus ruletas favoritas",
+	"favourites_empty_title": "Aún no tienes favoritos",
+	"favourites_empty_hint": "Añade juegos a favoritos para encontrarlos fácilmente aquí",
 	"social_follow_us_on": "Síguenos en {social}",
 	"age_restriction_title": "Para acceder a este sitio, debes tener al menos 18 años. Por favor, confirma tu edad.",
 	"age_restriction_subtext": "¿Confirma que tiene al menos 18 años?",
@@ -188,5 +191,7 @@
 	"nav_roulettes_new_link": "/ruleta-gratis/ruleta-nueva",
 	"nav_roulettes_european_link": "/ruleta-gratis/ruleta-europea",
 	"nav_roulettes_french_link": "/ruleta-gratis/ruleta-francesa",
-	"nav_roulettes_american_link": "/ruleta-gratis/ruleta-americana"
+	"nav_roulettes_american_link": "/ruleta-gratis/ruleta-americana",
+	"search_title": "Búsqueda rápida",
+	"search_placeholder": "Encuentra casinos, tragamonedas, bonos y mucho más en Gambling Club."
 }

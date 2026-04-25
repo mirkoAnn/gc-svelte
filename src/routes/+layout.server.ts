@@ -2,26 +2,28 @@ import { AGE_VERIFICATION_COOKIE_NAME } from '../component/layout/age-banner/age
 import { FAVOURITES_LIST_COOKIE_NAME } from '../component/favourites/favourites-manager.svelte';
 import { appManager } from '../lib/app-manager.svelte';
 import { dbManager } from '../lib/db-manager.svelte';
-import type { Slot } from '$lib/types/games';
+import type { Roulette, Slot } from '$lib/types/games';
 import type { Casino } from '$lib/types/casino';
 import type { LayoutServerLoad } from './$types';
 
 type FavouritesList = {
 	slots: Slot[];
+	roulettes: Roulette[];
 };
 
 const parseFavouritesList = (cookieValue: string | undefined): FavouritesList => {
 	if (!cookieValue) {
-		return { slots: [] };
+		return { slots: [], roulettes: [] };
 	}
 
 	try {
 		const parsed = JSON.parse(cookieValue) as Partial<FavouritesList>;
 		return {
-			slots: Array.isArray(parsed.slots) ? parsed.slots : []
+			slots: Array.isArray(parsed.slots) ? parsed.slots : [],
+			roulettes: Array.isArray(parsed.roulettes) ? parsed.roulettes : []
 		};
 	} catch {
-		return { slots: [] };
+		return { slots: [], roulettes: [] };
 	}
 };
 

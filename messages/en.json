@@ -49,6 +49,9 @@
 	"casino": "Casino",
 	"img_carousel_alt_text": "{imgAlt} - Displays the image in a larger or smaller preview.",
 	"favourites_slots_title": "Your Favorite Slots",
+	"favourites_roulettes_title": "Your Favorite Roulettes",
+	"favourites_empty_title": "No favourites yet",
+	"favourites_empty_hint": "Add games to your favourites to find them easily here",
 	"social_follow_us_on": "Follow us on {social}",
 	"age_restriction_title": "You must be at least 18 years old to access this site. Please confirm your age.",
 	"age_restriction_subtext": "Do you confirm that you are at least 18 years old?",
@@ -188,5 +191,7 @@
 	"nav_roulettes_new_link": "/free-roulette/new-roulette",
 	"nav_roulettes_european_link": "/free-roulette/european-roulette",
 	"nav_roulettes_french_link": "/free-roulette/french-roulette",
-	"nav_roulettes_american_link": "/free-roulette/american-roulette"
+	"nav_roulettes_american_link": "/free-roulette/american-roulette",
+	"search_title": "Quick Search",
+	"search_placeholder": "Find casinos, slots, bonuses, and more at Gambling Club"
 }

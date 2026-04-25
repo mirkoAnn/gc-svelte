@@ -100,16 +100,22 @@
 			width: 100%;
 			display: flex;
 			flex-direction: column;
-			gap: 32px;
+			gap: 24px;
 			overflow-y: auto;
 			scrollbar-width: thin;
-			scrollbar-color: transparent;
+			scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 			.results-category-container {
 				width: 100%;
-				padding: 16px;
+				padding: 0 16px 16px;
 				.results-category-title {
-					font-size: 24px;
-					font-weight: normal;
+					font-size: 10px;
+					font-weight: 700;
+					letter-spacing: 0.1em;
+					text-transform: uppercase;
+					color: var(--light-brown-600);
+					margin: 0 0 12px;
+					padding-bottom: 8px;
+					border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 				}
 			}
 		}

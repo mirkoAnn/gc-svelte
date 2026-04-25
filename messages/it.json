@@ -49,6 +49,9 @@
 	"casino": "Casinò",
 	"img_carousel_alt_text": "{imgAlt} - Visualizza l'immagine in anteprima ingrandita o ridotta",
 	"favourites_slots_title": "Le Tue Slot Preferite",
+	"favourites_roulettes_title": "Le Tue Roulette Preferite",
+	"favourites_empty_title": "Nessun preferito ancora",
+	"favourites_empty_hint": "Aggiungi giochi ai preferiti per trovarli facilmente qui",
 	"social_follow_us_on": "Seguici su {social}",
 	"age_restriction_title": "Devi avere almeno 18 anni per accedere a questo sito. Per favore conferma la tua età.",
 	"age_restriction_subtext": "Confermi di avere almeno 18 anni?",
@@ -188,5 +191,7 @@
 	"game_filter_rules": "Regole",
 	"game_filter_theme": "Tema",
 	"yes": "Si",
-	"no": "No"
+	"no": "No",
+	"search_title": "Ricerca Veloce",
+	"search_placeholder": "Cerca casinò, slot, bonus e altro ancora su Gambling Club"
 }

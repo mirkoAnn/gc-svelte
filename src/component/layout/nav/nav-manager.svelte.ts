@@ -141,6 +141,8 @@ let menuAnimation: GSAPTimeline | null = $state(null), // GSAP animation instanc
 
 const screenBreakpoint = 768; // Tailwind 'md' breakpoint in pixels
 
+const getActionPanelSelector = (actionIndex: number) => '#nav-action-tabpanel-' + actionIndex;
+
 // Function to toggle the main menu panel with animation
 const toggleMenuPanel = (newMenuIndex: number) => {
 	if (menuAnimation) {
@@ -196,7 +198,7 @@ const toggleMenuPanel = (newMenuIndex: number) => {
 						)
 						.to('.nav-menu-panel', { autoAlpha: 0, y: -20 }, '<')
 						.to(
-							newMenuIndex !== -1 ? '#nav-panel-' + newMenuIndex : '.nav-panel',
+							newMenuIndex !== -1 ? getActionPanelSelector(newMenuIndex) : '.nav-panel',
 							{ autoAlpha: 0 },
 							'<'
 						);
@@ -246,7 +248,7 @@ const toggleMenuPanel = (newMenuIndex: number) => {
 					menuAnimation
 						.fromTo('.nav-menu-panel', { autoAlpha: 0, y: -20 }, { autoAlpha: 1, y: 0 }, '<')
 						.fromTo(
-							newMenuIndex !== -1 ? '#nav-panel-' + newMenuIndex : '.nav-panel',
+							newMenuIndex !== -1 ? getActionPanelSelector(newMenuIndex) : '.nav-panel',
 							{ autoAlpha: 0 },
 							{ autoAlpha: 1 }
 						);
@@ -360,7 +362,7 @@ const switchBetweeenActionPanels = (newActionIndex: number) => {
 
 				{ autoAlpha: 1, y: 0 }
 			)
-			.to('#nav-panel-' + newActionIndex, { autoAlpha: 1, y: 0 })
+			.to(getActionPanelSelector(newActionIndex), { autoAlpha: 1, y: 0 })
 			.to('.main-outer', { zIndex: 999 })
 			.to('#nav-sidemenu', {
 				autoAlpha: 0
@@ -371,7 +373,7 @@ const switchBetweeenActionPanels = (newActionIndex: number) => {
 				autoAlpha: 0,
 				y: 50
 			})
-			.to('#nav-panel-' + newActionIndex, { autoAlpha: 1, y: 0 });
+			.to(getActionPanelSelector(newActionIndex), { autoAlpha: 1, y: 0 });
 	}
 };
 // Function to toggle submenu panels with animation
