@@ -21,10 +21,13 @@
 		const { default: ScrollTrigger } = await import('gsap/dist/ScrollTrigger');
 		gsap.registerPlugin(ScrollTrigger);
 
+		// Wait one frame so the layout (incl. navbar height) is fully painted
+		await new Promise<void>((r) => requestAnimationFrame(() => r()));
+
 		const scrollerEl = document.querySelector<HTMLElement>('.main-inner');
 		const isMobileViewport = window.matchMedia('(max-width: 767px)').matches;
 
-		ScrollTrigger.defaults({ scroller: scrollerEl ?? undefined });
+		if (scrollerEl) ScrollTrigger.defaults({ scroller: scrollerEl });
 
 		const tableRows = document.querySelectorAll<Element>(
 			'.casino-table-header, .casino-table-body .casino-table-row'
@@ -74,7 +77,7 @@
 			}
 		});
 
-		requestAnimationFrame(() => ScrollTrigger.refresh());
+		ScrollTrigger.refresh();
 		if (isMobileViewport) setTimeout(() => ScrollTrigger.refresh(), 400);
 	});
 
