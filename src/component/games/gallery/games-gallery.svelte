@@ -37,9 +37,9 @@
 
 	// Above-the-fold threshold: cards whose images should load eagerly
 	// Card dimensions (must match CSS): 200px wide, ~240px total height (image + text), 20px gap
-	const CARD_WIDTH = 200;
+	const CARD_WIDTH = 180;
 	const CARD_TOTAL_HEIGHT = 240;
-	const CARD_GAP = 20;
+	const CARD_GAP = 16;
 
 	let aboveTheFoldThreshold = $state(10);
 
@@ -64,7 +64,7 @@
 	let scrollOffset = 0;
 	// The width of a single card including margin, used to calculate the scroll amount, it should match the CSS width + margin of the .game-card class
 	// Its used only for desktop size cards to calculate the scroll amount, on mobile the scroll is managed by the native scroll of the container, so this variable is not used for mobile scrolling
-	const cardWidth: number = 200; // The width of a single card including margin, used to calculate the scroll amount, it should match the CSS width + margin of the .game-card class
+	const cardWidth: number = 196; // The width of a single card including margin, used to calculate the scroll amount, it should match the CSS width + margin of the .game-card class
 	const scrollAmount = cardWidth; // The amount to scroll when clicking the arrows, currently set to the width of one card to scroll one card at a time, but it can be adjusted to scroll multiple cards if needed
 
 	// State variable to keep track of the current scroll animation, allowing to prevent multiple simultaneous animations and to control the animation state
@@ -205,67 +205,97 @@
 		gap: 16px;
 		padding: var(--mobile-padding);
 		color: var(--blu-600);
+
 		.games-gallery-title-container {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+
 			.games-gallery-title {
 				display: flex;
 				align-items: center;
 				gap: 8px;
-				font-size: 1.5rem;
-				font-weight: 600;
+				margin: 0;
+				font-size: 1.25rem;
+				font-weight: 700;
 				color: var(--blu-600);
+
 				.games-gallery-title-icon {
-					width: 32px;
-					height: 32px;
+					width: 28px;
+					height: 28px;
+					flex-shrink: 0;
 				}
 			}
+
 			.arrows-container {
 				display: flex;
 				justify-content: flex-end;
-				gap: 16px;
+				gap: 8px;
+
 				.arrow {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					background: none;
+					border: none;
+					cursor: pointer;
 					color: inherit;
+					width: 36px;
+					height: 36px;
+					border-radius: 50%;
+					transition: background-color 0.15s ease;
+
+					&:hover {
+						background-color: var(--blu-700-opacity-100);
+					}
+
+					&:focus-visible {
+						outline: 2px solid currentColor;
+						outline-offset: 2px;
+					}
+
 					.arrow-icon {
-						width: 24px;
-						height: 24px;
+						width: 22px;
+						height: 22px;
 					}
 				}
-				.left-arrow {
-					.arrow-icon {
-						transform: rotate(270deg);
-					}
+
+				.left-arrow .arrow-icon {
+					transform: rotate(270deg);
 				}
-				.right-arrow {
-					.arrow-icon {
-						transform: rotate(90deg);
-					}
+
+				.right-arrow .arrow-icon {
+					transform: rotate(90deg);
 				}
 			}
 		}
+
 		.loader-container {
 			width: 100%;
 			height: 100vh;
 			display: flex;
 			justify-content: center;
 			align-items: center;
+
 			:global(.loader) {
 				width: 80px;
 				height: 80px;
 			}
 		}
+
 		.games-gallery-inner {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 20px;
+			gap: 16px;
 			scroll-behavior: smooth;
 		}
+
 		&.carousel {
 			.games-gallery-inner {
 				flex-wrap: nowrap;
 			}
 		}
+
 		.more-games-card {
 			aspect-ratio: 1 / 1;
 			display: flex;
@@ -276,40 +306,71 @@
 			border-radius: 10px;
 			text-decoration: none;
 			gap: 8px;
+			font-size: 0.75rem;
 			font-weight: 600;
+			text-align: center;
+			padding: 8px;
+			background: none;
+			border: none;
+			cursor: pointer;
+
 			.more-games-card-icon {
 				background-color: var(--blu-600);
 				color: var(--light-brown-900);
-				padding: 16px;
-				width: 60px;
-				height: 60px;
-				border-radius: 16px;
+				padding: 14px;
+				width: 52px;
+				height: 52px;
+				border-radius: 14px;
 				transform: rotate(90deg);
+				transition:
+					transform 0.2s ease,
+					background-color 0.15s ease;
+			}
+
+			&:hover .more-games-card-icon {
+				background-color: var(--blu-500);
+				transform: rotate(90deg) scale(1.08);
 			}
 		}
+
 		@media (min-width: 768px) {
 			margin: 0 5%;
+
 			.games-gallery-inner {
 				overflow: hidden;
+
 				:global(.game-card) {
 					flex: 0 0 180px;
 				}
 			}
 		}
+
 		@media (max-width: 767px) {
 			.games-gallery-inner {
 				overflow-x: auto;
+				scrollbar-width: none;
+
+				&::-webkit-scrollbar {
+					display: none;
+				}
+
 				:global(.game-card) {
-					flex: 0 0 calc(50% - 20px);
+					flex: 0 0 calc(50% - 8px);
 				}
 			}
+
 			&.carousel {
 				.games-gallery-inner {
+					scroll-snap-type: x mandatory;
+					-webkit-overflow-scrolling: touch;
+
 					:global(.game-card) {
-						flex: 0 0 40%;
+						flex: 0 0 42%;
+						scroll-snap-align: start;
 					}
 				}
 			}
+
 			.games-gallery-title-container {
 				.arrows-container {
 					display: none;

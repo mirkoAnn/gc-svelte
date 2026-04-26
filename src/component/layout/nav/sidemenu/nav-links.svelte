@@ -54,6 +54,11 @@
 	.nav-links-menus-outer {
 		position: relative;
 		flex: 1;
+		overflow-y: auto;
+		overflow-x: hidden;
+		scrollbar-width: thin;
+		scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+		padding-bottom: 16px;
 		.nav-links-menu {
 			width: 100%;
 			position: absolute;

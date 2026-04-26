@@ -61,10 +61,13 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		gap: 8px;
-		margin: 0;
+		margin: auto 0 0;
 		padding: 0;
 		color: inherit;
+		padding-top: 20px;
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+		justify-content: flex-start;
+		gap: 12px;
 		.social-bar-list-item {
 			color: inherit;
 			.social-bar-list-item-link {
@@ -85,6 +88,10 @@
 					}
 				}
 			}
+		}
+		@media (max-width: 767px) {
+			justify-content: center;
+			padding-top: 16px;
 		}
 	}
 </style>

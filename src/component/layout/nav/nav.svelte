@@ -2,6 +2,7 @@
 	import NavSectionToggler from './nav-section-toggler.svelte';
 	import NavActions from './nav-actions.svelte';
 	import NavMenuPanel from './nav-menu-panel.svelte';
+	import NavBranding from './nav-branding.svelte';
 	import { navManager } from './nav-manager.svelte';
 	import { beforeNavigate } from '$app/navigation';
 	import { page } from '$app/state';
@@ -24,6 +25,9 @@
 	style="--nav-bg-color: var(--navbar-bg-color-{initialSection});"
 >
 	<div class="nav-inner">
+		<div class="nav-branding-mobile">
+			<NavBranding />
+		</div>
 		<NavActions />
 	</div>
 	<div class="nav-menu-panel">
@@ -45,6 +49,8 @@
 		align-items: center;
 		background-color: var(--nav-bg-color);
 		color: var(--navbar-text-color);
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+
 		.nav-inner {
 			position: relative;
 			width: 100%;
@@ -55,7 +61,12 @@
 			justify-content: flex-end;
 			padding: 0 20px;
 			z-index: 950;
+
+			.nav-branding-mobile {
+				display: none;
+			}
 		}
+
 		.nav-menu-panel {
 			position: relative;
 			flex: 1;
@@ -67,10 +78,30 @@
 			overflow: hidden;
 			opacity: 0;
 			visibility: hidden;
+			background-color: var(--nav-bg-color);
 		}
+
 		@media (max-width: 767px) {
 			left: 0;
 			width: 100%;
+
+			.nav-inner {
+				justify-content: space-between;
+				padding: 0 16px;
+
+				.nav-branding-mobile {
+					display: flex;
+					align-items: center;
+
+					:global(.desktop-nav-branding-link) {
+						justify-content: flex-start;
+					}
+
+					:global(.site-logo) {
+						width: 100px;
+					}
+				}
+			}
 		}
 	}
 </style>
