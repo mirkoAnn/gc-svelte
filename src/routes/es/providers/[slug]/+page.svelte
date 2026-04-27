@@ -12,6 +12,8 @@
 	import type { ProviderPageData } from './+page.server';
 	import ContentContainer from '../../../../component/content/content-container.svelte';
 	import FaqsList from '../../../../component/faqs/faqs-list.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveProviderDetailRouteId, resolveProvidersIndexPath } from '$lib/link-resolver';
 
 	let {
 		data
@@ -62,12 +64,15 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/es/providers' },
+			route: { id: resolveProvidersIndexPath(CountryCodes.es) },
 			title: 'Descubre los mejores Proveedores de juegos online en España',
 			label: 'Proveedores'
 		},
 		{
-			route: { id: `/es/providers/[slug]`, params: { slug: data.page.slug } },
+			route: {
+				id: resolveProviderDetailRouteId(CountryCodes.es),
+				params: { slug: data.page.slug }
+			},
 			title: 'Información, juegos y opiniones sobre el proveedor ' + data.page.title,
 			label: data.page.title
 		}

@@ -5,6 +5,9 @@
 	import { casinosDataManager } from './../../../component/casino/casinos-data-manager.svelte';
 	import PageMetadata from './../../../component/metadata/page-metadata.svelte';
 	import ContentContainer from '../../../component/content/content-container.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveCasinoIndexPath } from '$lib/link-resolver';
+	import type { RouteId } from '$app/types';
 	import type { CasinoOnlinePageData } from './+page.server';
 	import AuthorBox from '../../../component/author/author-box.svelte';
 
@@ -16,7 +19,7 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/es/casino-online' },
+			route: { id: resolveCasinoIndexPath(CountryCodes.es) as RouteId },
 			title: 'Juega en los mejores Casinos Online en España',
 			label: 'Casino Online'
 		}

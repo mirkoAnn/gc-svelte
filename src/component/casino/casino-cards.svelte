@@ -4,8 +4,8 @@
 	import { casinosDataManager } from './casinos-data-manager.svelte';
 	import RadialChart from '../graphics/charts/radial-chart.svelte';
 	import type { Casino } from '$lib/types/casino';
-	import { resolve } from '$app/paths';
 	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveCasinoDetailPath } from '$lib/link-resolver';
 	import { m } from '../../paraglide/messages';
 
 	let {
@@ -59,9 +59,7 @@
 		>
 			<a
 				class="casino-card-link"
-				href={resolve(`/${locale}/casino-online/[slug]`, {
-					slug: casino.slug
-				})}
+				href={resolveCasinoDetailPath(locale, casino.slug)}
 				title={m.casino_review_link_title({ casinoTitle: casino.title }, { locale })}
 			>
 				<div class="casino-card-header">

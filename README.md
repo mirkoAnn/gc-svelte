@@ -1,6 +1,15 @@
-# sv
+# GC Svelte
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Sito web multilingue (🇮🇹 italiano / 🇪🇸 spagnolo) dedicato a slot machine, roulette e casinò online.  
+Costruito con **SvelteKit** (SSR), **TypeScript**, **Paraglide** per l'internazionalizzazione e distribuito su **Vercel**.
+
+Funzionalità principali:
+
+- Catalogo slot e roulette con pagine di dettaglio per slug
+- Sezione casinò con comparatore e griglia
+- Sistema di preferiti, valutazioni e sessioni di gioco
+- Sitemap XML generata dinamicamente per ogni locale
+- Ricerca full-text tramite Web Worker
 
 ## Creating a project
 

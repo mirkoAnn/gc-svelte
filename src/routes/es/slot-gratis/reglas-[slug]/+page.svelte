@@ -11,6 +11,11 @@
 	import type { SlotMechanicPageData } from './+page.server';
 	import FaqsList from './../../../../component/faqs/faqs-list.svelte';
 	import { getSlotOrderByOptions } from '../../../../component/games/gallery/game-gallery-filters-helper';
+	import { CountryCodes } from '$lib/app-manager.svelte';
+	import {
+		resolveSlotGratisIndexPath,
+		resolveSlotMechanicsDetailRouteId
+	} from '$lib/link-resolver';
 
 	let {
 		data
@@ -47,12 +52,15 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/es/slot-gratis' },
+			route: { id: resolveSlotGratisIndexPath(CountryCodes.es) },
 			title: 'Juega gratis a las Tragaperras Online',
 			label: 'Tragaperras Gratis'
 		},
 		{
-			route: { id: `/es/slot-gratis/reglas-[slug]`, params: { slug: data.page.slug } },
+			route: {
+				id: resolveSlotMechanicsDetailRouteId(CountryCodes.es),
+				params: { slug: data.page.slug }
+			},
 			title: `Juega Gratis a las Tragaperras ${data.page.title}`,
 			label: data.page.title
 		}

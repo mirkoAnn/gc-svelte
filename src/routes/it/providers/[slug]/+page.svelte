@@ -11,6 +11,8 @@
 	import AuthorBox from '../../../../component/author/author-box.svelte';
 	import ContentContainer from '../../../../component/content/content-container.svelte';
 	import FaqsList from '../../../../component/faqs/faqs-list.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveProviderDetailRouteId, resolveProvidersIndexPath } from '$lib/link-resolver';
 	import type { Provider } from '$lib/types/provider';
 
 	let {
@@ -62,12 +64,15 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/it/providers' },
+			route: { id: resolveProvidersIndexPath(CountryCodes.it) },
 			title: 'Scopri i migliori Providers di giochi online in Italia',
 			label: 'Providers'
 		},
 		{
-			route: { id: `/it/providers/[slug]`, params: { slug: data.page.slug } },
+			route: {
+				id: resolveProviderDetailRouteId(CountryCodes.it),
+				params: { slug: data.page.slug }
+			},
 			title: 'Info, giochi e opinioni sul provider ' + data.page.title,
 			label: data.page.title
 		}

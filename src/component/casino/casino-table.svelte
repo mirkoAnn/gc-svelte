@@ -2,8 +2,8 @@
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap/dist/gsap';
-	import { resolve } from '$app/paths';
 	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveCasinoDetailPath } from '$lib/link-resolver';
 	import type { Casino } from '$lib/types/casino';
 	import { m } from '../../paraglide/messages';
 
@@ -201,9 +201,7 @@
 						<a
 							class="casino-table-button casino-table-review-button"
 							title={m.casino_review_link_title({ casinoTitle: casino.title }, { locale })}
-							href={resolve(`/${locale}/casino-online/[slug]`, {
-								slug: casino.slug
-							})}
+							href={resolveCasinoDetailPath(locale, casino.slug)}
 							>{m.casino_review_link_text({}, { locale })}
 							<svg class="casino-table-icon"><use href="/icons/icon-set.svg#arrow" /></svg></a
 						>

@@ -10,6 +10,8 @@
 	import AuthorBox from '../../../../component/author/author-box.svelte';
 	import ContentContainer from '../../../../component/content/content-container.svelte';
 	import type { Slot } from '$lib/types/games';
+	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveSlotGratisIndexPath, resolveSlotThemeDetailRouteId } from '$lib/link-resolver';
 	import type { SlotThemePageData } from './+page.server';
 
 	let {
@@ -67,12 +69,15 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/it/slot-gratis' },
+			route: { id: resolveSlotGratisIndexPath(CountryCodes.it) },
 			title: 'Gioca gratis alle Slot Online',
 			label: 'Slot Gratis'
 		},
 		{
-			route: { id: `/it/slot-gratis/slot-[slug]`, params: { slug: data.page.slug } },
+			route: {
+				id: resolveSlotThemeDetailRouteId(CountryCodes.it),
+				params: { slug: data.page.slug }
+			},
 			title: `Gioca Gratis alle Slot ${data.page.title}`,
 			label: data.page.title
 		}

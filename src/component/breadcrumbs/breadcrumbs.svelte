@@ -10,6 +10,16 @@
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
 
+	const resolvePath = resolve as (route: string, params?: Record<string, string>) => string;
+
+	const resolveRouteHref = (route: Breadcrumb['route']): string => {
+		if (route.params) {
+			return resolvePath(route.id, route.params);
+		}
+
+		return resolvePath(route.id);
+	};
+
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	let jsonLdItems = $derived.by(() => {
 		return [
@@ -23,7 +33,7 @@
 				'@type': 'ListItem',
 				position: index + 2,
 				name: breadcrumb.title,
-				item: resolve(breadcrumb.route.id, breadcrumb.route.params)
+				item: resolveRouteHref(breadcrumb.route)
 			}))
 		];
 	});
@@ -51,7 +61,7 @@
 			itemscope
 			itemtype="http://schema.org/ListItem"
 		>
-			<a class="breadcrumbs-link" itemprop="item" href={resolve(route.id, route.params)} {title}>
+			<a class="breadcrumbs-link" itemprop="item" href={resolveRouteHref(route)} {title}>
 				<svg class="next-arrow" aria-hidden="true">
 					<use href="/icons/icon-set.svg#arrow" />
 				</svg>

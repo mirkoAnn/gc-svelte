@@ -9,6 +9,8 @@
 	import { m } from '../../../paraglide/messages';
 	import ContentContainer from '../../../component/content/content-container.svelte';
 	import AuthorBox from '../../../component/author/author-box.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveRouletteCategoryPath, resolveRouletteIndexPath } from '$lib/link-resolver';
 
 	let {
 		data
@@ -47,7 +49,7 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/es/ruletas-gratis' },
+			route: { id: resolveRouletteIndexPath(CountryCodes.es) },
 			title: 'Juega gratis a la Ruleta Online',
 			label: 'Ruleta Gratis'
 		}
@@ -66,28 +68,28 @@
 			category="roulette"
 			title="Nuevas Ruletas"
 			type="carousel"
-			categoryLink="/ruletas-gratis/ruletas-nuevas"
+			categoryLink={resolveRouletteCategoryPath(CountryCodes.es, 'new')}
 		/>
 		<GamesGallery
 			games={data.rouletteEuropea}
 			category="roulette"
 			title="Ruletas Europea"
 			type="carousel"
-			categoryLink="/ruletas-gratis/ruletas-europea"
+			categoryLink={resolveRouletteCategoryPath(CountryCodes.es, 'european')}
 		/>
 		<GamesGallery
 			games={data.rouletteAmericana}
 			category="roulette"
 			title="Ruletas Americana"
 			type="carousel"
-			categoryLink="/ruletas-gratis/ruletas-americana"
+			categoryLink={resolveRouletteCategoryPath(CountryCodes.es, 'american')}
 		/>
 		<GamesGallery
 			games={data.rouletteFrancese}
 			category="roulette"
 			title="Ruletas Francesa"
 			type="carousel"
-			categoryLink="/ruletas-gratis/ruletas-francesa"
+			categoryLink={resolveRouletteCategoryPath(CountryCodes.es, 'french')}
 		/>
 	</div>
 </div>

@@ -1,5 +1,11 @@
 import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 import { dbManager } from '$lib/db-manager.svelte';
+import {
+	resolveCasinoDetailPath,
+	resolveCasinoIndexPath,
+	resolveRouletteIndexPath,
+	resolveSlotMechanicsDetailPath
+} from '$lib/link-resolver';
 import { capitalizeFirstLetter } from '$lib/utils.svelte';
 import { error } from '@sveltejs/kit';
 
@@ -19,25 +25,6 @@ const SITE_ADDRESS = 'https://gamlub.com';
 const COLLECTION_PAGE_SIZE = 500;
 
 type CollectionName = 'slotThemes' | 'slotMechanics' | 'slots' | 'casinos' | 'providers';
-
-type LocaleRoutes = {
-	casinosBase: string;
-	rouletteBase: string;
-	slotMechanicsPrefix: string;
-};
-
-const LOCALE_ROUTES: Record<CountryCodes, LocaleRoutes> = {
-	[CountryCodes.it]: {
-		casinosBase: 'casino-online',
-		rouletteBase: 'roulette-gratis',
-		slotMechanicsPrefix: 'regole-'
-	},
-	[CountryCodes.es]: {
-		casinosBase: 'casinos-online',
-		rouletteBase: 'ruletas-gratis',
-		slotMechanicsPrefix: 'reglas-'
-	}
-};
 
 const getPage = (data: QueryResponse, key: string): PageData | undefined => {
 	const value = data[key];
@@ -143,8 +130,6 @@ export async function GET() {
 		const providersPage = getPage(response.data, `providersPage${countrySuffix}`);
 		const casinosPage = getPage(response.data, `casinosPage${countrySuffix}`);
 
-		const localeRoutes = LOCALE_ROUTES[countryCode];
-
 		const [casinos, slotThemes, slotMechanics, slots, providers] = await Promise.all([
 			fetchCollectionEntries('casinos', countryCode),
 			fetchCollectionEntries('slotThemes', countryCode),
@@ -173,7 +158,7 @@ export async function GET() {
 
 		if (roulettePage) {
 			urlset.push({
-				loc: SITE_ADDRESS + '/' + countryCode + '/' + localeRoutes.rouletteBase,
+				loc: SITE_ADDRESS + resolveRouletteIndexPath(countryCode),
 				freq: 'daily',
 				mod: roulettePage.updatedAt,
 				priority: 1
@@ -191,7 +176,7 @@ export async function GET() {
 
 		if (casinosPage) {
 			urlset.push({
-				loc: SITE_ADDRESS + '/' + countryCode + '/' + localeRoutes.casinosBase,
+				loc: SITE_ADDRESS + resolveCasinoIndexPath(countryCode),
 				freq: 'weekly',
 				mod: casinosPage.updatedAt,
 				priority: 0.9
@@ -200,7 +185,7 @@ export async function GET() {
 
 		casinos.forEach((entry) => {
 			urlset.push({
-				loc: SITE_ADDRESS + '/' + countryCode + '/' + localeRoutes.casinosBase + '/' + entry.slug,
+				loc: SITE_ADDRESS + resolveCasinoDetailPath(countryCode, entry.slug),
 				freq: 'monthly',
 				mod: entry.updatedAt,
 				priority: 0.8
@@ -218,13 +203,7 @@ export async function GET() {
 
 		slotMechanics.forEach((entry) => {
 			urlset.push({
-				loc:
-					SITE_ADDRESS +
-					'/' +
-					countryCode +
-					'/slot-gratis/' +
-					localeRoutes.slotMechanicsPrefix +
-					entry.slug,
+				loc: SITE_ADDRESS + resolveSlotMechanicsDetailPath(countryCode, entry.slug),
 				freq: 'yearly',
 				mod: entry.updatedAt,
 				priority: 0.5

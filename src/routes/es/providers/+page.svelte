@@ -5,6 +5,8 @@
 	import ContentContainer from '../../../component/content/content-container.svelte';
 	import FaqsList from '../../../component/faqs/faqs-list.svelte';
 	import AuthorBox from '../../../component/author/author-box.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveProvidersIndexPath } from '$lib/link-resolver';
 	import type { ProvidersPageData } from './+page.server';
 
 	let { data }: { data: ProvidersPageData } = $props();
@@ -15,7 +17,7 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: `/es/providers` },
+			route: { id: resolveProvidersIndexPath(CountryCodes.es) },
 			title: `Los proveedores de juegos de casino online en España ${new Date().getFullYear()}`,
 			label: 'Proveedores'
 		}

@@ -14,6 +14,7 @@
 	import AuthorBox from '../../../../component/author/author-box.svelte';
 	import type { Slot } from '$lib/types/games';
 	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveSlotDetailRouteId, resolveSlotGratisIndexPath } from '$lib/link-resolver';
 
 	let { data }: { data: { page: Slot } } = $props();
 
@@ -52,12 +53,12 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/it/slot-gratis' },
+			route: { id: resolveSlotGratisIndexPath(CountryCodes.it) },
 			title: 'Gioca gratis alle Slot Online',
 			label: 'Slot Gratis'
 		},
 		{
-			route: { id: `/it/slot/[slug]`, params: { slug: data.page.slug } },
+			route: { id: resolveSlotDetailRouteId(CountryCodes.it), params: { slug: data.page.slug } },
 			title: `Gioca Gratis alla Slot Machine ${data.page.title} Online`,
 			label: data.page.title
 		}

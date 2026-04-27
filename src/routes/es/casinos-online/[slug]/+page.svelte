@@ -8,7 +8,9 @@
 	import FaqsList from '../../../../component/faqs/faqs-list.svelte';
 	import PageMetadata from '../../../../component/metadata/page-metadata.svelte';
 	import ProvidersGallery from '../../../../component/providers/providers-gallery.svelte';
-	import { appManager } from '../../../../lib/app-manager.svelte';
+	import { appManager, CountryCodes } from '../../../../lib/app-manager.svelte';
+	import { resolveCasinoIndexPath } from '$lib/link-resolver';
+	import type { RouteId } from '$app/types';
 	import type { Casino } from '$lib/types/casino';
 
 	let { data }: { data: { page: Casino } } = $props();
@@ -29,12 +31,15 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/es/casino-online' },
+			route: { id: resolveCasinoIndexPath(CountryCodes.es) as RouteId },
 			title: 'Juega en los mejores Casinos Online en España',
 			label: 'Casino Online'
 		},
 		{
-			route: { id: `/es/casino-online/[slug]`, params: { slug: data.page.slug } },
+			route: {
+				id: `${resolveCasinoIndexPath(CountryCodes.es)}/[slug]` as RouteId,
+				params: { slug: data.page.slug }
+			},
 			title: 'Información, bonos y opiniones sobre el casino online ' + data.page.title,
 			label: data.page.title
 		}

@@ -10,6 +10,8 @@
 	import AuthorBox from '../../../../component/author/author-box.svelte';
 	import ContentContainer from '../../../../component/content/content-container.svelte';
 	import type { Slot } from '$lib/types/games';
+	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveSlotGratisIndexPath, resolveSlotThemeDetailRouteId } from '$lib/link-resolver';
 	import type { SlotThemePageData } from './+page.server';
 
 	let {
@@ -67,12 +69,15 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: '/es/slot-gratis' },
+			route: { id: resolveSlotGratisIndexPath(CountryCodes.es) },
 			title: 'Juega gratis a las Tragaperras Online',
 			label: 'Tragaperras Gratis'
 		},
 		{
-			route: { id: `/es/slot-gratis/slot-[slug]`, params: { slug: data.page.slug } },
+			route: {
+				id: resolveSlotThemeDetailRouteId(CountryCodes.es),
+				params: { slug: data.page.slug }
+			},
 			title: `Juega Gratis a las Tragaperras ${data.page.title}`,
 			label: data.page.title
 		}

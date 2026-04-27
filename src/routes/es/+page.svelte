@@ -6,6 +6,8 @@
 	import FaqsList from '../../component/faqs/faqs-list.svelte';
 	import GamesGallery from '../../component/games/gallery/games-gallery.svelte';
 	import PageMetadata from '../../component/metadata/page-metadata.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveRouletteIndexPath } from '$lib/link-resolver';
 	import type { Slot, Roulette } from '$lib/types/games';
 	import type { HomePageData } from './+page.server';
 
@@ -29,7 +31,7 @@
 		title="Nuevas Ruletas"
 		carouselIconName="new"
 		type="carousel"
-		categoryLink="/roulette-gratis"
+		categoryLink={resolveRouletteIndexPath(CountryCodes.es)}
 	/>
 </div>
 

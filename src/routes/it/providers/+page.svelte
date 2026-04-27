@@ -5,6 +5,8 @@
 	import ContentContainer from '../../../component/content/content-container.svelte';
 	import FaqsList from '../../../component/faqs/faqs-list.svelte';
 	import AuthorBox from '../../../component/author/author-box.svelte';
+	import { CountryCodes } from '$lib/app-manager.svelte';
+	import { resolveProvidersIndexPath } from '$lib/link-resolver';
 	import type { ProvidersPageData } from './+page.server';
 
 	let { data }: { data: ProvidersPageData } = $props();
@@ -15,7 +17,7 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: `/it/providers` },
+			route: { id: resolveProvidersIndexPath(CountryCodes.it) },
 			title: `I migliori providers di giochi da casinò online in Italia ${new Date().getFullYear()}`,
 			label: 'Providers'
 		}
