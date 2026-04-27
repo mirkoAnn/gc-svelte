@@ -34,7 +34,8 @@
 		<NavMenuPanel />
 	</div>
 </div>
-<NavSectionToggler />
+
+<!-- <NavSectionToggler /> -->
 
 <style>
 	.nav {
