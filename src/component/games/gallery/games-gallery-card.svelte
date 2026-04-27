@@ -3,6 +3,7 @@
 	import type { Roulette, Slot } from '$lib/types/games';
 	import { resolve } from '$app/paths';
 	import { appManager, CountryCodes } from '../../../lib/app-manager.svelte';
+	import { resolveRouletteIndexPath } from '$lib/link-resolver';
 	import { m } from '../../../paraglide/messages';
 	import FavouritesToggler from '../../favourites/favourites-toggler.svelte';
 	import { formatImageUrl } from '$lib/utils.svelte';
@@ -24,15 +25,65 @@
 	const locale = $derived.by(
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
+
+	const resolvePath = resolve as (route: string, params?: Record<string, string>) => string;
+
+	const isSlotGame = (value: Slot | Roulette): value is Slot => {
+		return category === 'slot' && 'slotThemes' in value;
+	};
+
+	const gameHref = $derived.by(() => {
+		if (category === 'slot') {
+			return resolvePath(`/${locale}/slot/[slug]`, { slug: game.slug });
+		}
+
+		// There is no roulette detail route yet, so route to localized roulette index.
+		return resolveRouletteIndexPath(locale);
+	});
+
+	// SEO: Game schema markup
+	const gameSchema = $derived.by(() => ({
+		'@context': 'https://schema.org',
+		'@type': 'SoftwareApplication',
+		name: game.title,
+		description: game.seo?.description,
+		image: formatImageUrl(game.logo.url, 300),
+		applicationCategory: 'Game',
+		operatingSystem: 'Web',
+		offer: {
+			'@type': 'Offer',
+			price: '0',
+			priceCurrency: 'EUR'
+		}
+	}));
+
+	// Theme name mapping for accessibility (slug to human-readable label)
+	const themeLabels: Record<string, string> = {
+		paytable: 'Paytable',
+		scatter: 'Scatter Symbol',
+		wild: 'Wild Symbol',
+		bonus: 'Bonus Feature',
+		free_spins: 'Free Spins',
+		progressive: 'Progressive Jackpot'
+	};
+
+	const getThemeLabel = (slug: string) => themeLabels[slug] ?? slug;
 </script>
 
 <div class="game-card" role="listitem">
+	<script type="application/ld+json">
+		{JSON.stringify(gameSchema)}
+	</script>
 	<div class="game-card-inner">
 		<div class="game-img-container">
 			{#if !imageLoaded}
-				<div class="game-image-skeleton" aria-hidden="true"></div>
+				<div class="game-image-skeleton" aria-hidden="true" role="status" aria-live="polite"></div>
 			{/if}
-			<a href={resolve(`/${locale}/${category}/[slug]`, { slug: game.slug })} class="game-link">
+			<a
+				href={gameHref}
+				class="game-link"
+				aria-label={m.play_game_free({ gameTitle: game.title }, { locale })}
+			>
 				<img
 					src={formatImageUrl(game.logo.url, 200)}
 					alt={m.play_game_free({ gameTitle: game.title }, { locale })}
@@ -41,11 +92,12 @@
 					class:loaded={imageLoaded}
 					fetchpriority={eager ? 'high' : 'low'}
 					loading={eager ? 'eager' : 'lazy'}
-					width="300"
-					height="300"
+					width="200"
+					height="200"
 					decoding={index === 0 ? 'sync' : 'async'}
 					crossorigin="anonymous"
 					onload={() => (imageLoaded = true)}
+					onerror={() => (imageLoaded = true)}
 				/>
 			</a>
 			<div class="game-actions-container">
@@ -54,11 +106,11 @@
 				</div>
 			</div>
 		</div>
-		{#if category === 'slot' && (game as Slot).slotThemes.length > 0}
-			<div class="game-themes-container">
+		{#if isSlotGame(game) && game.slotThemes.length > 0}
+			<div class="game-themes-container" aria-label="Game features">
 				<div class="game-themes-inner">
-					{#each (game as Slot).slotThemes as theme (theme.slug)}
-						<svg class="game-theme-icon" aria-label={theme.slug} role="img">
+					{#each game.slotThemes as theme (theme.slug)}
+						<svg class="game-theme-icon" aria-label={getThemeLabel(theme.slug)} role="img">
 							<use href="/icons/slot-set.svg#{theme.iconId}"></use>
 						</svg>
 					{/each}
@@ -68,7 +120,7 @@
 	</div>
 	<span class="game-title">{game.title}</span>
 	{#if game.provider}
-		<span class="game-provider">{game.provider.title}</span>
+		<span class="game-provider"><strong>{game.provider.title}</strong></span>
 	{/if}
 </div>
 
@@ -84,6 +136,7 @@
 				position: relative;
 				width: 100%;
 				height: auto;
+				aspect-ratio: 1;
 				overflow: hidden;
 				border-radius: 10%;
 				.game-actions-container {
@@ -124,6 +177,7 @@
 			}
 			.game-link {
 				color: inherit;
+				display: block;
 				.game-image {
 					width: 100%;
 					height: auto;
@@ -149,7 +203,7 @@
 			}
 			.game-themes-container {
 				position: absolute;
-				bottom: -0;
+				bottom: 0;
 				left: 0;
 				.game-themes-inner {
 					position: relative;
@@ -164,6 +218,7 @@
 					.game-theme-icon {
 						width: 16px;
 						height: 16px;
+						flex-shrink: 0;
 					}
 					&::before,
 					&::after {
@@ -191,9 +246,11 @@
 			font-size: 0.8rem;
 			font-weight: 600;
 			text-transform: capitalize;
+			line-height: 1.2;
 		}
 		.game-provider {
 			font-size: 0.6rem;
+			opacity: 0.8;
 		}
 	}
 

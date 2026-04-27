@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { appManager } from '../../../lib/app-manager.svelte';
 	import { CountryCodes } from '$lib/app-manager.svelte';
@@ -81,18 +80,18 @@
 		if (!carouselNode || carouselNode.children.length < 5) return; // No scrolling needed for less than 5 items
 
 		// Calculate how many cards fit on the screen at once
-		const cardsCountonScreen = categoryLink
+		const cardsCountOnScreen = categoryLink
 			? (carouselNode.clientWidth + cardWidth) / cardWidth
 			: carouselNode.clientWidth / cardWidth; // If categoryLink is provided, we have an extra "see all" card of cardWidth, so we add that to the clientWidth for the calculation
 		// Prevent scrolling beyond the available items
-		if (direction === 'left' && scrollOffset == 0) return;
+		if (direction === 'left' && scrollOffset === 0) return;
 		// if scrolling right, ensure we don't exceed the number of items minus the cards that already are on screen
 		if (
 			direction === 'right' &&
 			scrollOffset ===
 				(categoryLink
-					? carouselNode.children.length - Math.floor(cardsCountonScreen) + 1
-					: carouselNode.children.length - Math.floor(cardsCountonScreen))
+					? carouselNode.children.length - Math.floor(cardsCountOnScreen) + 1
+					: carouselNode.children.length - Math.floor(cardsCountOnScreen))
 		)
 			return;
 
@@ -161,7 +160,7 @@
 		<!-- Link to the category for carousel type -->
 		{#if categoryLink}
 			<a
-				href={resolve(`/${locale}${categoryLink}` as Parameters<typeof resolve>[0])}
+				href={`/${locale}${categoryLink}`}
 				class="game-card more-games-card"
 				title={m.show_all_by_category({ category }, { locale })}
 			>
