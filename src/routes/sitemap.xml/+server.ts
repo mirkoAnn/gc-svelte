@@ -212,7 +212,7 @@ export async function GET() {
 
 		slots.forEach((entry) => {
 			urlset.push({
-				loc: SITE_ADDRESS + '/' + countryCode + '/slot/' + entry.slug,
+				loc: SITE_ADDRESS + '/' + countryCode + '/slot-gratis/' + entry.slug,
 				freq: 'yearly',
 				mod: entry.updatedAt,
 				priority: 0.5

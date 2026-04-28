@@ -18,7 +18,7 @@ const LOCALE_ROUTE_CONFIG: Record<CountryCodes, LocaleRouteConfig> = {
 	[CountryCodes.it]: {
 		casinosBase: 'casino-online',
 		rouletteBase: 'roulette-gratis',
-		rouletteDetailBase: 'roulette',
+		rouletteDetailBase: 'roulette-gratis',
 		rouletteNewSegment: 'roulette-nuove',
 		rouletteEuropeanSegment: 'roulette-europea',
 		rouletteAmericanSegment: 'roulette-americana',
@@ -30,7 +30,7 @@ const LOCALE_ROUTE_CONFIG: Record<CountryCodes, LocaleRouteConfig> = {
 	[CountryCodes.es]: {
 		casinosBase: 'casinos-online',
 		rouletteBase: 'ruletas-gratis',
-		rouletteDetailBase: 'ruletas',
+		rouletteDetailBase: 'ruletas-gratis',
 		rouletteNewSegment: 'ruletas-nuevas',
 		rouletteEuropeanSegment: 'ruletas-europea',
 		rouletteAmericanSegment: 'ruletas-americana',
@@ -88,7 +88,7 @@ export const resolveSlotGratisIndexPath = (locale: CountryCodes): RouteId => {
 };
 
 export const resolveSlotDetailRouteId = (locale: CountryCodes): RouteId => {
-	return `/${locale}/slot/[slug]` as RouteId;
+	return `/${locale}/slot-gratis/[slug]` as RouteId;
 };
 
 export const resolveSlotThemeDetailRouteId = (locale: CountryCodes): RouteId => {
@@ -133,4 +133,19 @@ export const resolveRouletteCategoryPath = (
 export const resolveSlotMechanicsDetailPath = (locale: CountryCodes, slug: string): string => {
 	const { slotMechanicsPrefix } = getLocaleRouteConfig(locale);
 	return `/${locale}/slot-gratis/${slotMechanicsPrefix}${slug}`;
+};
+
+export const resolveGameHref = (
+	locale: CountryCodes,
+	gameSlug: string,
+	gameType: 'roulette' | 'slot'
+): string => {
+	switch (gameType) {
+		case 'roulette':
+			return resolveSlotMechanicsDetailRouteId(locale);
+		case 'slot':
+			return resolveSlotDetailRouteId(locale);
+		default:
+			return '#';
+	}
 };

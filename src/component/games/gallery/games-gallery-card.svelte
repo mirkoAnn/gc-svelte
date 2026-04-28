@@ -32,12 +32,16 @@
 	const gameHref = $derived.by(() => {
 		switch (category) {
 			case 'slot':
-				return resolve(resolveSlotDetailRouteId(locale) as never, { slug: game.slug });
+				return resolveSlotDetailRouteId(locale) as
+					| '/it/slot-gratis/[slug]'
+					| '/es/slot-gratis/[slug]';
 			case 'roulette':
 				// There is no roulette detail route yet, so route to localized roulette index.
-				return resolve(resolveRouletteDetailRouteId(locale) as never, { slug: game.slug });
+				return resolveRouletteDetailRouteId(locale) as
+					| '/it/roulette-gratis/[slug]'
+					| '/es/ruletas-gratis/[slug]';
 			default:
-				return '#';
+				return '/it/slot-gratis/[slug]';
 		}
 	});
 
@@ -80,7 +84,7 @@
 				<div class="game-image-skeleton" aria-hidden="true" role="status" aria-live="polite"></div>
 			{/if}
 			<a
-				href={gameHref}
+				href={resolve(gameHref, { slug: game.slug })}
 				class="game-link"
 				aria-label={m.play_game_free({ gameTitle: game.title }, { locale })}
 			>
