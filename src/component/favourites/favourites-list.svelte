@@ -38,13 +38,18 @@
 			{#if slotList.length > 0}
 				<div class="favourites-category-container">
 					<h2 class="favourites-category-title">{m.favourites_slots_title({}, { locale })}</h2>
-					<Gallery games={slotList} category="slot" type="carousel" />
+					<Gallery games={slotList} category="slot" type="carousel" isOnFavouritesList={true} />
 				</div>
 			{/if}
 			{#if rouletteList.length > 0}
 				<div class="favourites-category-container">
 					<h2 class="favourites-category-title">{m.favourites_roulettes_title({}, { locale })}</h2>
-					<Gallery games={rouletteList} category="roulette" type="carousel" />
+					<Gallery
+						games={rouletteList}
+						category="roulette"
+						type="carousel"
+						isOnFavouritesList={true}
+					/>
 				</div>
 			{/if}
 		</div>

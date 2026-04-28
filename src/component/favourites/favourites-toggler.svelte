@@ -2,7 +2,11 @@
 	import type { Favourite } from '$lib/types/favourites';
 	import { favouritesManager } from './favourites-manager.svelte';
 
-	let { data, category }: { data: Favourite; category: string } = $props();
+	let {
+		data,
+		category,
+		isOnFavouritesList = false
+	}: { data: Favourite; category: string; isOnFavouritesList?: boolean } = $props();
 </script>
 
 <button
@@ -11,12 +15,13 @@
 		category
 	)
 		? 'isActive'
-		: ''}"
+		: ''} {isOnFavouritesList ? 'on-favourites-list' : ''}"
 	aria-label="Aggiungi o rimuovi dai preferiti"
 	onclick={() => favouritesManager.toggleFromList(data, category)}
 >
 	<svg class="favourites-icon" aria-hidden="true">
-		<use href="/icons/icon-set.svg#favourites"></use>
+		<use href={isOnFavouritesList ? '/icons/icon-set.svg#close' : '/icons/icon-set.svg#favourites'}
+		></use>
 	</svg>
 </button>
 
@@ -65,11 +70,16 @@
 			max-width: 20px;
 			aspect-ratio: 1/1;
 		}
-		&:not(.isActive) .favourites-icon {
-			animation: 0.5s favourite-button-deactivation-animation forwards;
+		&:not(.on-favourites-list) {
+			&:not(.isActive) .favourites-icon {
+				animation: 0.5s favourite-button-deactivation-animation forwards;
+			}
+			&.isActive .favourites-icon {
+				animation: 0.5s favourite-button-activation-animation forwards;
+			}
 		}
-		&.isActive .favourites-icon {
-			animation: 0.5s favourite-button-activation-animation forwards;
+		&.on-favourites-list .favourites-icon {
+			color: var(--light-brown-900);
 		}
 	}
 </style>

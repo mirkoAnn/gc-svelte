@@ -15,12 +15,14 @@
 		game,
 		category,
 		index = 0,
-		eager = false
+		eager = false,
+		isOnFavouritesList = false
 	}: {
 		game: Slot | Roulette;
 		category: 'slot' | 'roulette';
 		index?: number;
 		eager?: boolean;
+		isOnFavouritesList?: boolean;
 	} = $props();
 
 	let imageLoaded = $state(false);
@@ -105,14 +107,14 @@
 				/>
 			</a>
 			<div class="game-actions-container">
-				<div class="game-actions-inner">
-					<FavouritesToggler data={game} {category} />
+				<div class="game-actions-inner {isOnFavouritesList ? 'on-favourites-list' : ''}">
+					<FavouritesToggler data={game} {category} {isOnFavouritesList} />
 				</div>
 			</div>
 		</div>
 		{#if category === 'slot' && 'slotThemes' in game && game.slotThemes.length > 0}
 			<div class="game-themes-container" aria-label="Game features">
-				<div class="game-themes-inner">
+				<div class="game-themes-inner {isOnFavouritesList ? 'on-favourites-list' : ''}">
 					{#each game.slotThemes as theme (theme.slug)}
 						<svg class="game-theme-icon" aria-label={getThemeLabel(theme.slug)} role="img">
 							<use href="/icons/slot-set.svg#{theme.iconId}"></use>
@@ -154,6 +156,9 @@
 						display: flex;
 						align-items: center;
 						justify-content: center;
+						&.on-favourites-list {
+							background-color: var(--blu-800);
+						}
 						& :global(.action-button) {
 							width: 30px;
 							height: 30px;
@@ -219,6 +224,10 @@
 					align-items: center;
 					justify-content: center;
 					gap: 8px;
+					&.on-favourites-list {
+						background-color: var(--blu-800);
+						color: var(--light-brown-900);
+					}
 					.game-theme-icon {
 						width: 16px;
 						height: 16px;

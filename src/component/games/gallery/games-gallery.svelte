@@ -20,7 +20,8 @@
 		carouselIconName, // Optional: if provided, it will use the specified icon from the sprite instead of trying to infer it from the title, this allows to have more control over the icon used in the gallery, especially for cases where the title doesn't contain a known category or when we want to use a specific icon that doesn't match the category
 		type = 'carousel', // Type of the games-gallery, it can be "carousel" or "grid", the default is "carousel". The carousel type will render the sliding buttons and the games in a single row with horizontal scroll, while the grid type will render the games in a responsive grid without sliding buttons
 		categoryLink, // Optional: if provided a last card will be rendered linking to the category page with the provided URL and label "Vedi tutte le [category]"
-		hasFilters = false // Optional: if true, it will show a button to toggle the filters and the games will be filtered based on the selected filters in the gamesGalleryManager, used in the main games-gallery page to allow filtering the games by type, provider, etc..
+		hasFilters = false, // Optional: if true, it will show a button to toggle the filters and the games will be filtered based on the selected filters in the gamesGalleryManager, used in the main games-gallery page to allow filtering the games by type, provider, etc..
+		isOnFavouritesList = false // Optional: if true, it will indicate that the games are being displayed in the favourites list
 	}: {
 		games?: Slot[] | Roulette[];
 		excludeId?: string;
@@ -30,6 +31,7 @@
 		categoryLink?: string;
 		type: 'carousel' | 'grid';
 		hasFilters?: boolean;
+		isOnFavouritesList?: boolean;
 	} = $props();
 
 	const locale = $derived.by(
@@ -122,7 +124,7 @@
 	}
 </script>
 
-<div class="games-gallery {type}">
+<div class="games-gallery {type} {isOnFavouritesList ? 'on-favourites-list' : ''}">
 	{#if title || hasFilters}
 		<div class="games-gallery-title-container">
 			{#if title}
@@ -177,7 +179,13 @@
 		{#each games ? games : gamesGalleryManager.getGames() as game, i (game.id)}
 			<!-- Remove some ids to avoid duplicates in the similar games gallery -->
 			{#if !excludeId || game.id !== excludeId}
-				<GameCard {game} {category} index={i} eager={i < aboveTheFoldThreshold} />
+				<GameCard
+					{game}
+					{category}
+					index={i}
+					eager={i < aboveTheFoldThreshold}
+					{isOnFavouritesList}
+				/>
 			{/if}
 		{/each}
 		<!-- Link to the category for carousel type -->
@@ -243,7 +251,9 @@
 		gap: 16px;
 		padding: var(--mobile-padding);
 		color: var(--blu-600);
-
+		&.on-favourites-list {
+			color: var(--light-brown-900);
+		}
 		.games-gallery-title-container {
 			display: flex;
 			justify-content: space-between;
