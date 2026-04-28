@@ -65,14 +65,7 @@
 </script>
 
 <div class="graph-container">
-	<canvas
-		class="graph"
-		bind:this={canvas}
-		width={300}
-		height={300}
-		role="img"
-		aria-label="Bar chart"
-	></canvas>
+	<canvas class="graph" bind:this={canvas} width={300} height={300} aria-label="Bar chart"></canvas>
 </div>
 
 <style>

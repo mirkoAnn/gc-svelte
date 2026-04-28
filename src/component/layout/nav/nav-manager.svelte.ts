@@ -155,9 +155,9 @@ const toggleMenuPanel = (newMenuIndex: number) => {
 			isMobile: `(max-width: ${screenBreakpoint - 1}px)`,
 			reduceMotion: '(prefers-reduced-motion: reduce)'
 		},
-		(context: gsap.MatchMediaContext) => {
+		(context) => {
 			// context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
-			const { isDesktop } = context.conditions;
+			const isDesktop = Boolean(context.conditions?.isDesktop);
 
 			// If closing the menu panel, reset the active menu index
 			if (newMenuIndex === -1) {
@@ -481,7 +481,7 @@ const animateSectionChange = () => {
 
 	toggleSubmenuPanel(-1); // Close any open submenu
 
-	menuAnimation = gsap.matchMedia().add(
+	gsap.matchMedia().add(
 		{
 			// set up any number of arbitrarily-named conditions. The function below will be called when ANY of them match.
 			isDesktop: `(min-width: ${screenBreakpoint}px)`,
@@ -489,9 +489,9 @@ const animateSectionChange = () => {
 			reduceMotion: '(prefers-reduced-motion: reduce)'
 		},
 
-		(context: gsap.MatchMediaContext) => {
+		(context) => {
 			// context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
-			const { isDesktop } = context.conditions;
+			const isDesktop = Boolean(context.conditions?.isDesktop);
 			// perform your animations here based on the matched conditions
 
 			menuAnimation = gsap

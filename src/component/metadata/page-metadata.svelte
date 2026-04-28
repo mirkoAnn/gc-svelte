@@ -29,54 +29,50 @@
 	const locale = $derived.by(
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? 'it'
 	);
+	const currentYear = new Date().getFullYear().toString();
+	const resolvedTitle = $derived(title.replace('{YEAR}', currentYear));
+	const resolvedDescription = $derived(description.replace('{YEAR}', currentYear));
 </script>
 
 <svelte:head>
-	<title>{title.replace('{YEAR}', new Date().getFullYear().toString())}</title>
-	<meta
-		name="description"
-		content={description.replace('{YEAR}', new Date().getFullYear().toString())}
-	/>
+	<title>{resolvedTitle}</title>
+	<meta name="description" content={resolvedDescription} />
+	<meta name="author" content={authorName} />
 	<link rel="canonical" href={pageUrl} />
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content={`@${SITE_NAME}`} />
 	<meta name="twitter:creator" content={`@${authorName}`} />
-	<meta
-		name="twitter:title"
-		content={title.replace('{YEAR}', new Date().getFullYear().toString())}
-	/>
-	<meta
-		name="twitter:description"
-		content={description.replace('{YEAR}', new Date().getFullYear().toString())}
-	/>
+	<meta name="twitter:title" content={resolvedTitle} />
+	<meta name="twitter:description" content={resolvedDescription} />
 	<meta name="twitter:image" content={imageAddress} />
-	<meta
-		name="twitter:image:alt"
-		content={title.replace('{YEAR}', new Date().getFullYear().toString())}
-	/>
+	<meta name="twitter:image:alt" content={resolvedTitle} />
 	<meta property="og:url" content={pageUrl} />
+	<meta property="og:site_name" content={SITE_NAME} />
 	{#if ogType}
 		<meta property="og:type" content={ogType} />
-		<meta property="article:published_time" content={publishedAt} />
-		<meta property="article:modified_time" content={updatedAt} />
+		{#if publishedAt}
+			<meta property="article:published_time" content={publishedAt} />
+		{/if}
+		{#if updatedAt}
+			<meta property="article:modified_time" content={updatedAt} />
+		{/if}
 		<meta property="article:author" content={authorName} />
-		<meta property="article:section" content={section} />
-		<meta property="article:tag" content={tags?.join(', ')} />
+		{#if section}
+			<meta property="article:section" content={section} />
+		{/if}
+		{#if tags && tags.length > 0}
+			<meta property="article:tag" content={tags.join(', ')} />
+		{/if}
 	{/if}
-	<meta
-		property="og:title"
-		content={title.replace('{YEAR}', new Date().getFullYear().toString())}
-	/>
-	<meta
-		property="og:description"
-		content={description.replace('{YEAR}', new Date().getFullYear().toString())}
-	/>
+	<meta property="og:title" content={resolvedTitle} />
+	<meta property="og:description" content={resolvedDescription} />
 	<meta property="og:image" content={imageAddress} />
+	<meta property="og:image:alt" content={resolvedTitle} />
 	<meta property="og:image:width" content="400" />
 	<meta property="og:image:height" content="80" />
 	<meta property="og:locale" content={locale + '_' + locale.toUpperCase()} />
 	<meta name="robots" content="index,follow" />
 	<meta name="googlebot" content="index,follow" />
-	<link rel="alternate" href="/feed.rss" />
-	<link rel="alternate" href="/feed.atom" />
+	<link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.rss" />
+	<link rel="alternate" type="application/atom+xml" title="Atom" href="/feed.atom" />
 </svelte:head>

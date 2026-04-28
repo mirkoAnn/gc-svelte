@@ -1,9 +1,12 @@
 <script lang="ts">
+	import {
+		resolveRouletteDetailRouteId,
+		resolveSlotDetailRouteId
+	} from './../../../lib/link-resolver.ts';
 	import { page } from '$app/state';
 	import type { Roulette, Slot } from '$lib/types/games';
 	import { resolve } from '$app/paths';
 	import { appManager, CountryCodes } from '../../../lib/app-manager.svelte';
-	import { resolveRouletteIndexPath } from '$lib/link-resolver';
 	import { m } from '../../../paraglide/messages';
 	import FavouritesToggler from '../../favourites/favourites-toggler.svelte';
 	import { formatImageUrl } from '$lib/utils.svelte';
@@ -26,19 +29,16 @@
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
 
-	const resolvePath = resolve as (route: string, params?: Record<string, string>) => string;
-
-	const isSlotGame = (value: Slot | Roulette): value is Slot => {
-		return category === 'slot' && 'slotThemes' in value;
-	};
-
 	const gameHref = $derived.by(() => {
-		if (category === 'slot') {
-			return resolvePath(`/${locale}/slot/[slug]`, { slug: game.slug });
+		switch (category) {
+			case 'slot':
+				return resolve(resolveSlotDetailRouteId(locale) as never, { slug: game.slug });
+			case 'roulette':
+				// There is no roulette detail route yet, so route to localized roulette index.
+				return resolve(resolveRouletteDetailRouteId(locale) as never, { slug: game.slug });
+			default:
+				return '#';
 		}
-
-		// There is no roulette detail route yet, so route to localized roulette index.
-		return resolveRouletteIndexPath(locale);
 	});
 
 	// SEO: Game schema markup
@@ -57,6 +57,8 @@
 		}
 	}));
 
+	const gameSchemaJson = $derived.by(() => JSON.stringify(gameSchema));
+
 	// Theme name mapping for accessibility (slug to human-readable label)
 	const themeLabels: Record<string, string> = {
 		paytable: 'Paytable',
@@ -71,9 +73,7 @@
 </script>
 
 <div class="game-card" role="listitem">
-	<script type="application/ld+json">
-		{JSON.stringify(gameSchema)}
-	</script>
+	<svelte:element this={'script'} type="application/ld+json">{gameSchemaJson}</svelte:element>
 	<div class="game-card-inner">
 		<div class="game-img-container">
 			{#if !imageLoaded}
@@ -106,7 +106,7 @@
 				</div>
 			</div>
 		</div>
-		{#if isSlotGame(game) && game.slotThemes.length > 0}
+		{#if category === 'slot' && 'slotThemes' in game && game.slotThemes.length > 0}
 			<div class="game-themes-container" aria-label="Game features">
 				<div class="game-themes-inner">
 					{#each game.slotThemes as theme (theme.slug)}

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import type { RouteId } from '$app/types';
 	import { appManager } from '../../../../lib/app-manager.svelte';
 	import { CountryCodes } from '$lib/app-manager.svelte';
 	import { navManager } from '../nav-manager.svelte';
@@ -12,6 +13,7 @@
 	const locale = $derived.by(
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
+	type StaticRouteId = Exclude<RouteId, `${string}[${string}`>;
 </script>
 
 <div
@@ -38,7 +40,7 @@
 						<a
 							class="nav-links-submenu-item-link"
 							title={m.go_to_page({ page: subitem.label }, { locale })}
-							href={resolve(`/${locale}${subitem.href}` as Parameters<typeof resolve>[0])}
+							href={resolve(`/${locale}${subitem.href}` as StaticRouteId)}
 						>
 							{subitem.label}
 						</a>

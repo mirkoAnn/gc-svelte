@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
-	import type { Slot } from '$lib/types/games';
+	import type { Roulette, Slot } from '$lib/types/games';
 	import { m } from '../../../paraglide/messages';
 	import FavouritesToggler from '../../favourites/favourites-toggler.svelte';
 	import Rating from '../../rating/rating.svelte';
 	import { gameManager } from './game-manager.svelte';
 
-	let { game, category }: { game: Slot; category: string } = $props();
+	let { game, category }: { game: Slot | Roulette; category: string } = $props();
 	const locale = $derived.by(
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);

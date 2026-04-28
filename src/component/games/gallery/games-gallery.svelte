@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
+	import type { RouteId } from '$app/types';
 	import { page } from '$app/state';
 	import { appManager } from '../../../lib/app-manager.svelte';
 	import { CountryCodes } from '$lib/app-manager.svelte';
@@ -33,6 +35,7 @@
 	const locale = $derived.by(
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
+	type StaticRouteId = Exclude<RouteId, `${string}[${string}`>;
 
 	// Above-the-fold threshold: cards whose images should load eagerly
 	// Card dimensions (must match CSS): 200px wide, ~240px total height (image + text), 20px gap
@@ -41,6 +44,7 @@
 	const CARD_GAP = 16;
 
 	let aboveTheFoldThreshold = $state(10);
+	let resizeRafId: number | null = null;
 
 	function computeThreshold(): number {
 		const cols = Math.max(2, Math.floor((window.innerWidth + CARD_GAP) / (CARD_WIDTH + CARD_GAP)));
@@ -51,9 +55,21 @@
 
 	$effect(() => {
 		aboveTheFoldThreshold = computeThreshold();
-		const onResize = () => (aboveTheFoldThreshold = computeThreshold());
-		window.addEventListener('resize', onResize);
-		return () => window.removeEventListener('resize', onResize);
+		const onResize = () => {
+			if (resizeRafId !== null) return;
+			resizeRafId = window.requestAnimationFrame(() => {
+				aboveTheFoldThreshold = computeThreshold();
+				resizeRafId = null;
+			});
+		};
+		window.addEventListener('resize', onResize, { passive: true });
+		return () => {
+			window.removeEventListener('resize', onResize);
+			if (resizeRafId !== null) {
+				window.cancelAnimationFrame(resizeRafId);
+				resizeRafId = null;
+			}
+		};
 	});
 
 	// Generate a unique ID for the carousel instance to avoid conflicts when multiple carousels are present on the same page
@@ -123,20 +139,22 @@
 			{#if type === 'carousel'}
 				<div class="arrows-container">
 					<button
+						type="button"
 						class="arrow left-arrow"
 						aria-label={m.show_previous_games({}, { locale })}
 						onclick={() => scroll('left')}
 					>
-						<svg class="arrow-icon">
+						<svg class="arrow-icon" aria-hidden="true">
 							<use href="/icons/icon-set.svg#fill-arrow" />
 						</svg>
 					</button>
 					<button
+						type="button"
 						class="arrow right-arrow"
 						aria-label={m.show_next_games({}, { locale })}
 						onclick={() => scroll('right')}
 					>
-						<svg class="arrow-icon">
+						<svg class="arrow-icon" aria-hidden="true">
 							<use href="/icons/icon-set.svg#fill-arrow" />
 						</svg>
 					</button>
@@ -145,11 +163,16 @@
 		</div>
 	{/if}
 	{#if hasFilters && gamesGalleryManager.isLoadingGames()}
-		<div class="loader-container">
+		<div class="loader-container" role="status" aria-live="polite" aria-label="Loading games">
 			<SquaresLoader />
 		</div>
 	{/if}
-	<div id={carouselID} class="games-gallery-inner" role="list">
+	<div
+		id={carouselID}
+		class="games-gallery-inner"
+		role="list"
+		aria-busy={hasFilters && gamesGalleryManager.isLoadingGames()}
+	>
 		<!-- If provided use the games prop, otherwise use the games from the gamesGalleryManager -->
 		{#each games ? games : gamesGalleryManager.getGames() as game, i (game.id)}
 			<!-- Remove some ids to avoid duplicates in the similar games gallery -->
@@ -159,18 +182,34 @@
 		{/each}
 		<!-- Link to the category for carousel type -->
 		{#if categoryLink}
-			<a
-				href={`/${locale}${categoryLink}`}
-				class="game-card more-games-card"
-				title={m.show_all_by_category({ category }, { locale })}
-			>
-				<span>{m.show_all_by_category({ category }, { locale })}</span>
-				<svg class="more-games-card-icon" aria-hidden="true">
-					<use href="/icons/icon-set.svg#fill-arrow" />
-				</svg>
-			</a>
+			{#if categoryLink.startsWith(`/${locale}/`)}
+				<a
+					href={resolve(categoryLink as StaticRouteId)}
+					class="game-card more-games-card"
+					title={m.show_all_by_category({ category }, { locale })}
+					aria-label={m.show_all_by_category({ category }, { locale })}
+				>
+					<span>{m.show_all_by_category({ category }, { locale })}</span>
+					<svg class="more-games-card-icon" aria-hidden="true">
+						<use href="/icons/icon-set.svg#fill-arrow" />
+					</svg>
+				</a>
+			{:else}
+				<a
+					href={resolve(`/${locale}${categoryLink}` as StaticRouteId)}
+					class="game-card more-games-card"
+					title={m.show_all_by_category({ category }, { locale })}
+					aria-label={m.show_all_by_category({ category }, { locale })}
+				>
+					<span>{m.show_all_by_category({ category }, { locale })}</span>
+					<svg class="more-games-card-icon" aria-hidden="true">
+						<use href="/icons/icon-set.svg#fill-arrow" />
+					</svg>
+				</a>
+			{/if}
 		{:else if gamesGalleryManager.areMoreGamesAvailable()}
 			<button
+				type="button"
 				class="game-card more-games-card load-more-button"
 				onclick={() => gamesGalleryManager.loadMoreGames(locale)}
 				disabled={!gamesGalleryManager.areMoreGamesAvailable()}

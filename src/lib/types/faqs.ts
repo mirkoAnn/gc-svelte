@@ -1,7 +1,7 @@
-import type { Content } from './content';
+import type { ContentItem } from './content';
 
 export type FAQ = {
 	id: string;
 	question: string;
-	answer: Content;
+	answer: ContentItem;
 };

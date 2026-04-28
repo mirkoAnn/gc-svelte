@@ -37,9 +37,7 @@
 </script>
 
 <svelte:head>
-	<script type="application/ld+json">
-{jsonLd}
-	</script>
+	<svelte:element this={'script'} type="application/ld+json">{jsonLd}</svelte:element>
 </svelte:head>
 
 <div class="content faqs-container">

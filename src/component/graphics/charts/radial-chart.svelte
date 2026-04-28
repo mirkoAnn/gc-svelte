@@ -75,7 +75,6 @@
 		bind:this={canvas}
 		width={300}
 		height={300}
-		role="img"
 		aria-label="Radar chart: {labels.join(', ')}"
 	></canvas>
 </div>

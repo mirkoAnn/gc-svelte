@@ -3,9 +3,9 @@
 	import GameIntro from './game-intro.svelte';
 	import { gameManager } from './game-manager.svelte';
 	import GameActionsBar from './game-actions-bar.svelte';
-	import type { Game } from '$lib/types/games';
+	import type { Roulette, Slot } from '$lib/types/games';
 
-	let { game, category }: { game: Game; category: string } = $props();
+	let { game, category }: { game: Slot | Roulette; category: string } = $props();
 </script>
 
 <div class="game-container">
@@ -16,7 +16,7 @@
 			<GameIntro {game} {category} />
 		{/if}
 	</div>
-	<GameActionsBar {game} {category} />
+	<GameActionsBar game={game as Slot | Roulette} {category} />
 </div>
 
 <style>

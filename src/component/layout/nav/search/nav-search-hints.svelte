@@ -1,17 +1,22 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import { fly } from 'svelte/transition';
 	import { navSearchManager } from './nav-search-manager.svelte';
+
+	const locale = $derived.by(
+		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
+	);
 </script>
 
 <ul class="navbar-searches-hints navbar-popular-searches-hints">
-	{#each navSearchManager.getSearchHints(10) as searchHint, i (searchHint.id)}
+	{#each navSearchManager.getSearchHints(10) as searchHint, i (searchHint)}
 		<li class="navbar-search-item" in:fly={{ y: 20, delay: i * 50, duration: 500 }}>
 			<button
 				class="navbar-search-item-button"
-				onclick={() => navSearchManager.handleHints(searchHint.title)}
+				onclick={() => navSearchManager.handleHints(searchHint, locale)}
 			>
-				<span class="navbar-search-item-button-text">{searchHint.title}</span>
-				<span class="navbar-search-item-button-category">{searchHint.category}</span>
+				<span class="navbar-search-item-button-text">{searchHint}</span>
 			</button>
 		</li>
 	{/each}

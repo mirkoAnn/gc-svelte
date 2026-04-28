@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import type { RouteId } from '$app/types';
 	import { page } from '$app/state';
 	import { appManager, CountryCodes } from '$lib/app-manager.svelte';
 	import { m } from '../../../paraglide/messages';
@@ -10,6 +11,7 @@
 	const locale = $derived.by(
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
+	type StaticRouteId = Exclude<RouteId, `${string}[${string}`>;
 
 	const policyPrivacyCodes = [{ it: '46494097' }, { es: '24631089' }];
 </script>
@@ -27,18 +29,16 @@
 		<div class="footer-column">
 			<p class="footer-heading">{navManager.getMenuItemByIndex(0).label}</p>
 			{#each navManager.getMenuItemByIndex(0).submenuItems as item (item.label)}
-				<a
-					href={resolve(`/${locale}${item.href}` as Parameters<typeof resolve>[0])}
-					class="footer-link">{item.label}</a
+				<a href={resolve(`/${locale}${item.href}` as StaticRouteId)} class="footer-link"
+					>{item.label}</a
 				>
 			{/each}
 		</div>
 		<div class="footer-column">
 			<p class="footer-heading">{navManager.getMenuItemByIndex(1).label}</p>
 			{#each navManager.getMenuItemByIndex(1).submenuItems as item (item.label)}
-				<a
-					href={resolve(`/${locale}${item.href}` as Parameters<typeof resolve>[0])}
-					class="footer-link">{item.label}</a
+				<a href={resolve(`/${locale}${item.href}` as StaticRouteId)} class="footer-link"
+					>{item.label}</a
 				>
 			{/each}
 		</div>

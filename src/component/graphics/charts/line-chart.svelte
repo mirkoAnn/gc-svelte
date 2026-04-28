@@ -71,7 +71,6 @@
 		bind:this={canvas}
 		width="800"
 		height="400"
-		role="img"
 		aria-label="Line chart: {labels.join(', ')}"
 	></canvas>
 </div>

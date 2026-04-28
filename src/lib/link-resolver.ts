@@ -4,6 +4,7 @@ import type { RouteId } from '$app/types';
 type LocaleRouteConfig = {
 	casinosBase: string;
 	rouletteBase: string;
+	rouletteDetailBase: string;
 	rouletteNewSegment: string;
 	rouletteEuropeanSegment: string;
 	rouletteAmericanSegment: string;
@@ -17,6 +18,7 @@ const LOCALE_ROUTE_CONFIG: Record<CountryCodes, LocaleRouteConfig> = {
 	[CountryCodes.it]: {
 		casinosBase: 'casino-online',
 		rouletteBase: 'roulette-gratis',
+		rouletteDetailBase: 'roulette',
 		rouletteNewSegment: 'roulette-nuove',
 		rouletteEuropeanSegment: 'roulette-europea',
 		rouletteAmericanSegment: 'roulette-americana',
@@ -28,6 +30,7 @@ const LOCALE_ROUTE_CONFIG: Record<CountryCodes, LocaleRouteConfig> = {
 	[CountryCodes.es]: {
 		casinosBase: 'casinos-online',
 		rouletteBase: 'ruletas-gratis',
+		rouletteDetailBase: 'ruletas',
 		rouletteNewSegment: 'ruletas-nuevas',
 		rouletteEuropeanSegment: 'ruletas-europea',
 		rouletteAmericanSegment: 'ruletas-americana',
@@ -60,6 +63,16 @@ export const resolveCasinoDetailRouteId = (locale: CountryCodes): RouteId => {
 export const resolveRouletteIndexPath = (locale: CountryCodes): RouteId => {
 	const { rouletteBase } = getLocaleRouteConfig(locale);
 	return `/${locale}/${rouletteBase}` as RouteId;
+};
+
+export const resolveRouletteDetailRouteId = (locale: CountryCodes): RouteId => {
+	const { rouletteDetailBase } = getLocaleRouteConfig(locale);
+	return `/${locale}/${rouletteDetailBase}/[slug]` as RouteId;
+};
+
+export const resolveRouletteDetailPath = (locale: CountryCodes, slug: string): string => {
+	const { rouletteDetailBase } = getLocaleRouteConfig(locale);
+	return `/${locale}/${rouletteDetailBase}/${slug}`;
 };
 
 export const resolveProvidersIndexPath = (locale: CountryCodes): RouteId => {

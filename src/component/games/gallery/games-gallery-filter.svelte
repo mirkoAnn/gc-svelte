@@ -11,12 +11,33 @@
 	const locale = $derived.by(
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
+	const isOpen = $derived(gamesGalleryManager.getCurrentVisibleFilter() === filter.name);
+	const optionsId = $derived(`games-gallery-filter-options-${filter.name}`);
 
 	let filterOptionsTogglingAnimation = $state<GSAPTimeline | null>();
+
+	const isReducedMotionEnabled = () =>
+		typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 	const toggleFilterOptions = () => {
 		// If there's an ongoing animation for toggling filter options, we don't do anything to prevent conflicts between multiple animations
 		if (filterOptionsTogglingAnimation && filterOptionsTogglingAnimation.isActive()) return;
+		if (isReducedMotionEnabled()) {
+			const shouldOpen = gamesGalleryManager.getCurrentVisibleFilter() !== filter.name;
+			gsap.set('.games-gallery-filters-backdrop', { autoAlpha: shouldOpen ? 1 : 0 });
+			gsap.set('.games-gallery-filter-options', { height: 0 });
+			gsap.set('.games-gallery-filter .games-gallery-filter-select-toggler-icon', { rotate: 180 });
+			if (shouldOpen) {
+				gsap.set(`#games-gallery-filter-${filter.name} .games-gallery-filter-options`, {
+					height: '300px'
+				});
+				gsap.set(`#games-gallery-filter-${filter.name} .games-gallery-filter-select-toggler-icon`, {
+					rotate: 0
+				});
+			}
+			gamesGalleryManager.setCurrentVisibleFilter(shouldOpen ? filter.name : '');
+			return;
+		}
 
 		// First, we create an animation that closes all filters and restores the rotation of all toggler icons
 		filterOptionsTogglingAnimation = gsap
@@ -43,7 +64,8 @@
 
 		// Since all the filters are now closed, we check if the filter we want to toggle is currently visible.
 		// If it is, we set the current visible filter to null and we don't create any more animations, since the one we just created already closed it.
-		if (gamesGalleryManager.getCurrentVisibleFilter() !== filter.name) {
+		const shouldOpen = gamesGalleryManager.getCurrentVisibleFilter() !== filter.name;
+		if (shouldOpen) {
 			filterOptionsTogglingAnimation = gsap
 				.timeline({ defaults: { duration: 0.25 } })
 				.to('.games-gallery-filters-backdrop', {
@@ -64,30 +86,46 @@
 					'<'
 				);
 		}
-		gamesGalleryManager.setCurrentVisibleFilter(filter.name);
+		gamesGalleryManager.setCurrentVisibleFilter(shouldOpen ? filter.name : '');
 	};
 </script>
 
 <div id="games-gallery-filter-{filter.name}" class="games-gallery-filter">
 	<button
+		type="button"
 		class="games-gallery-filter-select-toggler"
 		aria-label={m.select_filter_for({ filterName: filter.label }, { locale })}
+		aria-expanded={isOpen}
+		aria-controls={optionsId}
+		aria-haspopup="listbox"
 		onclick={toggleFilterOptions}
 	>
 		<span>{filter.label}</span>
-		<svg class="games-gallery-filter-select-toggler-icon">
+		<svg class="games-gallery-filter-select-toggler-icon" aria-hidden="true">
 			<use href="/icons/icon-set.svg#fill-arrow" />
 		</svg>
 	</button>
-	<div class="games-gallery-filter-options">
+	<div
+		id={optionsId}
+		class="games-gallery-filter-options"
+		role="listbox"
+		aria-label={filter.label}
+		aria-hidden={!isOpen}
+	>
 		{#each filter.filters as filterOption (filterOption.value)}
 			<button
+				type="button"
 				class="games-gallery-filter-option {gamesGalleryManager.isThisFilterCurrentlyApplied(
 					filter.name,
 					filterOption.value
 				)
 					? 'selected'
 					: ''}"
+				role="option"
+				aria-selected={gamesGalleryManager.isThisFilterCurrentlyApplied(
+					filter.name,
+					filterOption.value
+				)}
 				value={filterOption.value}
 				onclick={() =>
 					gamesGalleryManager.applyFilter(
@@ -98,7 +136,7 @@
 						locale
 					)}
 			>
-				<svg class="games-gallery-filter-option-icon">
+				<svg class="games-gallery-filter-option-icon" aria-hidden="true">
 					<use href="/icons/icon-set.svg#check" />
 				</svg>
 				{filterOption.title}</button

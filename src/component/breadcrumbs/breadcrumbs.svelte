@@ -37,6 +37,14 @@
 			}))
 		];
 	});
+
+	const breadcrumbSchemaJson = $derived.by(() =>
+		JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'BreadcrumbList',
+			itemListElement: jsonLdItems
+		})
+	);
 </script>
 
 <ul class="breadcrumbs" itemscope>
@@ -73,13 +81,7 @@
 </ul>
 
 <svelte:head>
-	<script type="application/ld+json">
-        {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: jsonLdItems
-        })}
-	</script>
+	<svelte:element this={'script'} type="application/ld+json">{breadcrumbSchemaJson}</svelte:element>
 </svelte:head>
 
 <style>
