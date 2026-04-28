@@ -166,6 +166,7 @@
 			flex-wrap: wrap;
 			gap: 8px 12px;
 			padding: 10px 24px;
+			padding-bottom: calc(10px + env(safe-area-inset-bottom));
 			font-size: 0.65rem;
 			color: var(--light-brown-700);
 
@@ -239,6 +240,7 @@
 
 			.subfooter {
 				padding: 14px 20px;
+				padding-bottom: calc(14px + env(safe-area-inset-bottom));
 				text-align: center;
 			}
 		}

@@ -126,7 +126,7 @@
 
 <style>
 	.navbar-search-panel {
-		width: min(1200px, 100%);
+		width: min(90%, 100%);
 		height: 100%;
 		margin: 0 auto;
 		padding: 8px 8px 16px;

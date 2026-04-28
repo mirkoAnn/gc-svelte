@@ -194,5 +194,10 @@
 	"nav_roulettes_american_link": "/ruleta-gratis/ruleta-americana",
 	"search_title": "Búsqueda rápida",
 	"search_placeholder": "Encuentra casinos, tragamonedas, bonos y mucho más en Gambling Club.",
-	"apply_filters": "Aplicar"
+	"apply_filters": "Aplicar",
+	"game_volatility_low": "Bajo",
+	"game_volatility_medium_low": "Medio-bajo",
+	"game_volatility_medium": "Promedio",
+	"game_volatility_medium_high": "Medio-alto",
+	"game_volatility_high": "Alto"
 }

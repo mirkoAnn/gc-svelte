@@ -14,6 +14,23 @@
 		() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 	);
 
+	const volatilityString = $derived.by(() => {
+		switch (game.info.volatility) {
+			case 'low':
+				return m.game_volatility_low({}, { locale });
+			case 'medium_low':
+				return m.game_volatility_medium_low({}, { locale });
+			case 'medium':
+				return m.game_volatility_medium({}, { locale });
+			case 'medium_high':
+				return m.game_volatility_medium_high({}, { locale });
+			case 'high':
+				return m.game_volatility_high({}, { locale });
+			default:
+				return game.info.volatility;
+		}
+	});
+
 	let hasAnimatedRtp = false;
 
 	const setupRtpAnimation = async () => {
@@ -100,7 +117,7 @@
 				</li>
 				<li class="game-info">
 					<span class="game-info-label">{m.game_volatility({}, { locale })}</span>
-					<span class="game-info-value game-volatility-value">{game.info.volatility}</span>
+					<span class="game-info-value game-volatility-value">{volatilityString}</span>
 				</li>
 			</ul>
 			<ul class="game-info-list">
@@ -254,6 +271,7 @@
 							font-weight: 700;
 							color: var(--blu-600);
 							line-height: 1.1;
+							text-align: center;
 						}
 					}
 				}

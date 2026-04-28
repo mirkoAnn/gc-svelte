@@ -217,7 +217,6 @@
 				.game-themes-inner {
 					position: relative;
 					background-color: var(--light-brown-900);
-					color: var(--blu-900);
 					border-radius: 0 0.6rem;
 					padding: 4px;
 					display: flex;
@@ -226,7 +225,6 @@
 					gap: 8px;
 					&.on-favourites-list {
 						background-color: var(--blu-800);
-						color: var(--light-brown-900);
 					}
 					.game-theme-icon {
 						width: 16px;
