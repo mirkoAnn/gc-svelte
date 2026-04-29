@@ -3,8 +3,12 @@ import { dbManager } from '$lib/db-manager.svelte';
 import {
 	resolveCasinoDetailPath,
 	resolveCasinoIndexPath,
+	resolveRouletteDetailPath,
 	resolveRouletteIndexPath,
-	resolveSlotMechanicsDetailPath
+	resolveRouletteNewPath,
+	resolveSlotMechanicsDetailPath,
+	resolveSlotNewPath,
+	resolveSlotPopularPath
 } from '$lib/link-resolver';
 import { capitalizeFirstLetter } from '$lib/utils.svelte';
 import { error } from '@sveltejs/kit';
@@ -24,7 +28,13 @@ type UrlSetResponse = {
 const SITE_ADDRESS = 'https://gamlub.com';
 const COLLECTION_PAGE_SIZE = 500;
 
-type CollectionName = 'slotThemes' | 'slotMechanics' | 'slots' | 'casinos' | 'providers';
+type CollectionName =
+	| 'slotThemes'
+	| 'slotMechanics'
+	| 'slots'
+	| 'roulettes'
+	| 'casinos'
+	| 'providers';
 
 const getPage = (data: QueryResponse, key: string): PageData | undefined => {
 	const value = data[key];
@@ -98,9 +108,18 @@ export async function GET() {
       slotsPage${countrySuffix}: slotsPage(locale: "${countryCode}") {
         updatedAt
       }
+		newSlotsPage${countrySuffix}: newSlotsPage(locale: "${countryCode}") {
+		updatedAt
+	  }
+		bestSlotsPage${countrySuffix}: bestSlotsPage(locale: "${countryCode}") {
+		updatedAt
+	  }
       roulettePage${countrySuffix}: roulettePage(locale: "${countryCode}") {
         updatedAt
       }
+		newRoulettePage${countrySuffix}: newRoulettePage(locale: "${countryCode}") {
+		updatedAt
+	  }
       providersPage${countrySuffix}: providersPage(locale: "${countryCode}") {
         updatedAt
       }
@@ -126,15 +145,19 @@ export async function GET() {
 		const countrySuffix = capitalizeFirstLetter(countryCode);
 		const homePage = getPage(response.data, `homePage${countrySuffix}`);
 		const slotsPage = getPage(response.data, `slotsPage${countrySuffix}`);
+		const newSlotsPage = getPage(response.data, `newSlotsPage${countrySuffix}`);
+		const bestSlotsPage = getPage(response.data, `bestSlotsPage${countrySuffix}`);
 		const roulettePage = getPage(response.data, `roulettePage${countrySuffix}`);
+		const newRoulettePage = getPage(response.data, `newRoulettePage${countrySuffix}`);
 		const providersPage = getPage(response.data, `providersPage${countrySuffix}`);
 		const casinosPage = getPage(response.data, `casinosPage${countrySuffix}`);
 
-		const [casinos, slotThemes, slotMechanics, slots, providers] = await Promise.all([
+		const [casinos, slotThemes, slotMechanics, slots, roulettes, providers] = await Promise.all([
 			fetchCollectionEntries('casinos', countryCode),
 			fetchCollectionEntries('slotThemes', countryCode),
 			fetchCollectionEntries('slotMechanics', countryCode),
 			fetchCollectionEntries('slots', countryCode),
+			fetchCollectionEntries('roulettes', countryCode),
 			fetchCollectionEntries('providers', countryCode)
 		]);
 
@@ -156,11 +179,38 @@ export async function GET() {
 			});
 		}
 
+		if (newSlotsPage) {
+			urlset.push({
+				loc: SITE_ADDRESS + resolveSlotNewPath(countryCode),
+				freq: 'daily',
+				mod: newSlotsPage.updatedAt,
+				priority: 1
+			});
+		}
+
+		if (bestSlotsPage) {
+			urlset.push({
+				loc: SITE_ADDRESS + resolveSlotPopularPath(countryCode),
+				freq: 'daily',
+				mod: bestSlotsPage.updatedAt,
+				priority: 1
+			});
+		}
+
 		if (roulettePage) {
 			urlset.push({
 				loc: SITE_ADDRESS + resolveRouletteIndexPath(countryCode),
 				freq: 'daily',
 				mod: roulettePage.updatedAt,
+				priority: 1
+			});
+		}
+
+		if (newRoulettePage) {
+			urlset.push({
+				loc: SITE_ADDRESS + resolveRouletteNewPath(countryCode),
+				freq: 'daily',
+				mod: newRoulettePage.updatedAt,
 				priority: 1
 			});
 		}
@@ -213,6 +263,15 @@ export async function GET() {
 		slots.forEach((entry) => {
 			urlset.push({
 				loc: SITE_ADDRESS + '/' + countryCode + '/slot-gratis/' + entry.slug,
+				freq: 'yearly',
+				mod: entry.updatedAt,
+				priority: 0.5
+			});
+		});
+
+		roulettes.forEach((entry) => {
+			urlset.push({
+				loc: SITE_ADDRESS + resolveRouletteDetailPath(countryCode, entry.slug),
 				freq: 'yearly',
 				mod: entry.updatedAt,
 				priority: 0.5

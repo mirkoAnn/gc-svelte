@@ -29,6 +29,7 @@
 		gamesGalleryManager.initTypedGalleryData({
 			initialGamesData: data.page.slots,
 			slotThemes: data.slotThemes,
+			slotThemesLabel: m.game_filter_theme({}, { locale: 'es' }),
 			providers: data.providers,
 			providerLabel: m.providers({}, { locale: 'es' }),
 			orderByLabel: m.gallery_filter_order_title({}, { locale: 'es' }),

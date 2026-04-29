@@ -1,49 +1,42 @@
 <script lang="ts">
-	import { afterNavigate } from '$app/navigation';
-	import type { Slot } from '$lib/types/games';
-	import AuthorBox from '../../../../component/author/author-box.svelte';
-	import Breadcrumbs from '../../../../component/breadcrumbs/breadcrumbs.svelte';
-	import ContentContainer from '../../../../component/content/content-container.svelte';
-	import { gamesGalleryManager } from '../../../../component/games/gallery/games-gallery-manager.svelte';
+	import PageMetadata from './../../../../component/metadata/page-metadata.svelte';
+	import Breadcrumbs from './../../../../component/breadcrumbs/breadcrumbs.svelte';
+	import Gallery from './../../../../component/games/gallery/games-gallery.svelte';
+	import { gamesGalleryManager } from './../../../../component/games/gallery/games-gallery-manager.svelte';
 	import { m } from './../../../../paraglide/messages';
-	import GamesGallery from '../../../../component/games/gallery/games-gallery.svelte';
-	import PageMetadata from '../../../../component/metadata/page-metadata.svelte';
-	import type { SlotMechanicPageData } from './+page.server';
-	import FaqsList from './../../../../component/faqs/faqs-list.svelte';
 	import { getSlotOrderByOptions } from '../../../../component/games/gallery/game-gallery-filters-helper';
+	import FaqsList from './../../../../component/faqs/faqs-list.svelte';
+	import AuthorBox from '../../../../component/author/author-box.svelte';
+	import ContentContainer from '../../../../component/content/content-container.svelte';
+	import type { NewRoulettePageData } from './+page.server';
+	import type { Roulette } from '$lib/types/games';
 	import { CountryCodes } from '$lib/app-manager.svelte';
-	import {
-		resolveSlotGratisIndexPath,
-		resolveSlotMechanicsDetailRouteId
-	} from '$lib/link-resolver';
+	import { resolveRouletteIndexPath, resolveRouletteNewPath } from '$lib/link-resolver';
 
 	let {
 		data
 	}: {
 		data: {
-			page: SlotMechanicPageData;
-			slots: Slot[];
-			slotThemes: { title: string; slug: string }[];
+			page: NewRoulettePageData;
+			roulettes: Roulette[];
+			rouletteMechanics: { title: string; slug: string }[];
 			providers: { title: string; slug: string }[];
 		};
 	} = $props();
 
 	const refreshGallery = () => {
 		gamesGalleryManager.initTypedGalleryData({
-			initialGamesData: data.slots,
-			slotThemes: data.slotThemes,
-			slotThemesLabel: m.game_filter_theme({}, { locale: 'es' }),
+			initialGamesData: data.roulettes,
+			rouletteMechanics: data.rouletteMechanics,
+			rouletteMechanicsLabel: m.game_filter_rules({}, { locale: 'es' }),
 			providers: data.providers,
 			providerLabel: m.providers({}, { locale: 'es' }),
 			orderByLabel: m.gallery_filter_order_title({}, { locale: 'es' }),
 			orderByOptions: getSlotOrderByOptions('es'),
-			defaultOrderByValue: data.page.slug
+			defaultOrderByValue: 'createdAt:desc',
+			defaultOrderByTitle: m.game_filter_release_date_new_old({}, { locale: 'es' })
 		});
 	};
-
-	afterNavigate(() => {
-		refreshGallery();
-	});
 
 	refreshGallery();
 </script>
@@ -53,26 +46,21 @@
 <Breadcrumbs
 	breadcrumbs={[
 		{
-			route: { id: resolveSlotGratisIndexPath(CountryCodes.es) },
-			title: 'Juega gratis a las Tragaperras Online',
-			label: 'Tragaperras Gratis'
+			route: { id: resolveRouletteIndexPath(CountryCodes.es) },
+			title: 'Juega gratis a la Ruleta Online',
+			label: 'Ruleta Gratis'
 		},
 		{
-			route: {
-				id: resolveSlotMechanicsDetailRouteId(CountryCodes.es),
-				params: { slug: data.page.slug }
-			},
-			title: `Juega Gratis a las Tragaperras ${data.page.title}`,
-			label: data.page.title
+			route: { id: resolveRouletteNewPath(CountryCodes.es) },
+			title: `Juega Gratis a las Nuevas Ruletas Online`,
+			label: 'Nuevas Ruletas'
 		}
 	]}
 />
 
-<h1 class="page-title">
-	Tragaperras {data.page.title}
-</h1>
-<div class="slot-category">
-	<GamesGallery category="slot" type="grid" hasFilters={true} />
+<h1 class="page-title">Nuevas Ruletas Online</h1>
+<div class="roulette-category">
+	<Gallery category="roulette" type="grid" hasFilters={true} />
 </div>
 
 {#if data.page.content.firstContent}
@@ -109,6 +97,7 @@
 {#if data.page.faqs.length > 0}
 	<FaqsList faqs={data.page.faqs} />
 {/if}
+
 {#if data.page.author}
 	<AuthorBox author={data.page.author} />
 {/if}

@@ -100,6 +100,7 @@ type TypedGalleryInitOptions = {
 type SlotGalleryInitOptions = {
 	initialGamesData: Slot[] | Roulette[];
 	slotThemes: SlugFilterSource[];
+	slotThemesLabel: string;
 	providers: SlugFilterSource[];
 	providerLabel: string;
 	orderByLabel: string;
@@ -116,6 +117,10 @@ type RouletteGalleryInitOptions = {
 	providerLabel: string;
 	initialRouletteMechanicsLabel?: string;
 	initialProviderLabel?: string;
+	orderByLabel: string;
+	orderByOptions: Array<{ title: string; value: string }>;
+	defaultOrderByValue: string;
+	defaultOrderByTitle?: string;
 };
 
 type MultiGameGalleryInitOptions =
@@ -148,7 +153,12 @@ const normalizeTypedGalleryOptions = (
 			gameType: 'slot',
 			initialGamesData: slotOptions.initialGamesData,
 			categories: [
-				{ name: 'slotThemes', label: 'Tema', source: slotOptions.slotThemes, initialFilters: [] },
+				{
+					name: 'slotThemes',
+					label: slotOptions.slotThemesLabel,
+					source: slotOptions.slotThemes,
+					initialFilters: []
+				},
 				{
 					name: 'providers',
 					label: slotOptions.providerLabel,
@@ -190,6 +200,19 @@ const normalizeTypedGalleryOptions = (
 				initialLabel: rouletteOptions.initialProviderLabel,
 				source: rouletteOptions.providers,
 				initialFilters: []
+			},
+			{
+				name: 'orderBy',
+				label: rouletteOptions.orderByLabel,
+				source: rouletteOptions.orderByOptions,
+				initialFilters: [
+					rouletteOptions.defaultOrderByTitle
+						? {
+								title: rouletteOptions.defaultOrderByTitle,
+								value: rouletteOptions.defaultOrderByValue
+							}
+						: { value: rouletteOptions.defaultOrderByValue }
+				]
 			}
 		]
 	};

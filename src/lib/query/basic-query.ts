@@ -60,4 +60,8 @@ export const roulettesQuery = `
     provider {
         title
     }
+    rouletteMechanic {
+        slug
+        iconId
+    }
 `;
