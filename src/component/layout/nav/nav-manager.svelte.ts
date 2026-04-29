@@ -80,6 +80,12 @@ const menuItems = $derived([
 						title: m.nav_roulettes_all_title({ year: new Date().getFullYear() }, { locale }),
 						label: m.nav_roulettes_all({}, { locale }),
 						category: 'roulette'
+					},
+					{
+						href: m.nav_roulettes_new_link({}, { locale }),
+						title: m.nav_roulettes_new_title({ year: new Date().getFullYear() }, { locale }),
+						label: m.nav_roulettes_new({}, { locale }),
+						category: 'new'
 					}
 					// {
 					// 	href: m.nav_roulettes_french_link({}, { locale }),

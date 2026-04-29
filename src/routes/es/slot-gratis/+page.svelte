@@ -102,6 +102,44 @@
 {/if}
 {#if data.page.content.thirdContent}
 	<ContentContainer content={data.page.content.thirdContent} />
+	<table class="content content-table">
+		<thead>
+			<tr>
+				<th>Slots gratis</th>
+				<th>Slots con dinero real</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Acceso inmediato</td>
+				<td>✔ Sí</td>
+			</tr>
+			<tr>
+				<td>Dinero necesario</td>
+				<td>❌ No</td>
+			</tr>
+			<tr>
+				<td>Premios reales</td>
+				<td>❌ No</td>
+			</tr>
+			<tr>
+				<td>Registro</td>
+				<td>❌ No necesario</td>
+			</tr>
+			<tr>
+				<td>Riesgo</td>
+				<td>❌ Ninguno</td>
+			</tr>
+			<tr>
+				<td>Jackpots progresivos</td>
+				<td>❌ No</td>
+			</tr>
+			<tr>
+				<td>Funciones</td>
+				<td>✔ Todas</td>
+			</tr>
+		</tbody>
+	</table>
 {/if}
 {#if data.page.content.fourthContent}
 	<ContentContainer content={data.page.content.fourthContent} />
