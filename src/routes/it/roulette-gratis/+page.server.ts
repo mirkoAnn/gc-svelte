@@ -5,6 +5,7 @@ import type Faq from '../../../component/faqs/faq.svelte';
 import type { Roulette } from '$lib/types/games';
 import type { Author } from '$lib/types/author';
 import { basicQuery } from '$lib/query/basic-query';
+import { roulettesQuery } from '$lib/query/basic-query';
 
 export type RouletteGratisPageData = {
 	seo: {
@@ -24,64 +25,34 @@ export async function load() {
         page: roulettePage (locale: "it"){
             ${basicQuery} 
         }
-        newRoulette: roulettes(locale: "it",
+        newRoulette: roulettes(
+            locale: "it"
             sort: "createdAt:desc"
             pagination: { page: 1, pageSize: 20 }
         ) {
-            id: documentId
-            title
-            slug
-            logo {
-            url
-            }
-            provider {
-            title
-            }
+            ${roulettesQuery}
         }
-        rouletteEuropea: roulettes(locale: "it",
-            filters: { rouletteMechanic: { slug: { eq: "europea" } } }
+        europeanRoulette: roulettes(
+            filters: { locale: {eq:"it"}, rouletteMechanic: { slug: { eq: "europea" } } }
             sort: "sessions:desc"
             pagination: { page: 1, pageSize: 20 }
         ) {
-            id: documentId
-            title
-            slug
-            logo {
-            url
-            }
-            provider {
-            title
-            }
+            
+            ${roulettesQuery}
         }
-        rouletteAmericana: roulettes(
-            filters: { rouletteMechanic: { slug: { eq: "americana" } } }
+        americanRoulette: roulettes(
+            filters: { locale: {eq:"it"}, rouletteMechanic: { slug: { eq: "americana" } } }
             sort: "sessions:desc"
             pagination: { page: 1, pageSize: 20 }
         ) {
-            id: documentId
-            title
-            slug
-            logo {
-            url
-            }
-            provider {
-            title
-            }
+            ${roulettesQuery}
         }
-        rouletteFrancese: roulettes(locale: "it",
-            filters: { rouletteMechanic: { slug: { eq: "francese" } } }
+        frenchRoulette: roulettes(
+            filters: { locale: {eq:"it"}, rouletteMechanic: { slug: { eq: "francese" } } }
             sort: "sessions:desc"
             pagination: { page: 1, pageSize: 20 }
         ) {
-            id: documentId
-            title
-            slug
-            logo {
-            url
-            }
-            provider {
-            title
-            }
+           ${roulettesQuery}
         }
         rouletteMechanics(locale: "it", pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
             title
@@ -94,6 +65,8 @@ export async function load() {
     }
   `;
 
+	console.log('Query:', query);
+
 	return await dbManager
 		.executeQuery(query)
 		.then(
@@ -101,9 +74,9 @@ export async function load() {
 				data: {
 					page: RouletteGratisPageData;
 					newRoulette: Roulette[];
-					rouletteEuropea: Roulette[];
-					rouletteAmericana: Roulette[];
-					rouletteFrancese: Roulette[];
+					europeanRoulette: Roulette[];
+					americanRoulette: Roulette[];
+					frenchRoulette: Roulette[];
 					rouletteMechanics: { title: string; slug: string }[];
 					providers: { title: string; slug: string }[];
 				};

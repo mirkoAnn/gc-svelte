@@ -4,7 +4,7 @@
 	import Gallery from './../../../../component/games/gallery/games-gallery.svelte';
 	import { gamesGalleryManager } from './../../../../component/games/gallery/games-gallery-manager.svelte';
 	import { m } from './../../../../paraglide/messages';
-	import { getSlotOrderByOptions } from '../../../../component/games/gallery/game-gallery-filters-helper';
+	import { getRouletteOrderByOptions } from '../../../../component/games/gallery/game-gallery-filters-helper';
 	import FaqsList from './../../../../component/faqs/faqs-list.svelte';
 	import AuthorBox from '../../../../component/author/author-box.svelte';
 	import ContentContainer from '../../../../component/content/content-container.svelte';
@@ -32,7 +32,7 @@
 			providers: data.providers,
 			providerLabel: m.providers({}, { locale: 'it' }),
 			orderByLabel: m.gallery_filter_order_title({}, { locale: 'it' }),
-			orderByOptions: getSlotOrderByOptions('it'),
+			orderByOptions: getRouletteOrderByOptions('it'),
 			defaultOrderByValue: 'createdAt:desc',
 			defaultOrderByTitle: m.game_filter_release_date_new_old({}, { locale: 'it' })
 		});

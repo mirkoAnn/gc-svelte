@@ -30,7 +30,7 @@ export async function load() {
       bestSlots: slots(locale:"it", sort: "sessions:desc", pagination: { page: 1, pageSize: 20 }) {
          ${slotsQuery}
       }
-      barSlots: slots(locale: "it", filters: { slotThemes: { slug: { eq: "bar" } } }, pagination: { page: 1, pageSize: 20 }) {
+      vltSlots: slots(filters: { locale: {eq:"it"}, slotThemes: { slug: { eq: "vlt" } } }, pagination: { page: 1, pageSize: 20 }) {
          ${slotsQuery}
       }
       slotThemes (locale:"it", pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
@@ -52,7 +52,7 @@ export async function load() {
 					page: SlotsPageData;
 					newSlots: Slot[];
 					bestSlots: Slot[];
-					barSlots: Slot[];
+					vltSlots: Slot[];
 					slotThemes: { title: string; slug: string }[];
 					providers: { title: string; slug: string }[];
 				};

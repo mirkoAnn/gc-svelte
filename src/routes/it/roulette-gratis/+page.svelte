@@ -11,6 +11,7 @@
 	import AuthorBox from '../../../component/author/author-box.svelte';
 	import { CountryCodes } from '$lib/app-manager.svelte';
 	import { resolveRouletteCategoryPath, resolveRouletteIndexPath } from '$lib/link-resolver';
+	import { getRouletteOrderByOptions } from '../../../component/games/gallery/game-gallery-filters-helper';
 
 	let {
 		data
@@ -18,9 +19,9 @@
 		data: {
 			page: RouletteGratisPageData;
 			newRoulette: Roulette[];
-			rouletteEuropea: Roulette[];
-			rouletteAmericana: Roulette[];
-			rouletteFrancese: Roulette[];
+			europeanRoulette: Roulette[];
+			americanRoulette: Roulette[];
+			frenchRoulette: Roulette[];
 			rouletteMechanics: { title: string; slug: string }[];
 			providers: { title: string; slug: string }[];
 		};
@@ -32,11 +33,15 @@
 		gamesGalleryManager.initTypedGalleryData({
 			initialGamesData: [],
 			rouletteMechanics: data.rouletteMechanics,
-			providers: data.providers,
 			rouletteMechanicsLabel: m.game_filter_rules({}, { locale: 'it' }),
+			providers: data.providers,
 			providerLabel: m.providers({}, { locale: 'it' }),
 			initialRouletteMechanicsLabel: m.game_filter_rules({}, { locale: 'it' }),
-			initialProviderLabel: m.providers({}, { locale: 'it' })
+			initialProviderLabel: m.providers({}, { locale: 'it' }),
+			orderByLabel: m.gallery_filter_order_title({}, { locale: 'it' }),
+			orderByOptions: getRouletteOrderByOptions('it'),
+			defaultOrderByValue: 'createdAt:desc',
+			defaultOrderByTitle: m.game_filter_release_date_new_old({}, { locale: 'it' })
 		});
 	};
 
@@ -70,21 +75,21 @@
 			categoryLink={resolveRouletteCategoryPath(CountryCodes.it, 'new')}
 		/>
 		<GamesGallery
-			games={data.rouletteEuropea}
+			games={data.europeanRoulette}
 			category="roulette"
 			title="Roulette Europea"
 			type="carousel"
 			categoryLink={resolveRouletteCategoryPath(CountryCodes.it, 'european')}
 		/>
 		<GamesGallery
-			games={data.rouletteAmericana}
+			games={data.americanRoulette}
 			category="roulette"
 			title="Roulette Americana"
 			type="carousel"
 			categoryLink={resolveRouletteCategoryPath(CountryCodes.it, 'american')}
 		/>
 		<GamesGallery
-			games={data.rouletteFrancese}
+			games={data.frenchRoulette}
 			category="roulette"
 			title="Roulette Francese"
 			type="carousel"

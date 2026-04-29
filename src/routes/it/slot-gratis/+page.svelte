@@ -18,7 +18,7 @@
 			page: SlotsPageData;
 			newSlots: Slot[];
 			bestSlots: Slot[];
-			barSlots: Slot[];
+			vltSlots: Slot[];
 			slotThemes: GalleryFilter[];
 			providers: GalleryFilter[];
 		};
@@ -84,12 +84,12 @@
 			categoryLink="/slot-gratis/slot-piu-giocate"
 		/>
 		<GamesGallery
-			games={data.barSlots}
+			games={data.vltSlots}
 			category="slot"
-			title="Slot Bar"
-			carouselIconName="bar"
+			title="Slot VLT"
+			carouselIconName="vlt"
 			type="carousel"
-			categoryLink="/slot-gratis/slot-bar"
+			categoryLink="/slot-gratis/slot-vlt"
 		/>
 	</div>
 </div>
