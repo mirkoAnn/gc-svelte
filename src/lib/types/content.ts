@@ -17,6 +17,7 @@ export type TextChild = {
 	url?: string;
 	rel?: string;
 	target?: string;
+	italic?: boolean;
 	children?: { text: string }[];
 };
 

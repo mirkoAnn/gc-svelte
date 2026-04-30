@@ -91,29 +91,15 @@
 						'<'
 					)
 					.fromTo(
-						'.games-gallery-filters',
+						'.games-gallery-filters-panel',
 						{
-							width: 0,
-							x: 0
+							autoAlpha: 0,
+							y: isDesktop ? -8 : '100%'
 						},
 						{
-							width: isDesktop
-								? gamesGalleryManager.getFilters().categories.length * 216 + 120 + 'px' // 216px per filter (200px width + 16px gap) + 120px for the reset button
-								: '80vw',
-							x: isDesktop ? 0 : -32,
+							autoAlpha: 1,
+							y: 0,
 							ease: 'power2.inOut'
-						},
-						'<'
-					)
-					.fromTo(
-						'.games-filters-toggler-arrow-icon',
-						{
-							rotate: 180,
-							margin: '0'
-						},
-						{
-							rotate: 0,
-							margin: '0 8px'
 						},
 						'<'
 					)
@@ -149,7 +135,7 @@
 						}
 					)
 					.fromTo(
-						'.games-gallery-filters .games-gallery-filter',
+						'.games-gallery-filters-panel .games-gallery-filter',
 						{
 							autoAlpha: 0,
 							y: 10
@@ -183,22 +169,14 @@
 				backgroundColor: isOpen ? '#3d6080ff' : '#f6f3edff',
 				color: isOpen ? '#f6f3edff' : '#3d6080ff'
 			});
-			gsap.set('.games-gallery-filters', {
-				width: isOpen
-					? window.matchMedia('(min-width: 768px)').matches
-						? gamesGalleryManager.getFilters().categories.length * 216 + 120 + 'px'
-						: '80vw'
-					: 0,
-				x: isOpen && window.matchMedia('(max-width: 767px)').matches ? -32 : 0
-			});
-			gsap.set('.games-filters-toggler-arrow-icon', {
-				rotate: isOpen ? 0 : 180,
-				margin: isOpen ? '0 8px' : '0'
+			gsap.set('.games-gallery-filters-panel', {
+				autoAlpha: isOpen ? 1 : 0,
+				y: isOpen ? 0 : window.matchMedia('(min-width: 768px)').matches ? -8 : '100%'
 			});
 			gsap.set('.games-filters-toggler-icon', { scale: isOpen ? 0 : 1 });
 			gsap.set('.games-filters-toggler-icon-close', { scale: isOpen ? 1 : 0 });
 			gsap.set('.games-gallery-filters-reset', { autoAlpha: isOpen ? 1 : 0, y: isOpen ? 0 : 10 });
-			gsap.set('.games-gallery-filters .games-gallery-filter', {
+			gsap.set('.games-gallery-filters-panel .games-gallery-filter', {
 				autoAlpha: isOpen ? 1 : 0,
 				y: isOpen ? 0 : 10
 			});
@@ -220,7 +198,7 @@
 	};
 </script>
 
-<div class="games-gallery-filters-container">
+<div class="games-gallery-filters-wrapper">
 	<button
 		type="button"
 		class="games-gallery-filters-backdrop"
@@ -229,21 +207,26 @@
 		aria-hidden={!areFiltersVisible}
 		tabindex={areFiltersVisible ? 0 : -1}
 	></button>
-	<!-- Arrow icon -->
-	<button
-		type="button"
-		class="games-filters-toggler-arrow"
-		onclick={toggleFilters}
-		aria-label={m.toggle_filters({}, { locale })}
-		aria-expanded={areFiltersVisible}
-		aria-controls={filtersPanelId}
-	>
-		<svg class="games-filters-toggler-arrow-icon" viewBox="0 0 200 200" aria-hidden="true">
-			<use href="/icons/icon-set.svg#arrow" />
-		</svg>
-	</button>
-	<!-- Filters buttons -->
-	<div id={filtersPanelId} class="games-gallery-filters" aria-hidden={!areFiltersVisible}>
+	<!-- Filter toggle pill -->
+	<div class="games-gallery-filters-container">
+		<button
+			type="button"
+			class="games-filters-toggler"
+			onclick={toggleFilters}
+			aria-label={m.toggle_filters({}, { locale })}
+			aria-expanded={areFiltersVisible}
+			aria-controls={filtersPanelId}
+		>
+			<svg class="games-filters-toggler-icon" viewBox="0 0 200 200" aria-hidden="true">
+				<use href="/icons/icon-set.svg#filter" />
+			</svg>
+			<svg class="games-filters-toggler-icon-close" viewBox="0 0 200 200" aria-hidden="true">
+				<use href="/icons/icon-set.svg#close" />
+			</svg>
+		</button>
+	</div>
+	<!-- Filters panel: dropdown on desktop, bottom sheet on mobile -->
+	<div id={filtersPanelId} class="games-gallery-filters-panel" aria-hidden={!areFiltersVisible}>
 		{#each filterCategories as filter (filter.name)}
 			<GamesGalleryFilter {filter} />
 		{/each}
@@ -274,34 +257,14 @@
 			</button>
 		</div>
 	</div>
-	<!-- Filter Icon -->
-	<button
-		type="button"
-		class="games-filters-toggler"
-		onclick={toggleFilters}
-		aria-label={m.toggle_filters({}, { locale })}
-		aria-expanded={areFiltersVisible}
-		aria-controls={filtersPanelId}
-	>
-		<svg class="games-filters-toggler-icon" viewBox="0 0 200 200" aria-hidden="true">
-			<use href="/icons/icon-set.svg#filter" />
-		</svg>
-		<svg class="games-filters-toggler-icon-close" viewBox="0 0 200 200" aria-hidden="true">
-			<use href="/icons/icon-set.svg#close" />
-		</svg>
-	</button>
 </div>
 
 <style>
-	.games-gallery-filters-container {
+	.games-gallery-filters-wrapper {
+		position: relative;
 		display: flex;
 		align-items: center;
 		margin-left: auto;
-		border-radius: 40px;
-		padding: 8px;
-		line-height: 1;
-		background-color: var(--light-brown-900);
-		color: var(--blu-600);
 		z-index: 10;
 		.games-gallery-filters-backdrop {
 			position: fixed;
@@ -314,33 +277,59 @@
 			visibility: hidden;
 			z-index: -1;
 		}
-		.games-filters-toggler-arrow {
-			.games-filters-toggler-arrow-icon {
-				width: 10px;
-				height: 10px;
-				stroke-width: 50px;
-				transform: rotate(180deg);
+		.games-gallery-filters-container {
+			display: flex;
+			align-items: center;
+			border-radius: 40px;
+			padding: 8px;
+			line-height: 1;
+			background-color: var(--light-brown-900);
+			color: var(--blu-600);
+			.games-filters-toggler {
+				position: relative;
+				gap: 0;
+				.games-filters-toggler-icon {
+					width: 24px;
+					height: 24px;
+				}
+				.games-filters-toggler-icon-close {
+					width: 24px;
+					height: 24px;
+					position: absolute;
+					top: 0;
+					left: 0;
+					transform: scale(0);
+				}
 			}
 		}
-		.games-gallery-filters {
-			width: 0;
-			height: 35px;
+		.games-gallery-filters-panel {
+			position: absolute;
+			top: calc(100% + 8px);
+			right: 0;
 			display: flex;
-			justify-content: center;
+			flex-wrap: wrap;
 			gap: 16px;
+			padding: 16px;
+			background-color: var(--blu-600);
+			color: var(--light-brown-900);
+			border-radius: 16px;
+			box-shadow:
+				0 8px 32px rgba(0, 0, 0, 0.3),
+				0 2px 8px rgba(0, 0, 0, 0.15);
+			opacity: 0;
+			visibility: hidden;
 			.filters-button-container {
 				display: flex;
 				align-items: center;
 				gap: 8px;
 				.games-apply-filters-button {
-					width: 120px;
-					display: flex;
+					display: none;
 					align-items: center;
 					gap: 8px;
 					padding: 4px 12px;
 					border-radius: 20px;
-					background-color: var(--blu-600);
-					color: var(--light-brown-900);
+					background-color: var(--light-brown-900);
+					color: var(--blu-600);
 					font-size: 14px;
 					.games-apply-filters-icon {
 						width: 24px;
@@ -368,50 +357,30 @@
 				}
 			}
 		}
-		.games-filters-toggler {
-			position: relative;
-			margin-left: auto;
-			gap: 0;
-			.games-filters-toggler-icon {
-				width: 24px;
-				height: 24px;
-			}
-			.games-filters-toggler-icon-close {
-				width: 24px;
-				height: 24px;
-				position: absolute;
-				top: 0;
-				left: 0;
-				transform: scale(0);
-			}
-		}
-		@media (min-width: 768px) {
-			.games-gallery-filters {
-				.filters-button-container {
-					.games-apply-filters-button {
-						display: none;
-					}
-				}
-			}
-		}
 		@media (max-width: 767px) {
-			.games-filters-toggler-arrow {
-				display: none;
-			}
-			.games-gallery-filters {
+			.games-gallery-filters-panel {
 				position: fixed;
-				top: 65px;
-				right: -32px;
-				width: 0;
-				height: calc(100vh - 135px);
+				top: auto;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				width: 100%;
 				flex-direction: column;
-				justify-content: flex-start;
-				align-items: center;
-				padding: 100px 16px 16px;
-				background-color: inherit;
-				border-radius: 20px 0 0 20px;
+				border-radius: 20px 20px 0 0;
+				padding: 24px 16px 32px;
+				max-height: 80dvh;
+				overflow-y: auto;
 				.filters-button-container {
-					margin: auto 0 16px 0;
+					margin-top: auto;
+					flex-direction: row;
+					justify-content: center;
+					.games-apply-filters-button {
+						display: flex;
+						width: 120px;
+					}
+					.games-gallery-filters-reset {
+						width: 120px;
+					}
 				}
 			}
 		}

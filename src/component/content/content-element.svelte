@@ -33,7 +33,11 @@
 		section.children.forEach((child: TextChild) => {
 			switch (child.type) {
 				case 'text':
-					paragraphText += child.text;
+					if (child.italic) {
+						paragraphText += `<em>${child.text}</em>`;
+					} else {
+						paragraphText += child.text;
+					}
 					break;
 				case 'link':
 					if (child.url && child.url.includes('http')) {
