@@ -2,7 +2,7 @@ import { dbManager } from '$lib/db-manager.svelte.js';
 import { basicQuery, slotsQuery } from '$lib/query/basic-query';
 import type { PageContent } from '$lib/types/content';
 import { error } from '@sveltejs/kit';
-import type Faq from '../../../../component/faqs/faq.svelte';
+import type { FAQType } from '$lib/types/faqs';
 import type { Author } from '$lib/types/author';
 import type { Slot } from '$lib/types/games';
 
@@ -15,7 +15,7 @@ export type NewSlotsPageData = {
 		description: string;
 	};
 	content: PageContent;
-	faqs: Faq[];
+	faqs: FAQType[];
 	author: Author;
 	publishedAt: string;
 	updatedAt: string;

@@ -1,17 +1,17 @@
 import { dbManager } from '$lib/db-manager.svelte';
 import type { PageContent } from '$lib/types/content';
 import { error } from '@sveltejs/kit';
-import type { FAQType } from '$lib/types/faqs';
 import type { Author } from '$lib/types/author';
 import { basicQuery } from '$lib/query/basic-query';
+import type { FAQ } from '$lib/types/faqs';
 
-export type CasinoOnlinePageData = {
+export type NewCasinosPageData = {
 	seo: {
 		title: string;
 		description: string;
 	};
 	content: PageContent;
-	faqs: FAQType[];
+	faqs: FAQ[];
 	author: Author;
 	publishedAt: string;
 	updatedAt: string;
@@ -20,14 +20,14 @@ export type CasinoOnlinePageData = {
 export async function load() {
 	const query = `
     query {
-        page: casinosPage (locale: "it") {
+        page: newCasinosPage (locale: "it") {
             ${basicQuery}
         }
     }
   `;
 	return await dbManager
 		.executeQuery(query)
-		.then((response: { data: { page: CasinoOnlinePageData } }) => {
+		.then((response: { data: { page: NewCasinosPageData } }) => {
 			return {
 				page: response.data.page
 			};

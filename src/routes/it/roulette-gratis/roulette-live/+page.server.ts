@@ -6,7 +6,7 @@ import type { FAQType } from '$lib/types/faqs';
 import type { Author } from '$lib/types/author';
 import type { Slot } from '$lib/types/games';
 
-export type NewRoulettePageData = {
+export type LiveRoulettePageData = {
 	id: string;
 	title: string;
 	slug: string;
@@ -26,10 +26,10 @@ export async function load() {
 
 	const query = `
     query {
-      page: newRoulettePage (locale:"it"){
+      page: liveRoulettePage (locale:"it"){
        ${basicQuery}
       }
-      roulettes(locale: "it", sort: "createdAt:desc", pagination: { page: 1, pageSize: ${roulettesCount} }) {
+      roulettes(filters:{locale: {eq: "it"}}, sort: "createdAt:desc", pagination: { page: 1, pageSize: ${roulettesCount} }) {
         ${roulettesQuery}
       }
       rouletteMechanics (locale:"it", pagination: { page: 1, pageSize: 500 }, sort: "title:asc") {
@@ -48,7 +48,7 @@ export async function load() {
 		.then(
 			(response: {
 				data: {
-					page: NewRoulettePageData;
+					page: LiveRoulettePageData;
 					roulettes: Slot[];
 					rouletteMechanics: { title: string; slug: string }[];
 					providers: { title: string; slug: string }[];

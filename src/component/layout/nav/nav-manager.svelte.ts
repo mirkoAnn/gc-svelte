@@ -11,6 +11,8 @@ const locale = $derived.by(
 	() => appManager.getCountryCodeFromPathname(page.url.pathname) ?? CountryCodes.it
 );
 
+const currentYear = new Date().getFullYear();
+
 // Array of menu items for the navbar, including submenus and links
 const menuItems = $derived([
 	// Each object represents a menu item
@@ -26,9 +28,15 @@ const menuItems = $derived([
 				submenuItems: [
 					{
 						href: m.nav_casinos_all_link({}, { locale }),
-						title: m.nav_casinos_all_title({ year: new Date().getFullYear() }, { locale }),
+						title: m.nav_casinos_all_title({ year: currentYear }, { locale }),
 						label: m.nav_casinos_all({}, { locale }),
 						category: 'casino'
+					},
+					{
+						href: m.nav_casinos_new_link({}, { locale }),
+						title: m.nav_casinos_new_title({ year: currentYear }, { locale }),
+						label: m.nav_casinos_new({}, { locale }),
+						category: 'new'
 					}
 				]
 			},
@@ -39,32 +47,32 @@ const menuItems = $derived([
 				submenuItems: [
 					{
 						href: m.nav_slots_all_link({}, { locale }),
-						title: m.nav_slots_all_title({ year: new Date().getFullYear() }, { locale }),
+						title: m.nav_slots_all_title({ year: currentYear }, { locale }),
 						label: m.nav_slots_all({}, { locale }),
 						category: 'slot'
 					},
 					{
 						href: m.nav_slots_classic_link({}, { locale }),
-						title: m.nav_slots_classic_title({ year: new Date().getFullYear() }, { locale }),
+						title: m.nav_slots_classic_title({ year: currentYear }, { locale }),
 						label: m.nav_slots_classic({}, { locale }),
 						category: 'bar'
 					},
 					{
 						href: m.nav_slots_vlt_link({}, { locale }),
-						title: m.nav_slots_vlt_title({ year: new Date().getFullYear() }, { locale }),
+						title: m.nav_slots_vlt_title({ year: currentYear }, { locale }),
 						label: m.nav_slots_vlt({}, { locale }),
 						category: 'vlt',
 						onlyForCountries: [CountryCodes.it]
 					},
 					{
 						href: m.nav_slots_top_link({}, { locale }),
-						title: m.nav_slots_top_title({ year: new Date().getFullYear() }, { locale }),
+						title: m.nav_slots_top_title({ year: currentYear }, { locale }),
 						label: m.nav_slots_top({}, { locale }),
 						category: 'hot'
 					},
 					{
 						href: m.nav_slots_new_link({}, { locale }),
-						title: m.nav_slots_new_title({ year: new Date().getFullYear() }, { locale }),
+						title: m.nav_slots_new_title({ year: currentYear }, { locale }),
 						label: m.nav_slots_new({}, { locale }),
 						category: 'new'
 					}
@@ -77,15 +85,21 @@ const menuItems = $derived([
 				submenuItems: [
 					{
 						href: m.nav_roulettes_all_link({}, { locale }),
-						title: m.nav_roulettes_all_title({ year: new Date().getFullYear() }, { locale }),
+						title: m.nav_roulettes_all_title({ year: currentYear }, { locale }),
 						label: m.nav_roulettes_all({}, { locale }),
 						category: 'roulette'
 					},
 					{
 						href: m.nav_roulettes_new_link({}, { locale }),
-						title: m.nav_roulettes_new_title({ year: new Date().getFullYear() }, { locale }),
+						title: m.nav_roulettes_new_title({ year: currentYear }, { locale }),
 						label: m.nav_roulettes_new({}, { locale }),
 						category: 'new'
+					},
+					{
+						href: m.nav_roulettes_live_link({}, { locale }),
+						title: m.nav_roulettes_live_title({ year: currentYear }, { locale }),
+						label: m.nav_roulettes_live({}, { locale }),
+						category: 'live'
 					}
 					// {
 					// 	href: m.nav_roulettes_french_link({}, { locale }),

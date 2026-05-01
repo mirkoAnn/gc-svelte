@@ -3,7 +3,7 @@ import type { Author } from '$lib/types/author.js';
 import type { PageContent } from '$lib/types/content.js';
 import type { Slot } from '$lib/types/games.js';
 import { error } from '@sveltejs/kit';
-import type Faq from '../../../../component/faqs/faq.svelte';
+import type { FAQType } from '$lib/types/faqs';
 import { basicQuery, slotsQuery } from '$lib/query/basic-query';
 
 export type ProviderPageData = {
@@ -18,7 +18,7 @@ export type ProviderPageData = {
 	};
 	slots: Slot[];
 	content: PageContent;
-	faqs: Faq[];
+	faqs: FAQType[];
 	author: Author;
 	publishedAt: string;
 	updatedAt: string;

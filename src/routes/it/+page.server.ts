@@ -1,7 +1,7 @@
 import { dbManager } from '$lib/db-manager.svelte';
 import type { Author } from '$lib/types/author';
 import type { PageContent } from '$lib/types/content';
-import type { FAQ } from '$lib/types/faqs';
+import type { FAQType } from '$lib/types/faqs';
 import type { Slot, Roulette } from '$lib/types/games';
 import { error } from '@sveltejs/kit';
 import { basicQuery, slotsQuery } from '$lib/query/basic-query';
@@ -12,7 +12,7 @@ export type HomePageData = {
 		description: string;
 	};
 	content: PageContent;
-	faqs: FAQ[];
+	faqs: FAQType[];
 	author: Author;
 	pusblishedAt: string;
 	updatedAt: string;

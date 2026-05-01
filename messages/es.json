@@ -199,5 +199,8 @@
 	"game_volatility_medium_low": "Medio-bajo",
 	"game_volatility_medium": "Promedio",
 	"game_volatility_medium_high": "Medio-alto",
-	"game_volatility_high": "Alto"
+	"game_volatility_high": "Alto",
+	"nav_roulettes_live": "Ruleta en vivo",
+	"nav_roulettes_live_title": "Juega a la ruleta online en vivo gratis y sin registrarte {year}",
+	"nav_roulettes_live_link": "/ruleta-gratis/ruleta-en vivo"
 }

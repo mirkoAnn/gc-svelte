@@ -12,12 +12,11 @@
 	);
 </script>
 
-<div class="iframe-container {gameManager.checkIfOnFullscreen() ? 'fullscreen' : ''}">
+<div class="iframe-container" class:fullscreen={gameManager.checkIfOnFullscreen()}>
 	<iframe
 		class="game-iframe"
 		src={game.gameUrl}
-		frameborder="0"
-		allowfullscreen
+		allow="fullscreen"
 		title={m.game_play({ gameTitle: game.title }, { locale })}
 	></iframe>
 	<button

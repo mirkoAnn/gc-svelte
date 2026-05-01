@@ -1,6 +1,6 @@
 import type { ContentItem } from './content';
 
-export type FAQ = {
+export type FAQType = {
 	id: string;
 	question: string;
 	answer: ContentItem;

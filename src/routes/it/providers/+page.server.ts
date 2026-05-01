@@ -2,7 +2,7 @@ import { dbManager } from '$lib/db-manager.svelte';
 import type { PageContent } from '$lib/types/content';
 import type { Provider } from '$lib/types/provider';
 import { error } from '@sveltejs/kit';
-import type Faq from '../../../component/faqs/faq.svelte';
+import type { FAQType } from '$lib/types/faqs';
 import type { Author } from '$lib/types/author';
 import { basicQuery } from '$lib/query/basic-query';
 
@@ -13,7 +13,7 @@ export type ProvidersPageData = {
 			description: string;
 		};
 		content: PageContent;
-		faqs: Faq[];
+		faqs: FAQType[];
 		author: Author;
 		publishedAt: string;
 		updatedAt: string;

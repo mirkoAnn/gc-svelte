@@ -3,6 +3,7 @@ import type { RouteId } from '$app/types';
 
 type LocaleRouteConfig = {
 	casinosBase: string;
+	casinosNewSegment: string;
 	rouletteBase: string;
 	rouletteDetailBase: string;
 	rouletteNewSegment: string;
@@ -10,6 +11,7 @@ type LocaleRouteConfig = {
 	rouletteEuropeanSegment: string;
 	rouletteAmericanSegment: string;
 	rouletteFrenchSegment: string;
+	rouletteLiveSegment: string;
 	slotMechanicsPrefix: string;
 	slotNewSegment: string;
 	slotPopularSegment: string;
@@ -18,6 +20,7 @@ type LocaleRouteConfig = {
 const LOCALE_ROUTE_CONFIG: Record<CountryCodes, LocaleRouteConfig> = {
 	[CountryCodes.it]: {
 		casinosBase: 'casino-online',
+		casinosNewSegment: 'casino-nuovi',
 		rouletteBase: 'roulette-gratis',
 		rouletteDetailBase: 'roulette-gratis',
 		rouletteNewSegment: 'roulette-nuove',
@@ -25,12 +28,14 @@ const LOCALE_ROUTE_CONFIG: Record<CountryCodes, LocaleRouteConfig> = {
 		rouletteEuropeanSegment: 'roulette-europea',
 		rouletteAmericanSegment: 'roulette-americana',
 		rouletteFrenchSegment: 'roulette-francese',
+		rouletteLiveSegment: 'roulette-live',
 		slotMechanicsPrefix: 'regole-',
 		slotNewSegment: 'slot-nuove',
 		slotPopularSegment: 'slot-piu-giocate'
 	},
 	[CountryCodes.es]: {
 		casinosBase: 'casinos-online',
+		casinosNewSegment: 'casinos-nuevos',
 		rouletteBase: 'ruletas-gratis',
 		rouletteDetailBase: 'ruletas-gratis',
 		rouletteNewSegment: 'ruletas-nuevas',
@@ -38,6 +43,7 @@ const LOCALE_ROUTE_CONFIG: Record<CountryCodes, LocaleRouteConfig> = {
 		rouletteEuropeanSegment: 'ruletas-europea',
 		rouletteAmericanSegment: 'ruletas-americana',
 		rouletteFrenchSegment: 'ruletas-francesa',
+		rouletteLiveSegment: 'ruletas-en-vivo',
 		slotMechanicsPrefix: 'reglas-',
 		slotNewSegment: 'slot-nuevas',
 		slotPopularSegment: 'slot-mas-jugadas'
@@ -53,6 +59,11 @@ export const getLocaleRouteConfig = (locale: CountryCodes): LocaleRouteConfig =>
 export const resolveCasinoIndexPath = (locale: CountryCodes): RouteId => {
 	const { casinosBase } = getLocaleRouteConfig(locale);
 	return `/${locale}/${casinosBase}` as RouteId;
+};
+
+export const resolveNewCasinoPath = (locale: CountryCodes): RouteId => {
+	const { casinosNewSegment } = getLocaleRouteConfig(locale);
+	return `${resolveCasinoIndexPath(locale)}/${casinosNewSegment}` as RouteId;
 };
 
 export const resolveCasinoDetailPath = (locale: CountryCodes, slug: string): string => {
@@ -86,6 +97,11 @@ export const resolveRouletteNewPath = (locale: CountryCodes): RouteId => {
 export const resolveRoulettePopularPath = (locale: CountryCodes): RouteId => {
 	const { roulettePopularSegment } = getLocaleRouteConfig(locale);
 	return `${resolveRouletteIndexPath(locale)}/${roulettePopularSegment}` as RouteId;
+};
+
+export const resolveRouletteLivePath = (locale: CountryCodes): RouteId => {
+	const { rouletteLiveSegment } = getLocaleRouteConfig(locale);
+	return `${resolveRouletteIndexPath(locale)}/${rouletteLiveSegment}` as RouteId;
 };
 
 export const resolveProvidersIndexPath = (locale: CountryCodes): RouteId => {
